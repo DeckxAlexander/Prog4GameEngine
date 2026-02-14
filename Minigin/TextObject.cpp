@@ -56,3 +56,4 @@ void dae::TextObject::SetColor(const SDL_Color& color)
 }
 
 
+

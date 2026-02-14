@@ -1,6 +1,7 @@
 ﻿#include <stdexcept>
 #include <sstream>
 #include <iostream>
+#include <thread>
 
 #if WIN32
 #define WIN32_LEAN_AND_MEAN 
@@ -15,6 +16,7 @@
 #include "SceneManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
+#include "TimeManager.h"
 
 SDL_Window* g_window{};
 
@@ -74,6 +76,9 @@ dae::Minigin::Minigin(const std::filesystem::path& dataPath)
 	{
 		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 	}
+	AllocConsole();
+	FILE* fp;
+	freopen_s(&fp, "CONOUT$", "w", stdout);
 
 	Renderer::GetInstance().Init(g_window);
 	ResourceManager::GetInstance().Init(dataPath);
@@ -90,6 +95,7 @@ dae::Minigin::~Minigin()
 void dae::Minigin::Run(const std::function<void()>& load)
 {
 	load();
+	m_LastTime = std::chrono::high_resolution_clock::now();
 #ifndef __EMSCRIPTEN__
 	while (!m_quit)
 		RunOneFrame();
@@ -100,7 +106,17 @@ void dae::Minigin::Run(const std::function<void()>& load)
 
 void dae::Minigin::RunOneFrame()
 {
+	const auto currentTime = std::chrono::high_resolution_clock::now();
+	const float deltaTime = std::chrono::duration<float>(currentTime - m_LastTime).count();
+	m_LastTime = currentTime;
+	TimeManager::GetInstance().SetDeltaTime(deltaTime);
+
 	m_quit = !InputManager::GetInstance().ProcessInput();
 	SceneManager::GetInstance().Update();
 	Renderer::GetInstance().Render();
+	const auto endTime = std::chrono::high_resolution_clock::now();
+	const auto loopDuration = (currentTime - endTime);
+	const auto sleepTime = std::chrono::nanoseconds(m_MsPerFrame);
+	std::this_thread::sleep_for(sleepTime);
+	
 }
