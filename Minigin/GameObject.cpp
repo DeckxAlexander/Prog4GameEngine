@@ -3,7 +3,10 @@
 #include "ResourceManager.h"
 #include "Renderer.h"
 
+
 dae::GameObject::~GameObject() = default;
+
+
 
 void dae::GameObject::Update()
 {
@@ -12,6 +15,20 @@ void dae::GameObject::Update()
 		component.get()->Update();
 	}
 }
+
+dae::ObjectComponent* dae::GameObject::GetComponentByName(const std::string& name) const
+{
+	for (const auto& component : m_Components)
+	{
+		auto compPtr = component.get();
+		if (compPtr->GetName() == name)
+		{
+			return compPtr;
+		}
+	}
+	return nullptr;
+}
+
 
 void dae::GameObject::Render() const
 {
@@ -43,6 +60,7 @@ void dae::GameObject::AddComponent(std::unique_ptr<ObjectComponent> component)
 	m_Components.emplace_back(std::move(component));
 }
 
+
 void dae::GameObject::RemoveComponent(const ObjectComponent& component) 
 {
 	m_Components.erase(
@@ -53,4 +71,8 @@ void dae::GameObject::RemoveComponent(const ObjectComponent& component)
 		),
 		m_Components.end()
 	);
+
 }
+
+
+

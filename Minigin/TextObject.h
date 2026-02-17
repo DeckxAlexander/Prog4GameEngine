@@ -19,7 +19,7 @@ namespace dae
 		void SetPosition(float x, float y) override;
 		void SetColor(const SDL_Color& color);
 
-		TextObject(const std::string& text, std::shared_ptr<Font> font, const SDL_Color& color = { 255, 255, 255, 255 });
+		TextObject(const std::string& text, std::shared_ptr<Font> font, const SDL_Color& color = { 255, 255, 255, 255 }, const std::string& componentName = "textBox");
 		virtual ~TextObject() = default;
 		TextObject(const TextObject& other) = delete;
 		TextObject(TextObject&& other) = delete;

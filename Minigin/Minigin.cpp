@@ -108,15 +108,18 @@ void dae::Minigin::RunOneFrame()
 {
 	const auto currentTime = std::chrono::high_resolution_clock::now();
 	const float deltaTime = std::chrono::duration<float>(currentTime - m_LastTime).count();
-	m_LastTime = currentTime;
 	TimeManager::GetInstance().SetDeltaTime(deltaTime);
+	m_LastTime = currentTime;
 
 	m_quit = !InputManager::GetInstance().ProcessInput();
 	SceneManager::GetInstance().Update();
 	Renderer::GetInstance().Render();
 	const auto endTime = std::chrono::high_resolution_clock::now();
-	const auto loopDuration = (currentTime - endTime);
-	const auto sleepTime = std::chrono::nanoseconds(m_MsPerFrame);
-	std::this_thread::sleep_for(sleepTime);
+	const auto loopDuration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - currentTime);
+	const auto sleepTime = m_MsPerFrame - loopDuration;
+
+	
+	if (sleepTime.count()>0.f) std::this_thread::sleep_for(sleepTime);
+	
 	
 }

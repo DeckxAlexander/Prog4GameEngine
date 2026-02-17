@@ -41,7 +41,18 @@ static void load()
 	fpsc->SetColor({ 255, 255, 0, 255 });
 	fpsc->SetPosition(50, 20);
 	fpso.get()->AddComponent(std::move(fpsc));
+	if (fpso.get()->GetComponentByType<dae::FPSCounterComponent>() != nullptr)
+	{
+		std::cout << "Component by type works!\n";
+	}
+	if (fpso.get()->GetComponentByName("textBox") != nullptr)
+	{
+		std::cout << "Component by Name works!\n";
+	}
+
 	scene.Add(std::move(fpso));
+
+
 }
 
 int main(int, char*[]) {

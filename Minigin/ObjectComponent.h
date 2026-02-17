@@ -9,6 +9,8 @@ namespace dae
 	class ObjectComponent //Abstract class
 	{
 		//These variables are kept incase object has Render capabilities
+		std::string m_ComponentName;
+
 		Transform m_transform{};
 		std::shared_ptr<Texture2D> m_texture{};
 	public:
@@ -17,8 +19,9 @@ namespace dae
 
 		virtual void SetTexture(const std::string& filename);
 		virtual void SetPosition(float x, float y) ;
+		std::string GetName() const;
 
-		ObjectComponent() = default;
+		ObjectComponent(const std::string&	 componentName);
 		virtual ~ObjectComponent() = default; //!Q Can i do this?
 		ObjectComponent(const ObjectComponent& other) = delete;
 		ObjectComponent(ObjectComponent&& other) = delete;

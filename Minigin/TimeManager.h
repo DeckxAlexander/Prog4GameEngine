@@ -7,12 +7,12 @@ namespace dae
 	class TimeManager final : public Singleton<TimeManager>
 	{
 	public:
-		double GetDeltaTime() const 
+		float GetDeltaTime() const 
 		{
 			return m_DeltaTime;
 
 		}
-		void SetDeltaTime(double deltaT) 
+		void SetDeltaTime(float deltaT) 
 		{
 			m_DeltaTime = deltaT;
 			//std::cout << m_DeltaTime << "\n";
@@ -20,6 +20,6 @@ namespace dae
 	private:
 		friend class Singleton<TimeManager>;
 		TimeManager() = default;
-		double m_DeltaTime{};
+		float m_DeltaTime{};
 	};
 }
