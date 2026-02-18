@@ -45,6 +45,8 @@ static void load()
 	fpsc->SetColor({ 255, 255, 0, 255 });
 	fpsc->SetPosition(50, 20);
 	fpso.get()->AddComponent(std::move(fpsc));
+	
+
 
 	scene.Add(std::move(fpso));
 

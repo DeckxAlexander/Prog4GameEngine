@@ -14,8 +14,8 @@ namespace dae
 		Transform m_transform{};
 		std::vector<std::unique_ptr<ObjectComponent>> m_Components{};
 	public:
-		virtual void Update();
-		virtual void Render() const;
+		void Update();
+		void Render() const;
 
 
 		void SetPosition(float x, float y);
@@ -34,7 +34,7 @@ namespace dae
 
 			for (const auto& component : m_Components) 
 			{
-				if (typeid(*component) == typeid(T)) 
+				if (component && typeid(*component.get()) == typeid(T))
 				{
 					return component.get();
 				}
@@ -56,7 +56,7 @@ namespace dae
 		
 
 		GameObject() = default;
-		virtual ~GameObject();
+		~GameObject();
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
 		GameObject& operator=(const GameObject& other) = delete;
