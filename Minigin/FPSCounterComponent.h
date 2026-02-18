@@ -1,13 +1,13 @@
 #pragma once
 #include <string>
 #include <memory>
-#include "TextObject.h"
+#include "TextComponent.h"
 #include "TimeManager.h"
 #include <iostream>
 
 namespace dae 
 {
-	class FPSCounterComponent : public TextObject
+	class FPSCounterComponent : public TextComponent
 	{
 	public:
 		void Update() override 
@@ -38,12 +38,12 @@ namespace dae
 			m_needsUpdate = true;
 			
 
-			TextObject::Update();
+			TextComponent::Update();
 
 			
 		};
 
-		FPSCounterComponent(const std::string& text, std::shared_ptr<Font> font, const SDL_Color& color = { 255, 255, 255, 255 }, const std::string& componentName = "textBox") : TextObject(text, font, color, componentName), m_smoothDelta{0.f}
+		FPSCounterComponent(const std::string& text, std::shared_ptr<Font> font, const SDL_Color& color = { 255, 255, 255, 255 }, const std::string& componentName = "textBox") : TextComponent(text, font, color, componentName), m_smoothDelta{0.f}
 		{}
 		virtual ~FPSCounterComponent() = default;
 		FPSCounterComponent(const FPSCounterComponent& other) = delete;

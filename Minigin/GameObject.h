@@ -12,23 +12,25 @@ namespace dae
 	class GameObject 
 	{
 		Transform m_transform{};
-		std::shared_ptr<Texture2D> m_texture{};
-		std::vector<std::unique_ptr<ObjectComponent>> m_Components{}; //!Q somehow i cannot use unique_ptr here
+		std::vector<std::unique_ptr<ObjectComponent>> m_Components{};
 	public:
 		virtual void Update();
 		virtual void Render() const;
 
-		void SetTexture(const std::string& filename);
+
 		void SetPosition(float x, float y);
+		void SetScale(float x, float y);
 		
 		void AddComponent(std::unique_ptr<ObjectComponent> component);
 		void RemoveComponent(const ObjectComponent& component);
+
+
 
 		ObjectComponent* GetComponentByName(const std::string& name) const;
 		template <typename T>
 		ObjectComponent* GetComponentByType() const
 		{
-			static_assert(std::is_base_of<ObjectComponent, T>::value, "T must derive from ObjectComponent");
+			static_assert(std::is_base_of<ObjectComponent, T>::value, "Type must derive from ObjectComponent");
 
 			for (const auto& component : m_Components) 
 			{
@@ -39,6 +41,17 @@ namespace dae
 			}
 
 			return nullptr;
+		}
+
+
+		bool HasComponentOfName(const std::string& name) const;
+
+		template <typename T>
+		bool HasComponentOfType() const 
+		{
+			static_assert(std::is_base_of<ObjectComponent, T>::value, "Type must derive from ObjectComponent");
+
+			return GetComponentByType<T>() != nullptr;
 		}
 		
 

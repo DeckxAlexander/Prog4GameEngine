@@ -4,6 +4,11 @@
 #include "Renderer.h"
 
 
+bool dae::GameObject::HasComponentOfName(const std::string& name) const
+{
+	return GetComponentByName(name) != nullptr;
+}
+
 dae::GameObject::~GameObject() = default;
 
 
@@ -32,12 +37,7 @@ dae::ObjectComponent* dae::GameObject::GetComponentByName(const std::string& nam
 
 void dae::GameObject::Render() const
 {
-	
-	if (m_texture != nullptr)
-	{
-		const auto& pos = m_transform.GetPosition();
-		Renderer::GetInstance().RenderTexture(*m_texture, pos.x, pos.y);
-	}
+
 	
 	for (const auto& component : m_Components)
 	{
@@ -45,14 +45,24 @@ void dae::GameObject::Render() const
 	}
 }
 
-void dae::GameObject::SetTexture(const std::string& filename)
-{
-	m_texture = ResourceManager::GetInstance().LoadTexture(filename);
-}
 
 void dae::GameObject::SetPosition(float x, float y)
 {
 	m_transform.SetPosition(x, y, 0.0f);
+	for (const auto& component : m_Components)
+	{
+		component.get()->SetPosition(x, y);
+	}
+
+}
+
+void dae::GameObject::SetScale(float x, float y)
+{
+	m_transform.SetScale(x, y, 1.0f);
+	for (const auto& component : m_Components)
+	{
+		component.get()->SetScale(x, y);
+	}
 }
 
 void dae::GameObject::AddComponent(std::unique_ptr<ObjectComponent> component)

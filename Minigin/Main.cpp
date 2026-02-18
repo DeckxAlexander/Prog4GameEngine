@@ -8,7 +8,8 @@
 #include "Minigin.h"
 #include "SceneManager.h"
 #include "ResourceManager.h"
-#include "TextObject.h"
+#include "RenderComponent.h"
+#include "TextComponent.h"
 #include "Scene.h"
 #include "FPSCounterComponent.h"
 
@@ -20,17 +21,20 @@ static void load()
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
 
 	auto go = std::make_unique<dae::GameObject>();
-	go->SetTexture("background.png");
+	auto gor = std::make_unique<dae::RenderComponent>("background.png");
+	go.get()->AddComponent(std::move(gor));
 	scene.Add(std::move(go));
 
 	go = std::make_unique<dae::GameObject>();
-	go->SetTexture("logo.png");
+	gor = std::make_unique<dae::RenderComponent>("logo.png");
+	go.get()->AddComponent(std::move(gor));
+
 	go->SetPosition(358, 180);
 	scene.Add(std::move(go));
 
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto to = std::make_unique<dae::GameObject>();
-	auto tc = std::make_unique<dae::TextObject>("Dae Assignment Alexander", font);
+	auto tc = std::make_unique<dae::TextComponent>("Dae Assignment Alexander", font);
 	tc->SetColor({ 255, 255, 0, 255 });
 	tc->SetPosition(292, 20);
 	to.get()->AddComponent(std::move(tc));
@@ -41,18 +45,24 @@ static void load()
 	fpsc->SetColor({ 255, 255, 0, 255 });
 	fpsc->SetPosition(50, 20);
 	fpso.get()->AddComponent(std::move(fpsc));
-	if (fpso.get()->GetComponentByType<dae::FPSCounterComponent>() != nullptr)
+	if (fpso.get()->HasComponentOfType<dae::FPSCounterComponent>() )
 	{
 		std::cout << "Component by type works!\n";
 	}
-	if (fpso.get()->GetComponentByName("textBox") != nullptr)
+	if (fpso.get()->HasComponentOfName("textBox"))
 	{
 		std::cout << "Component by Name works!\n";
 	}
 
 	scene.Add(std::move(fpso));
 
+	auto guido = std::make_unique<dae::GameObject>();
+	auto guidoRender = std::make_unique<dae::RenderComponent>("cars.png");
+	guido.get()->AddComponent(std::move(guidoRender));
+	guido.get()->SetScale(0.2f,0.2f);
+	guido.get()->SetPosition(100.f,100.f);
 
+	scene.Add(std::move(guido));
 }
 
 int main(int, char*[]) {
