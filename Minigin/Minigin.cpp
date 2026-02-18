@@ -76,9 +76,12 @@ dae::Minigin::Minigin(const std::filesystem::path& dataPath)
 	{
 		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 	}
+
+#ifndef __EMSCRIPTEN__
 	AllocConsole();
 	FILE* fp;
 	freopen_s(&fp, "CONOUT$", "w", stdout);
+#endif
 
 	Renderer::GetInstance().Init(g_window);
 	ResourceManager::GetInstance().Init(dataPath);
