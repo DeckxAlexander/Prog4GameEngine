@@ -34,7 +34,8 @@ namespace dae
 
 			for (const auto& component : m_Components) 
 			{
-				if (component && typeid(*component.get()) == typeid(T))
+				ObjectComponent& compRef = *component.get();
+				if (typeid(compRef) == typeid(T))
 				{
 					return component.get();
 				}
