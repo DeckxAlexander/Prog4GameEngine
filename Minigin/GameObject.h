@@ -9,7 +9,7 @@
 namespace dae
 {
 	class Texture2D;
-	class GameObject 
+	class GameObject final
 	{
 		Transform m_transform{};
 		std::vector<std::unique_ptr<ObjectComponent>> m_Components{};

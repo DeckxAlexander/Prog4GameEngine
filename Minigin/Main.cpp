@@ -45,24 +45,10 @@ static void load()
 	fpsc->SetColor({ 255, 255, 0, 255 });
 	fpsc->SetPosition(50, 20);
 	fpso.get()->AddComponent(std::move(fpsc));
-	if (fpso.get()->HasComponentOfType<dae::FPSCounterComponent>() )
-	{
-		std::cout << "Component by type works!\n";
-	}
-	if (fpso.get()->HasComponentOfName("textBox"))
-	{
-		std::cout << "Component by Name works!\n";
-	}
 
 	scene.Add(std::move(fpso));
 
-	auto guido = std::make_unique<dae::GameObject>();
-	auto guidoRender = std::make_unique<dae::RenderComponent>("cars.png");
-	guido.get()->AddComponent(std::move(guidoRender));
-	guido.get()->SetScale(0.2f,0.2f);
-	guido.get()->SetPosition(100.f,100.f);
 
-	scene.Add(std::move(guido));
 }
 
 int main(int, char*[]) {
