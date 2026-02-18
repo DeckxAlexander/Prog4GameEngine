@@ -14,10 +14,10 @@ namespace dae
 		virtual void Update() override;
 		virtual void Render() const override;
 
-		virtual void SetTexture(const std::string& filename);
+		void SetTexture(const std::string& filename);
 
 		RenderComponent(const std::string& filename, const std::string& componentName = "renderComponent");
-		virtual ~RenderComponent() = default; 
+		~RenderComponent() = default; 
 		RenderComponent(const RenderComponent& other) = delete;
 		RenderComponent(RenderComponent&& other) = delete;
 		RenderComponent& operator=(const RenderComponent& other) = delete;
