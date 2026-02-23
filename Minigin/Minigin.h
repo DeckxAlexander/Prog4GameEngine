@@ -9,7 +9,7 @@ namespace dae
 	class Minigin final
 	{
 		bool m_quit{};
-		float m_TargetFPS{ 60.0 };
+		float m_TargetFPS{ 60.f };
 		std::chrono::duration<long long, std::milli> m_MsPerFrame{ long(1000.0 / m_TargetFPS) };
 		std::chrono::high_resolution_clock::time_point m_LastTime{};
 	public:

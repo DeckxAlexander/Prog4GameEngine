@@ -7,7 +7,7 @@
 
 namespace dae 
 {
-	class FPSCounterComponent : public TextComponent
+	class FPSCounterComponent final : public ObjectComponent
 	{
 	public:
 		void Update() override 
@@ -28,24 +28,27 @@ namespace dae
 			float fps = 1.f / m_smoothDelta;
 
 			float fpsRounded = std::roundf((fps) * 10.f) / 10.f;
-			std::stringstream ss;
-			ss << std::fixed << std::setprecision(1) << fpsRounded;
-			m_text = ss.str() + "FPS";
-			
 
-			
 
-			m_needsUpdate = true;
-			
+			if (fpsRounded >= m_FPS+0.3f || fpsRounded <= m_FPS -0.3f)
+			{
+				m_FPS = fpsRounded;
+				std::stringstream ss;
+				ss << std::fixed << std::setprecision(1) << fpsRounded;
 
-			TextComponent::Update();
 
-			
-		};
+				if (auto textComp = m_pOwner->GetComponentByType<TextComponent>()) textComp->SetText(ss.str());
+			}
+		
+		}
 
-		FPSCounterComponent(const std::string& text, std::shared_ptr<Font> font, const SDL_Color& color = { 255, 255, 255, 255 }, const std::string& componentName = "textBox") : TextComponent(text, font, color, componentName), m_smoothDelta{0.f}
+		void Render() const override 
+		{
+		}
+
+		FPSCounterComponent(GameObject* pOwner) : ObjectComponent(pOwner), m_smoothDelta{0.f}, m_FPS{}
 		{}
-		virtual ~FPSCounterComponent() = default;
+		~FPSCounterComponent() = default;
 		FPSCounterComponent(const FPSCounterComponent& other) = delete;
 		FPSCounterComponent(FPSCounterComponent&& other) = delete;
 		FPSCounterComponent& operator=(const FPSCounterComponent& other) = delete;
@@ -53,5 +56,6 @@ namespace dae
 	private:
 
 		float m_smoothDelta;
+		float m_FPS;
 	};
 }

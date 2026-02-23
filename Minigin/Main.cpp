@@ -21,12 +21,12 @@ static void load()
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
 
 	auto go = std::make_unique<dae::GameObject>();
-	auto gor = std::make_unique<dae::RenderComponent>("background.png");
+	auto gor = std::make_unique<dae::RenderComponent>(go.get(), "background.png");
 	go.get()->AddComponent(std::move(gor));
 	scene.Add(std::move(go));
 
 	go = std::make_unique<dae::GameObject>();
-	gor = std::make_unique<dae::RenderComponent>("logo.png");
+	gor = std::make_unique<dae::RenderComponent>(go.get(), "logo.png");
 	go.get()->AddComponent(std::move(gor));
 
 	go->SetPosition(358, 180);
@@ -34,17 +34,21 @@ static void load()
 
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto to = std::make_unique<dae::GameObject>();
-	auto tc = std::make_unique<dae::TextComponent>("Dae Assignment Alexander", font);
+	auto tc = std::make_unique<dae::TextComponent>(to.get(),"Dae Assignment Alexander", font);
+	auto tor = std::make_unique<dae::RenderComponent>(to.get());
 	tc->SetColor({ 255, 255, 0, 255 });
-	tc->SetPosition(292, 20);
 	to.get()->AddComponent(std::move(tc));
+	to.get()->AddComponent(std::move(tor));
+	to->SetPosition(292, 20);
 	scene.Add(std::move(to));
 
 	auto fpso = std::make_unique<dae::GameObject>();
-	auto fpsc = std::make_unique<dae::FPSCounterComponent>("FPS", font);
-	fpsc->SetColor({ 255, 255, 0, 255 });
-	fpsc->SetPosition(50, 20);
+	auto fpsc = std::make_unique<dae::FPSCounterComponent>(fpso.get());
+	auto fpst = std::make_unique<dae::TextComponent>(fpso.get(), "FPS", font);
+	auto fpsr = std::make_unique<dae::RenderComponent>(fpso.get());
 	fpso.get()->AddComponent(std::move(fpsc));
+	fpso.get()->AddComponent(std::move(fpst));
+	fpso.get()->AddComponent(std::move(fpsr));
 	
 
 

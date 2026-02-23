@@ -4,10 +4,6 @@
 #include "Renderer.h"
 
 
-bool dae::GameObject::HasComponentOfName(const std::string& name) const
-{
-	return GetComponentByName(name) != nullptr;
-}
 
 dae::GameObject::~GameObject() = default;
 
@@ -21,18 +17,6 @@ void dae::GameObject::Update()
 	}
 }
 
-dae::ObjectComponent* dae::GameObject::GetComponentByName(const std::string& name) const
-{
-	for (const auto& component : m_Components)
-	{
-		auto compPtr = component.get();
-		if (compPtr->GetName() == name)
-		{
-			return compPtr;
-		}
-	}
-	return nullptr;
-}
 
 
 void dae::GameObject::Render() const

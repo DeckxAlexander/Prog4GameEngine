@@ -8,7 +8,7 @@ namespace dae
 {
 	class Font;
 	class Texture2D;
-	class TextComponent : public ObjectComponent
+	class TextComponent final : public ObjectComponent
 	{
 	public:
 		void Update() override;
@@ -18,8 +18,8 @@ namespace dae
 		void SetPosition(float x, float y) override;
 		void SetColor(const SDL_Color& color);
 
-		TextComponent(const std::string& text, std::shared_ptr<Font> font, const SDL_Color& color = { 255, 255, 255, 255 }, const std::string& componentName = "textBox");
-		virtual ~TextComponent() = default;
+		TextComponent(GameObject* pOwner, const std::string& text, std::shared_ptr<Font> font, const SDL_Color& color = { 255, 255, 255, 255 });
+		~TextComponent() = default;
 		TextComponent(const TextComponent& other) = delete;
 		TextComponent(TextComponent&& other) = delete;
 		TextComponent& operator=(const TextComponent& other) = delete;
@@ -30,6 +30,5 @@ namespace dae
 		SDL_Color m_color{ 255, 255, 255, 255 };
 		Transform m_transform{};
 		std::shared_ptr<Font> m_font{};
-		std::shared_ptr<Texture2D> m_textTexture{};
 	};
 }

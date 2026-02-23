@@ -11,8 +11,14 @@ namespace dae
 	class Texture2D;
 	class GameObject final
 	{
+	private:
+
 		Transform m_transform{};
 		std::vector<std::unique_ptr<ObjectComponent>> m_Components{};
+		bool m_MarkedForDelete{false};
+
+
+
 	public:
 		void Update();
 		void Render() const;
@@ -26,18 +32,17 @@ namespace dae
 
 
 
-		ObjectComponent* GetComponentByName(const std::string& name) const;
+
 		template <typename T>
-		ObjectComponent* GetComponentByType() const
+		T* GetComponentByType() const
 		{
 			static_assert(std::is_base_of<ObjectComponent, T>::value, "Type must derive from ObjectComponent");
 
 			for (const auto& component : m_Components) 
 			{
-				ObjectComponent& compRef = *component.get();
-				if (typeid(compRef) == typeid(T))
+				if (auto compTarget = dynamic_cast<T*>(component.get()))
 				{
-					return component.get();
+					return compTarget;
 				}
 			}
 
@@ -45,7 +50,6 @@ namespace dae
 		}
 
 
-		bool HasComponentOfName(const std::string& name) const;
 
 		template <typename T>
 		bool HasComponentOfType() const 
@@ -54,6 +58,12 @@ namespace dae
 
 			return GetComponentByType<T>() != nullptr;
 		}
+
+
+		//Deletion
+		void MarkForDelete() { m_MarkedForDelete = true; }
+		bool IsMarkedForDelete() { return m_MarkedForDelete; }
+
 		
 
 		GameObject() = default;

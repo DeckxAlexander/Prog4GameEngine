@@ -5,25 +5,28 @@
 
 namespace dae
 {
-	class Texture2D;
+	class GameObject;
+
+
 	class ObjectComponent //Abstract class
 	{
+
+
 	protected:
 		//These variables are kept incase object has Render capabilities
-		std::string m_ComponentName;
-
+		GameObject* m_pOwner;
 		Transform m_transform{};
 	public:
 		virtual void Update() = 0;
 		virtual void Render() const = 0;
-
 		virtual void SetPosition(float x, float y) ;
 		void SetScale(float x, float y);
 
-		std::string GetName() const;
 
-		ObjectComponent(const std::string&	 componentName);
-		virtual ~ObjectComponent() = default; //!Q Can i do this?
+
+		GameObject* GetOwner();
+		ObjectComponent(GameObject* pOwner);
+		virtual ~ObjectComponent() = default;
 		ObjectComponent(const ObjectComponent& other) = delete;
 		ObjectComponent(ObjectComponent&& other) = delete;
 		ObjectComponent& operator=(const ObjectComponent& other) = delete;
