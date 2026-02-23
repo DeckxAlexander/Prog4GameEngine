@@ -17,22 +17,17 @@ namespace dae
 		std::vector<std::unique_ptr<ObjectComponent>> m_Components{};
 		bool m_MarkedForDelete{false};
 
-
+		GameObject* m_Parent;
+		std::vector<GameObject*> m_Children;
 
 	public:
 		void Update();
 		void Render() const;
-
-
 		void SetPosition(float x, float y);
 		void SetScale(float x, float y);
 		
 		void AddComponent(std::unique_ptr<ObjectComponent> component);
 		void RemoveComponent(const ObjectComponent& component);
-
-
-
-
 		template <typename T>
 		T* GetComponentByType() const
 		{
@@ -45,12 +40,8 @@ namespace dae
 					return compTarget;
 				}
 			}
-
 			return nullptr;
 		}
-
-
-
 		template <typename T>
 		bool HasComponentOfType() const 
 		{
@@ -64,7 +55,9 @@ namespace dae
 		void MarkForDelete() { m_MarkedForDelete = true; }
 		bool IsMarkedForDelete() { return m_MarkedForDelete; }
 
-		
+		//Parent/Child
+		void SetParent(GameObject* gameObject);
+
 
 		GameObject() = default;
 		~GameObject();

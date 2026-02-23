@@ -5,6 +5,32 @@
 
 
 
+void dae::GameObject::SetParent(GameObject* gameObject)
+{
+	if (gameObject->IsMarkedForDelete() || gameObject == this ||
+		std::find(m_Children.begin(), m_Children.end(), gameObject) != m_Children.end()) return;
+
+
+	if (m_Parent != nullptr) 
+	{
+		m_Parent->m_Children.erase(
+			std::remove(
+				m_Children.begin(),
+				m_Children.end(),
+				gameObject
+			),
+			m_Children.end()
+		);
+	}
+	m_Parent = gameObject;
+	if (gameObject != nullptr) m_Parent->m_Children.push_back(this);
+}
+
+
+
+
+
+
 dae::GameObject::~GameObject() = default;
 
 
