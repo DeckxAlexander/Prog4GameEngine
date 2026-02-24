@@ -9,6 +9,7 @@
 #include "SceneManager.h"
 #include "ResourceManager.h"
 #include "RenderComponent.h"
+#include "MovementComponent.h"
 #include "TextComponent.h"
 #include "Scene.h"
 #include "FPSCounterComponent.h"
@@ -50,9 +51,28 @@ static void load()
 	fpso.get()->AddComponent(std::move(fpst));
 	fpso.get()->AddComponent(std::move(fpsr));
 	
-
-
 	scene.Add(std::move(fpso));
+
+	go = std::make_unique<dae::GameObject>();
+	gor = std::make_unique<dae::RenderComponent>(go.get(), "logo.png");
+	auto gom = std::make_unique<dae::MovementComponent>(go.get());
+	gom.get()->SetCenterPosition(358, 180);
+	go.get()->AddComponent(std::move(gor));
+	go.get()->AddComponent(std::move(gom));
+	go.get()->SetScale(0.1f, 0.1f);
+
+	
+
+	auto child = std::make_unique<dae::GameObject>();
+	gor = std::make_unique<dae::RenderComponent>(child.get(), "logo.png");
+	gom = std::make_unique<dae::MovementComponent>(child.get());
+	child.get()->AddComponent(std::move(gor));
+	child.get()->AddComponent(std::move(gom));
+	child.get()->SetScale(0.1f, 0.1f);
+	child.get()->SetParent(go.get());
+
+	scene.Add(std::move(go));
+	scene.Add(std::move(child));
 
 
 }

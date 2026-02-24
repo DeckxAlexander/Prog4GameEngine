@@ -3,24 +3,39 @@
 
 namespace dae
 {
+	class GameObject;
 	class Transform final
 	{
 	public:
-		Transform() : m_position{0.f,0.f,0.f}, m_scale{1.f,1.f,1.f}
+		Transform(GameObject* pOwner) : m_pOwner{ pOwner }, m_scale{1.f,1.f,1.f}, m_LocalPosition{ 0.f,0.f,0.f }, m_WorldPosition{ 0.f,0.f,0.f }, m_PositionIsDirty{true}
 		{
 		}
 
-		const glm::vec3& GetPosition() const { return m_position; }
-		void SetPosition(float x, float y, float z = 0);
-		void SetPosition(const glm::vec3& position);
+		
+
+		//void SetPosition(const glm::vec3& position);
 
 		void SetScale(float x, float y, float z=0);
 		void SetScale(const glm::vec3& scale);
 		const glm::vec3& GetScale() const { return m_scale; }
 
+		//New SceneGraph Positions
+		void SetLocalPosition(const glm::vec3& position);
+		void SetPosition(const glm::vec3& position) { SetLocalPosition(position); }; //SetPosition still used as SetLocalPosition
+		const glm::vec3& GetWorldPosition();
+		const glm::vec3& GetPosition() { return GetWorldPosition(); } //GetPosition still used as GetWorldPosition
+		void UpdateWorldPosition();
+		void SetPositionDirty() { m_PositionIsDirty = true; }
+
+
+
 	private:
-		glm::vec3 m_position;
+		GameObject* m_pOwner;
+
 		glm::vec3 m_scale; 
+		glm::vec3 m_LocalPosition;
+		glm::vec3 m_WorldPosition;
+		bool m_PositionIsDirty;
 
 	};
 }

@@ -3,17 +3,19 @@
 #include "ResourceManager.h"
 #include "Renderer.h"
 
+dae::GameObject::GameObject() : m_pParent{ nullptr }, m_transform{ this }, m_Components{}
+{
+}
 
-
-void dae::GameObject::SetParent(GameObject* gameObject)
+void dae::GameObject::SetParent(GameObject* gameObject, bool keepWorldPosition)
 {
 	if (gameObject->IsMarkedForDelete() || gameObject == this ||
 		std::find(m_Children.begin(), m_Children.end(), gameObject) != m_Children.end()) return;
 
 
-	if (m_Parent != nullptr) 
+	if (m_pParent != nullptr) //Remove child from previous parent
 	{
-		m_Parent->m_Children.erase(
+		m_pParent->m_Children.erase(
 			std::remove(
 				m_Children.begin(),
 				m_Children.end(),
@@ -22,12 +24,24 @@ void dae::GameObject::SetParent(GameObject* gameObject)
 			m_Children.end()
 		);
 	}
-	m_Parent = gameObject;
-	if (gameObject != nullptr) m_Parent->m_Children.push_back(this);
+	m_pParent = gameObject;
+	if (gameObject != nullptr)
+	{ 
+		m_pParent->m_Children.push_back(this); 
+		if (keepWorldPosition) 
+		{
+			m_transform.SetLocalPosition(m_transform.GetWorldPosition() - gameObject->GetWorldPosition());
+		}
+		m_transform.SetPositionDirty();
+	}
+	else 
+	{
+		m_transform.SetLocalPosition(m_transform.GetWorldPosition());
+	}
+
+
+
 }
-
-
-
 
 
 
@@ -55,25 +69,19 @@ void dae::GameObject::Render() const
 	}
 }
 
-
 void dae::GameObject::SetPosition(float x, float y)
 {
-	m_transform.SetPosition(x, y, 0.0f);
-	for (const auto& component : m_Components)
-	{
-		component.get()->SetPosition(x, y);
-	}
+	m_transform.SetPosition({ x, y, 0.0f });
+
 
 }
 
 void dae::GameObject::SetScale(float x, float y)
 {
 	m_transform.SetScale(x, y, 1.0f);
-	for (const auto& component : m_Components)
-	{
-		component.get()->SetScale(x, y);
-	}
+
 }
+
 
 void dae::GameObject::AddComponent(std::unique_ptr<ObjectComponent> component)
 {

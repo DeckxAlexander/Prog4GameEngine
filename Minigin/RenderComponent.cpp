@@ -1,6 +1,7 @@
 #include "RenderComponent.h"
 #include "ResourceManager.h"
 #include "Renderer.h"
+#include "GameObject.h"
 
 
 void dae::RenderComponent::Update()
@@ -11,8 +12,8 @@ void dae::RenderComponent::Update()
 void dae::RenderComponent::Render() const
 {
 	if (m_texture == nullptr) return;
-	const auto& pos = m_transform.GetPosition();
-	const auto& scale = m_transform.GetScale();
+	const auto& pos = m_pOwner->GetWorldPosition();
+	const auto& scale = m_pOwner->GetScale();
 	Renderer::GetInstance().RenderTexture(*m_texture, pos.x, pos.y, scale.x, scale.y );
 }
 

@@ -47,10 +47,7 @@ void dae::TextComponent::SetText(const std::string& text)
 	m_needsUpdate = true;
 }
 
-void dae::TextComponent::SetPosition(const float x, const float y)
-{
-	m_transform.SetPosition(x, y);
-}
+
 
 void dae::TextComponent::SetColor(const SDL_Color& color)
 { 

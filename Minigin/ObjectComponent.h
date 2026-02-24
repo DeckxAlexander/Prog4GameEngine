@@ -15,12 +15,9 @@ namespace dae
 	protected:
 		//These variables are kept incase object has Render capabilities
 		GameObject* m_pOwner;
-		Transform m_transform{};
 	public:
 		virtual void Update() = 0;
 		virtual void Render() const = 0;
-		virtual void SetPosition(float x, float y) ;
-		void SetScale(float x, float y);
 
 
 
