@@ -7,9 +7,19 @@ dae::GameObject::GameObject() : m_transform{ this }, m_Components{}, m_pParent{ 
 {
 }
 
+void dae::GameObject::MarkForDelete()
+{
+	m_MarkedForDelete = true; 
+	for(auto child : m_Children) //Detach Children when marked for delete
+	{
+		child->SetParent(nullptr);
+	}
+
+}
+
 void dae::GameObject::SetParent(GameObject* gameObject, bool keepWorldPosition)
 {
-	if (gameObject->IsMarkedForDelete() || gameObject == this ||
+	if (gameObject == this ||
 		std::find(m_Children.begin(), m_Children.end(), gameObject) != m_Children.end()) return;
 
 
@@ -17,13 +27,14 @@ void dae::GameObject::SetParent(GameObject* gameObject, bool keepWorldPosition)
 	{
 		m_pParent->m_Children.erase(
 			std::remove(
-				m_Children.begin(),
-				m_Children.end(),
+				m_pParent->m_Children.begin(),
+				m_pParent->m_Children.end(),
 				gameObject
 			),
-			m_Children.end()
+			m_pParent->m_Children.end()
 		);
 	}
+
 	m_pParent = gameObject;
 	if (gameObject != nullptr)
 	{ 

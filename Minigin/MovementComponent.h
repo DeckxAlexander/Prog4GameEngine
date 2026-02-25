@@ -26,6 +26,7 @@ namespace dae
 
 
 		MovementComponent(GameObject* pOwner);
+		MovementComponent(GameObject* pOwner, float speed, float radius);
 		~MovementComponent() = default;
 		MovementComponent(const MovementComponent& other) = delete;
 		MovementComponent(MovementComponent&& other) = delete;

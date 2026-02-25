@@ -30,7 +30,7 @@ namespace dae
 			float fpsRounded = std::roundf((fps) * 10.f) / 10.f;
 
 
-			if (fpsRounded >= m_FPS+0.3f || fpsRounded <= m_FPS -0.3f)
+			if (fpsRounded >= m_FPS+0.2f || fpsRounded <= m_FPS -0.2f)
 			{
 				m_FPS = fpsRounded;
 				std::stringstream ss;

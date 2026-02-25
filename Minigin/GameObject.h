@@ -29,6 +29,7 @@ namespace dae
 
 		const glm::vec3& GetWorldPosition() { return m_transform.GetWorldPosition(); }
 		const glm::vec3& GetScale() { return m_transform.GetScale(); }
+		const std::vector<GameObject*>& GetChildren() { return m_Children; }
 
 		
 		void AddComponent(std::unique_ptr<ObjectComponent> component);
@@ -57,7 +58,7 @@ namespace dae
 
 
 		//Deletion
-		void MarkForDelete() { m_MarkedForDelete = true; }
+		void MarkForDelete();
 		bool IsMarkedForDelete() { return m_MarkedForDelete; }
 
 		//Parent/Child

@@ -54,26 +54,26 @@ static void load()
 	scene.Add(std::move(fpso));
 
 	go = std::make_unique<dae::GameObject>();
-	gor = std::make_unique<dae::RenderComponent>(go.get(), "logo.png");
-	auto gom = std::make_unique<dae::MovementComponent>(go.get());
-	gom.get()->SetCenterPosition(358, 180);
+	gor = std::make_unique<dae::RenderComponent>(go.get(), "Bomb.png");
+	auto gom = std::make_unique<dae::MovementComponent>(go.get(), 5.f, 25.f);
+	gom.get()->SetCenterPosition(250, 100);
 	go.get()->AddComponent(std::move(gor));
 	go.get()->AddComponent(std::move(gom));
-	go.get()->SetScale(0.1f, 0.1f);
 
 	
 
 	auto child = std::make_unique<dae::GameObject>();
-	gor = std::make_unique<dae::RenderComponent>(child.get(), "logo.png");
-	gom = std::make_unique<dae::MovementComponent>(child.get());
+	gor = std::make_unique<dae::RenderComponent>(child.get(), "Bomberman.png");
+	gom = std::make_unique<dae::MovementComponent>(child.get(), -10.f, 50.f);
 	child.get()->AddComponent(std::move(gor));
 	child.get()->AddComponent(std::move(gom));
-	child.get()->SetScale(0.1f, 0.1f);
 	child.get()->SetParent(go.get());
+
 
 	scene.Add(std::move(go));
 	scene.Add(std::move(child));
 
+	
 
 }
 
