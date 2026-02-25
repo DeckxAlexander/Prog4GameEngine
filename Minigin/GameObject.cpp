@@ -3,7 +3,7 @@
 #include "ResourceManager.h"
 #include "Renderer.h"
 
-dae::GameObject::GameObject() : m_pParent{ nullptr }, m_transform{ this }, m_Components{}
+dae::GameObject::GameObject() : m_transform{ this }, m_Components{}, m_pParent{ nullptr }, m_Children{}
 {
 }
 
