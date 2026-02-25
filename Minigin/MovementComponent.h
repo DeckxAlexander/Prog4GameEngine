@@ -10,7 +10,6 @@ namespace dae
 	class MovementComponent final : public ObjectComponent
 	{
 	private:
-		bool m_Rotate;
 		float m_Angle;
 		float m_Speed;
 		float m_Radius;

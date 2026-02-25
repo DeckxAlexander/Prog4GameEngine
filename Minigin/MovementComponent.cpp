@@ -3,7 +3,7 @@
 #include "TimeManager.h"
 
 
-dae::MovementComponent::MovementComponent(GameObject* pOwner) : ObjectComponent(pOwner), m_Rotate{ true }, m_Angle{}, m_Speed{ 10.f }, m_Radius{ 50.f }, m_Center{}
+dae::MovementComponent::MovementComponent(GameObject* pOwner) : ObjectComponent(pOwner), m_Angle{}, m_Speed{ 10.f }, m_Radius{ 50.f }, m_Center{}
 {
 }
 
