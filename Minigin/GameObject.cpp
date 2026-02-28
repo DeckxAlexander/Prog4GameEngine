@@ -35,10 +35,10 @@ void dae::GameObject::SetParent(GameObject* gameObject, bool keepWorldPosition)
 		);
 	}
 
-	m_pParent = gameObject;
+
 	if (gameObject != nullptr)
 	{ 
-		m_pParent->m_Children.push_back(this); 
+		gameObject->m_Children.push_back(this);
 		if (keepWorldPosition) 
 		{
 			m_transform.SetLocalPosition(m_transform.GetWorldPosition() - gameObject->GetWorldPosition());
@@ -49,7 +49,7 @@ void dae::GameObject::SetParent(GameObject* gameObject, bool keepWorldPosition)
 	{
 		m_transform.SetLocalPosition(m_transform.GetWorldPosition());
 	}
-
+	m_pParent = gameObject;
 
 
 }
@@ -96,7 +96,9 @@ void dae::GameObject::SetScale(float x, float y)
 
 void dae::GameObject::AddComponent(std::unique_ptr<ObjectComponent> component)
 {
+	component.get()->m_pOwner = this;
 	m_Components.emplace_back(std::move(component));
+	
 }
 
 

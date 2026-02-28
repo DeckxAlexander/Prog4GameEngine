@@ -25,7 +25,7 @@ namespace dae
 		const glm::vec3& GetWorldPosition();
 		const glm::vec3& GetPosition() { return GetWorldPosition(); } //GetPosition still used as GetWorldPosition
 		void UpdateWorldPosition();
-		void SetPositionDirty() { m_PositionIsDirty = true; }
+		void SetPositionDirty();
 
 
 

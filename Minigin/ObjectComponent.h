@@ -16,6 +16,7 @@ namespace dae
 		//These variables are kept incase object has Render capabilities
 		GameObject* m_pOwner;
 	public:
+		friend class GameObject;
 		virtual void Update() = 0;
 		virtual void Render() const = 0;
 

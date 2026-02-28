@@ -7,7 +7,7 @@ dae::MovementComponent::MovementComponent(GameObject* pOwner) : MovementComponen
 {
 }
 
-dae::MovementComponent::MovementComponent(GameObject* pOwner, float speed, float radius) : ObjectComponent(pOwner), m_Angle{}, m_Speed{ speed }, m_Radius{ radius }, m_Center{}
+dae::MovementComponent::MovementComponent(GameObject* pOwner, float speed, float radius) : ObjectComponent(pOwner), m_Angle{}, m_Speed{ speed }, m_Radius{ radius }
 {
 }
 
@@ -20,8 +20,8 @@ void dae::MovementComponent::Update()
 	glm::vec3 position{};
 
 
-	position.x = m_Center.x + std::cos(m_Angle) * m_Radius;
-	position.y = m_Center.y + std::sin(m_Angle) * m_Radius;
+	position.x = std::cos(m_Angle) * m_Radius;
+	position.y = std::sin(m_Angle) * m_Radius;
 
 	m_pOwner->SetPosition(position.x, position.y);
 }

@@ -28,6 +28,17 @@ const glm::vec3& dae::Transform::GetWorldPosition()
 
 }
 
+void dae::Transform::SetPositionDirty() 
+{
+	m_PositionIsDirty = true;
+
+	for (GameObject* child : m_pOwner->GetChildren()) 
+	{
+		child->GetTransform().SetPositionDirty();
+	}
+
+}
+
 void dae::Transform::UpdateWorldPosition() 
 {
 	if (m_PositionIsDirty) 

@@ -53,12 +53,15 @@ static void load()
 	
 	scene.Add(std::move(fpso));
 
+	auto pivot = std::make_unique<dae::GameObject>();
+	pivot.get()->SetPosition(250, 100);
+
 	go = std::make_unique<dae::GameObject>();
 	gor = std::make_unique<dae::RenderComponent>(go.get(), "Bomb.png");
 	auto gom = std::make_unique<dae::MovementComponent>(go.get(), 5.f, 25.f);
-	gom.get()->SetCenterPosition(250, 100);
 	go.get()->AddComponent(std::move(gor));
 	go.get()->AddComponent(std::move(gom));
+	go.get()->SetParent(pivot.get());
 
 	
 
@@ -69,6 +72,7 @@ static void load()
 	child.get()->AddComponent(std::move(gom));
 	child.get()->SetParent(go.get());
 
+	scene.Add(std::move(pivot));
 
 	scene.Add(std::move(go));
 	scene.Add(std::move(child));

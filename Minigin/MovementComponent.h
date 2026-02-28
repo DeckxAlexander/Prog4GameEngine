@@ -14,16 +14,11 @@ namespace dae
 		float m_Speed;
 		float m_Radius;
 
-
-		glm::vec3 m_Center;
 		
 
 	public:
 		virtual void Update() override;
 		virtual void Render() const override;
-		void SetCenterPosition(float x, float y) { m_Center = { x,y,0.f }; }
-		void SetCenterPosition(const glm::vec3& position) { m_Center = position; }
-
 
 		MovementComponent(GameObject* pOwner);
 		MovementComponent(GameObject* pOwner, float speed, float radius);
