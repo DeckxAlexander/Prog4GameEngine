@@ -4,8 +4,10 @@
 #include <backends/imgui_impl_sdlrenderer3.h>
 #include <cstring>
 #include <iostream>
+#include <chrono>
 #include "Renderer.h"
 #include "SceneManager.h"
+#include "ThrashCacheManager.h"
 #include "Texture2D.h"
 
 
@@ -51,8 +53,9 @@ void dae::Renderer::Render() const
 	ImGui_ImplSDL3_NewFrame();
 	ImGui::NewFrame();
 
-	ImGui::ShowDemoWindow(); // For demonstration purposes, do not keep this in your engine
-
+	//ImGui::ShowDemoWindow(); // For demonstration purposes, do not keep this in your engine
+    RenderImGui();
+    
 	ImGui::Render();
 
 	const auto& color = GetBackgroundColor();
@@ -65,6 +68,60 @@ void dae::Renderer::Render() const
 	SDL_RenderPresent(m_renderer);
 
 }
+
+void dae::Renderer::RenderImGui() const
+{
+
+
+    ImGui::Begin("Exercise 2");
+
+    // Samples input
+    ImGui::PushItemWidth(120);
+    ImGui::InputInt("##samples", &m_samples);
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    ImGui::Text("# samples");
+
+    m_samples = std::max(1, m_samples);
+
+    // Button 1
+    if (ImGui::Button("Thrash the cache with GameObject3D"))
+    {
+
+        m_Timings3D.clear();
+
+        m_Timings3D = ThrashCacheManager::ThrashCache(m_samples);
+
+
+    }
+
+    // Graph
+    if (!m_Timings3D.empty())
+    {
+        ImGui::PlotLines("##plot3D",m_Timings3D.data(),static_cast<int>(m_Timings3D.size()),0,nullptr,0.0f,
+			*std::max_element(m_Timings3D.begin(), m_Timings3D.end()),ImVec2(0, 100)
+        );
+    }
+
+    // Button 2
+    if (ImGui::Button("Thrash the cache with GameObject3DAlt"))
+    {
+		m_Timings3DAlt.clear();
+		m_Timings3DAlt = ThrashCacheManager::ThrashCacheAlt(m_samples);
+    }
+
+    if (!m_Timings3DAlt.empty())
+    {
+        ImGui::PlotLines("##plot3DAlt",m_Timings3DAlt.data(), static_cast<int>(m_Timings3DAlt.size()),0,nullptr,0.0f,
+            *std::max_element(m_Timings3DAlt.begin(), m_Timings3DAlt.end()),ImVec2(0, 100));
+    }
+
+    ImGui::End();
+
+
+
+}
+
 
 void dae::Renderer::Destroy()
 {

@@ -27,7 +27,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   "Minigin/TextComponent.cpp"
   Minigin/Texture2D.cpp
   Minigin/Transform.cpp
- "Minigin/TimeManager.h" "Minigin/ObjectComponent.h" "Minigin/ObjectComponent.cpp" "Minigin/FPSCounterComponent.h" "Minigin/RenderComponent.h" "Minigin/RenderComponent.cpp" "Minigin/MovementComponent.h" "Minigin/MovementComponent.cpp")
+ "Minigin/TimeManager.h" "Minigin/ObjectComponent.h" "Minigin/ObjectComponent.cpp" "Minigin/FPSCounterComponent.h" "Minigin/RenderComponent.h" "Minigin/RenderComponent.cpp" "Minigin/MovementComponent.h" "Minigin/MovementComponent.cpp" "Minigin/ThrashCacheManager.h")
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
@@ -127,12 +127,26 @@ add_library(imgui STATIC
   ${imgui_SOURCE_DIR}/imgui_demo.cpp
   ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp
   ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp
-)
+ "Minigin/ThrashCacheManager.h")
 
 target_include_directories(imgui PUBLIC ${imgui_SOURCE_DIR} ${sdl3_SOURCE_DIR}/include)
 target_link_libraries(imgui PUBLIC SDL3::SDL3)
 # enable c++20 features
 target_compile_features(imgui PUBLIC cxx_std_20)
+target_compile_definitions(imgui PUBLIC IMGUI_DEFINE_MATH_OPERATORS)
+
+# imgui-plot
+FetchContent_Declare(
+    imgui_plot
+    GIT_REPOSITORY https://github.com/soulthreads/imgui-plot.git
+    GIT_TAG master
+    EXCLUDE_FROM_ALL
+)
+FetchContent_MakeAvailable(imgui_plot)
+target_link_libraries(imgui_plot PUBLIC imgui)
+
+
+
 
 
 # Add steam if available
@@ -157,6 +171,7 @@ target_link_libraries("${TARGET_NAME}" PUBLIC
   SDL3_ttf::SDL3_ttf
   glm::glm
   imgui
+  imgui_plot
   ${VLD_LIBRARIES}
 )
 

@@ -16,6 +16,7 @@ namespace dae
 		Transform m_transform;
 		std::vector<std::unique_ptr<ObjectComponent>> m_Components;
 		bool m_MarkedForDelete{false};
+
 		GameObject* m_pParent;
 		std::vector<GameObject*> m_Children;
 
@@ -24,7 +25,6 @@ namespace dae
 		void Render() const;
 		void SetPosition(float x, float y); //MARK FOR CHANGE
 		void SetScale(float x, float y); //MARK FOR CHANGE
-		
 
 		const glm::vec3& GetWorldPosition() { return m_transform.GetWorldPosition(); }
 		const glm::vec3& GetScale() { return m_transform.GetScale(); }
