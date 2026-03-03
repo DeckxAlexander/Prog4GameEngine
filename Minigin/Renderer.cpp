@@ -36,8 +36,6 @@ void dae::Renderer::Init(SDL_Window* window)
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 #if __EMSCRIPTEN__
-	// For an Emscripten build we are disabling file-system access, so let's not attempt to do a fopen() of the imgui.ini file.
-	// You may manually call LoadIniSettingsFromMemory() to load settings from your own storage.
 	io.IniFilename = NULL;
 #endif
 
@@ -73,7 +71,7 @@ void dae::Renderer::RenderImGui() const
 {
 
 
-    ImGui::Begin("Exercise 2");
+    ImGui::Begin("Cache Manager");
 
     // Samples input
     ImGui::PushItemWidth(120);
@@ -84,18 +82,15 @@ void dae::Renderer::RenderImGui() const
 
     m_samples = std::max(1, m_samples);
 
-    // Button 1
+    //Thrash Cache 
     if (ImGui::Button("Thrash the cache with GameObject3D"))
     {
 
         m_Timings3D.clear();
-
         m_Timings3D = ThrashCacheManager::ThrashCache(m_samples);
 
 
     }
-
-    // Graph
     if (!m_Timings3D.empty())
     {
         ImGui::PlotLines("##plot3D",m_Timings3D.data(),static_cast<int>(m_Timings3D.size()),0,nullptr,0.0f,
@@ -103,7 +98,7 @@ void dae::Renderer::RenderImGui() const
         );
     }
 
-    // Button 2
+	//Thrash Cache Alt
     if (ImGui::Button("Thrash the cache with GameObject3DAlt"))
     {
 		m_Timings3DAlt.clear();
@@ -117,9 +112,6 @@ void dae::Renderer::RenderImGui() const
     }
 
     ImGui::End();
-
-
-
 }
 
 

@@ -31,7 +31,7 @@ namespace dae
 
     };
 
-	class ThrashCacheManager final : public Singleton<ThrashCacheManager>
+	class ThrashCacheManager final 
 	{
 	public:
 		static std::vector<float> ThrashCache(int samples) 
@@ -81,10 +81,6 @@ namespace dae
             delete[] arr;
             return timesList;
         }
-
-	private:
-		friend class Singleton<ThrashCacheManager>;
-		ThrashCacheManager() = default;
 	};
 
 
