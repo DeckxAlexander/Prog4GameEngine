@@ -1,5 +1,6 @@
 ﻿#include <stdexcept>
 #include <imgui.h>
+#include <imgui_plot.h>
 #include <backends/imgui_impl_sdl3.h>
 #include <backends/imgui_impl_sdlrenderer3.h>
 #include <cstring>
@@ -51,8 +52,8 @@ void dae::Renderer::Render() const
 	ImGui_ImplSDL3_NewFrame();
 	ImGui::NewFrame();
 
-	//ImGui::ShowDemoWindow(); // For demonstration purposes, do not keep this in your engine
-    RenderImGui();
+    RenderImGuiGameObject(); 
+    RenderImGuiInt();
     
 	ImGui::Render();
 
@@ -67,49 +68,161 @@ void dae::Renderer::Render() const
 
 }
 
-void dae::Renderer::RenderImGui() const
+void dae::Renderer::RenderImGuiGameObject() const
 {
-
-
-    ImGui::Begin("Cache Manager");
+    ImGui::Begin("Exercise 2");
 
     // Samples input
     ImGui::PushItemWidth(120);
-    ImGui::InputInt("##samples", &m_samples);
+    ImGui::InputInt("##samples", &m_Samples);
     ImGui::PopItemWidth();
     ImGui::SameLine();
     ImGui::Text("# samples");
 
-    m_samples = std::max(1, m_samples);
+    m_Samples = std::max(1, m_Samples);
 
     //Thrash Cache 
     if (ImGui::Button("Thrash the cache with GameObject3D"))
     {
 
         m_Timings3D.clear();
-        m_Timings3D = ThrashCacheManager::ThrashCache(m_samples);
+        m_Timings3D = ThrashCacheManager::ThrashCache(m_Samples);
 
 
-    }
-    if (!m_Timings3D.empty())
-    {
-        ImGui::PlotLines("##plot3D",m_Timings3D.data(),static_cast<int>(m_Timings3D.size()),0,nullptr,0.0f,
-			*std::max_element(m_Timings3D.begin(), m_Timings3D.end()),ImVec2(0, 100)
-        );
     }
 
 	//Thrash Cache Alt
     if (ImGui::Button("Thrash the cache with GameObject3DAlt"))
     {
 		m_Timings3DAlt.clear();
-		m_Timings3DAlt = ThrashCacheManager::ThrashCacheAlt(m_samples);
+		m_Timings3DAlt = ThrashCacheManager::ThrashCacheAlt(m_Samples);
     }
 
-    if (!m_Timings3DAlt.empty())
+
+    //Plot
+    if (!m_Timings3D.empty() || !m_Timings3DAlt.empty())
     {
-        ImGui::PlotLines("##plot3DAlt",m_Timings3DAlt.data(), static_cast<int>(m_Timings3DAlt.size()),0,nullptr,0.0f,
-            *std::max_element(m_Timings3DAlt.begin(), m_Timings3DAlt.end()),ImVec2(0, 100));
+        const float* y_data[2];
+        std::vector<float> x_values;
+        ImU32 colors[2];
+
+        int lineCount = 0;
+        int dataCount = 0;
+        float maxY = 0.0f;
+
+        //Get Y values
+        if (!m_Timings3D.empty())
+        {
+            y_data[lineCount] = m_Timings3D.data();
+            colors[lineCount] = ImColor(0, 255, 0);
+            dataCount = static_cast<int>(m_Timings3D.size());
+            maxY = *std::max_element(m_Timings3D.begin(), m_Timings3D.end());
+            lineCount++;
+        }
+
+        if (!m_Timings3DAlt.empty())
+        {
+            y_data[lineCount] = m_Timings3DAlt.data();
+            colors[lineCount] = ImColor(255, 0, 0);
+            int altSize = static_cast<int>(m_Timings3DAlt.size());
+            dataCount = std::max(dataCount, altSize);
+            float altMax = *std::max_element(m_Timings3DAlt.begin(), m_Timings3DAlt.end());
+            maxY = std::max(maxY, altMax);
+            lineCount++;
+        }
+
+        //Get X values
+        x_values.resize(dataCount);
+        for (int i = 0; i < dataCount; ++i)
+        {
+            x_values[i] = std::pow(2.0f, static_cast<float>(i));
+        }
+
+        //Config
+        float plotWidth = ImGui::GetContentRegionAvail().x;
+        ImGui::PlotConfig conf;
+        conf.values.xs = x_values.data();         
+        conf.values.ys_list = y_data;
+        conf.values.ys_count = lineCount;
+        conf.values.count = dataCount;
+        conf.values.colors = colors;
+
+        conf.scale.min = 0.0f;
+        conf.scale.max = maxY;
+
+        conf.tooltip.show = true;
+        conf.grid_x.show = true;
+        conf.grid_y.show = true;
+
+        conf.line_thickness = 2.0f;
+        conf.frame_size = ImVec2(plotWidth, 150);
+
+        ImGui::Plot("Performance", conf);
+
     }
+
+    ImGui::End();
+}
+
+void dae::Renderer::RenderImGuiInt() const
+{
+    ImGui::Begin("Exercise 1");
+
+    // Samples input
+    ImGui::PushItemWidth(120);
+    ImGui::InputInt("##samplesInt", &m_SamplesInt);
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    ImGui::Text("# samples");
+
+    m_SamplesInt = std::max(1, m_SamplesInt);
+
+    //Thrash Cache 
+    if (ImGui::Button("Thrash the cache with GameObject3D"))
+    {
+
+        m_TimingsInt.clear();
+        m_TimingsInt = ThrashCacheManager::ThrashCacheInt(m_SamplesInt);
+
+
+    }
+    if (!m_TimingsInt.empty())
+    {
+        const float* y_data[1]= { m_TimingsInt.data() };
+        std::vector<float> x_values;
+        ImU32 colors[1] = { ImColor(0, 255, 0) };
+        int dataCount = static_cast<int>(m_TimingsInt.size());
+        float maxY = *std::max_element(m_TimingsInt.begin(), m_TimingsInt.end());
+
+        //Get X values
+        x_values.resize(dataCount);
+        for (int i = 0; i < dataCount; ++i)
+        {
+            x_values[i] = std::pow(2.0f, static_cast<float>(i));
+        }
+
+        //Config
+        float plotWidth = ImGui::GetContentRegionAvail().x;
+        ImGui::PlotConfig conf;
+        conf.values.xs = x_values.data();
+        conf.values.ys_list = y_data;
+        conf.values.ys_count = 1;
+        conf.values.count = dataCount;
+        conf.values.colors = colors;
+        conf.scale.min = 0.0f;
+        conf.scale.max = maxY;
+
+        conf.tooltip.show = true;
+        conf.grid_x.show = true;
+        conf.grid_y.show = true;
+
+        conf.line_thickness = 2.0f;
+        conf.frame_size = ImVec2(plotWidth, 150);
+
+        ImGui::Plot("Performance", conf);
+
+    }
+
 
     ImGui::End();
 }
