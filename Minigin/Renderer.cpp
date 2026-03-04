@@ -78,18 +78,58 @@ void dae::Renderer::RenderImGuiGameObject() const
     ImGui::PopItemWidth();
     ImGui::SameLine();
     ImGui::Text("# samples");
-
     m_Samples = std::max(1, m_Samples);
+
+    const float* combined_data[2];
+    std::vector<float> x_values;
+    ImU32 colors[2] = { ImColor(0, 255, 0), ImColor(255, 0, 0) };
+
+    int dataCount = 0;
+    float maxY = 0.0f;
+
+
+    //Config
+    float plotWidth = ImGui::GetContentRegionAvail().x;
+    ImGui::PlotConfig conf;
+
+    conf.values.colors = colors;
+    conf.scale.min = 0.0f;
+    conf.tooltip.show = true;
+    conf.grid_x.show = true;
+    conf.grid_y.show = true;
+    conf.line_thickness = 2.0f;
+    conf.frame_size = ImVec2(plotWidth, 150);
 
     //Thrash Cache 
     if (ImGui::Button("Thrash the cache with GameObject3D"))
     {
-
         m_Timings3D.clear();
         m_Timings3D = ThrashCacheManager::ThrashCache(m_Samples);
+    }
 
+
+    if (!m_Timings3D.empty())
+    {
+        const float* data[1] = { m_Timings3D.data() };
+        combined_data[0] = m_Timings3D.data();
+        dataCount = static_cast<int>(m_Timings3D.size());
+        maxY = *std::max_element(m_Timings3D.begin(), m_Timings3D.end());
+        x_values.resize(dataCount);
+        for (int i = 0; i < dataCount; ++i)
+        {
+            x_values[i] = std::pow(2.0f, static_cast<float>(i));
+        }
+        conf.values.xs = x_values.data();
+        conf.values.ys_list = data;
+        conf.values.ys_count = 1;
+        conf.values.count = dataCount;
+        conf.scale.max = maxY;
+
+
+        ImGui::Plot("Graph 3D", conf);
 
     }
+
 
 	//Thrash Cache Alt
     if (ImGui::Button("Thrash the cache with GameObject3DAlt"))
@@ -98,71 +138,56 @@ void dae::Renderer::RenderImGuiGameObject() const
 		m_Timings3DAlt = ThrashCacheManager::ThrashCacheAlt(m_Samples);
     }
 
-
-    //Plot
-    if (!m_Timings3D.empty() || !m_Timings3DAlt.empty())
+    if (!m_Timings3DAlt.empty())
     {
-        const float* y_data[2];
-        std::vector<float> x_values;
-        ImU32 colors[2];
+        const float* data[1] = { m_Timings3DAlt.data() };
+        combined_data[1] = m_Timings3DAlt.data();
+        int altSize = static_cast<int>(m_Timings3DAlt.size());
+        dataCount = std::max(dataCount, altSize);
+        float altMax = *std::max_element(m_Timings3DAlt.begin(), m_Timings3DAlt.end());
+        maxY = std::max(maxY, altMax);
 
-        int lineCount = 0;
-        int dataCount = 0;
-        float maxY = 0.0f;
-
-        //Get Y values
-        if (!m_Timings3D.empty())
+        x_values.resize(altSize);
+        for (int i = 0; i < altSize; ++i)
         {
-            y_data[lineCount] = m_Timings3D.data();
-            colors[lineCount] = ImColor(0, 255, 0);
-            dataCount = static_cast<int>(m_Timings3D.size());
-            maxY = *std::max_element(m_Timings3D.begin(), m_Timings3D.end());
-            lineCount++;
+            x_values[i] = std::pow(2.0f, static_cast<float>(i));
         }
+        conf.values.xs = x_values.data();
+        conf.values.ys_list = data;
+        conf.values.ys_count = 1;
+        conf.values.count = altSize;
+        conf.scale.max = altMax;
+        ImGui::Plot("Graph Alt", conf);
 
-        if (!m_Timings3DAlt.empty())
-        {
-            y_data[lineCount] = m_Timings3DAlt.data();
-            colors[lineCount] = ImColor(255, 0, 0);
-            int altSize = static_cast<int>(m_Timings3DAlt.size());
-            dataCount = std::max(dataCount, altSize);
-            float altMax = *std::max_element(m_Timings3DAlt.begin(), m_Timings3DAlt.end());
-            maxY = std::max(maxY, altMax);
-            lineCount++;
-        }
+    }
 
-        //Get X values
+    if (!m_Timings3D.empty() && !m_Timings3DAlt.empty() )
+    {
+        ImGui::Text("Combined: ");
         x_values.resize(dataCount);
         for (int i = 0; i < dataCount; ++i)
         {
             x_values[i] = std::pow(2.0f, static_cast<float>(i));
         }
-
-        //Config
-        float plotWidth = ImGui::GetContentRegionAvail().x;
-        ImGui::PlotConfig conf;
-        conf.values.xs = x_values.data();         
-        conf.values.ys_list = y_data;
-        conf.values.ys_count = lineCount;
+        conf.values.xs = x_values.data();
+        conf.values.ys_list = combined_data;
+        conf.values.ys_count = 2;
         conf.values.count = dataCount;
-        conf.values.colors = colors;
-
-        conf.scale.min = 0.0f;
         conf.scale.max = maxY;
 
-        conf.tooltip.show = true;
-        conf.grid_x.show = true;
-        conf.grid_y.show = true;
-
-        conf.line_thickness = 2.0f;
-        conf.frame_size = ImVec2(plotWidth, 150);
-
-        ImGui::Plot("Performance", conf);
+        ImGui::Plot("Graph Combined", conf);
 
     }
 
+
+   
+        
+
+
     ImGui::End();
 }
+
+
 
 void dae::Renderer::RenderImGuiInt() const
 {
