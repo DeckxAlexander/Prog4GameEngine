@@ -16,16 +16,10 @@ namespace dae
 		SDL_Color m_clearColor{};
 
 
-		mutable int m_Samples{100};
-		mutable int m_SamplesInt{10};
-		mutable std::vector<float> m_TimingsInt{};
-		mutable std::vector<float> m_Timings3D{};
-		mutable std::vector<float> m_Timings3DAlt{};
 	public:
 		void Init(SDL_Window* window);
 		void Render() const;
-		void RenderImGuiGameObject() const;
-		void RenderImGuiInt() const;
+
 
 
 		void Destroy();

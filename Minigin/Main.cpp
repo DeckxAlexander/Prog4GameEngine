@@ -10,6 +10,7 @@
 #include "ResourceManager.h"
 #include "RenderComponent.h"
 #include "MovementComponent.h"
+#include "ThrashCacheComponent.h"
 #include "TextComponent.h"
 #include "Scene.h"
 #include "FPSCounterComponent.h"
@@ -77,8 +78,10 @@ static void load()
 	scene.Add(std::move(go));
 	scene.Add(std::move(child));
 
-	
-
+	auto Menu = std::make_unique<dae::GameObject>();
+	auto thr = std::make_unique<dae::ThrashCacheComponent>(Menu.get());
+	Menu.get()->AddComponent(std::move(thr));
+	scene.Add(std::move(Menu));
 }
 
 int main(int, char*[]) {
