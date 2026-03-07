@@ -1,5 +1,7 @@
 #include "ThrashCacheComponent.h"
 #include <imgui.h>
+#include <algorithm>
+#include <numeric>
 #include <imgui_plot.h>
 
 
@@ -231,17 +233,17 @@ void dae::ThrashCacheComponent::RenderImGuiInt() const
 
 std::vector<float> dae::ThrashCacheComponent::ThrashCache(int samples)
 {
-    std::vector<float> timesList;
-    timesList.resize(11);
+    std::vector<float> averageTimesList{};
+    averageTimesList.resize(11);
 
-    for (int index{  }; index < samples; index++)
+
+    GameObject3D* arr = new GameObject3D[1000000]{};
+    int yindex{};
+    for (int stepsize = 1; stepsize <= 1024; stepsize *= 2)
     {
-
-        int yIndex{};
-        GameObject3D* arr = new GameObject3D[1000000]{};
-        for (int stepsize = 1; stepsize <= 1024; stepsize *= 2)
+        std::vector<float> timesList;
+        for (int index{  }; index < samples; index++)
         {
-
             const auto start = std::chrono::high_resolution_clock::now();
             for (int i = 0; i < 1000000; i += stepsize)
             {
@@ -249,37 +251,38 @@ std::vector<float> dae::ThrashCacheComponent::ThrashCache(int samples)
             }
             const auto end = std::chrono::high_resolution_clock::now();
             const auto total = static_cast<float>(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count());
-
-
-            timesList[yIndex] += total;
-            yIndex++;
-
+            timesList.push_back(total);
         }
-        delete[] arr;
-    }
 
-    for (float& times : timesList)
-    {
-        times /= samples;
-        std::cout << times << std::endl;
-    }
 
-    return timesList;
+        std::sort(timesList.begin(), timesList.end());
+
+        timesList.erase(timesList.begin());
+        timesList.pop_back();
+        
+
+        averageTimesList[yindex] = std::accumulate(timesList.begin(), timesList.end(), 0.f) / static_cast<float>(samples);
+        std::cout << std::accumulate(timesList.begin(), timesList.end(), 0.f) / samples << std::endl;
+        yindex++;
+    }
+    delete[] arr;
+    return averageTimesList;
+
 }
 
 std::vector<float> dae::ThrashCacheComponent::ThrashCacheAlt(int samples) 
 {
-    std::vector<float> timesList;
-    timesList.resize(11);
+    std::vector<float> averageTimesList{};
+    averageTimesList.resize(11);
 
-    for (int index{}; index < samples; index++)
+
+    GameObject3DAlt* arr = new GameObject3DAlt[1000000]{};
+    int yindex{};
+    for (int stepsize = 1; stepsize <= 1024; stepsize *= 2)
     {
-
-        int yIndex{};
-        GameObject3DAlt* arr = new GameObject3DAlt[1000000]{};
-        for (int stepsize = 1; stepsize <= 1024; stepsize *= 2)
+        std::vector<float> timesList;
+        for (int index{  }; index < samples; index++)
         {
-
             const auto start = std::chrono::high_resolution_clock::now();
             for (int i = 0; i < 1000000; i += stepsize)
             {
@@ -287,39 +290,39 @@ std::vector<float> dae::ThrashCacheComponent::ThrashCacheAlt(int samples)
             }
             const auto end = std::chrono::high_resolution_clock::now();
             const auto total = static_cast<float>(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count());
-
-
-            timesList[yIndex] += total;
-            yIndex++;
-
+            timesList.push_back(total);
         }
 
-        delete[] arr;
-    }
 
-    for (float& times : timesList)
-    {
-        times /= samples;
-        std::cout << times << std::endl;
-    }
+        std::sort(timesList.begin(), timesList.end());
 
-    return timesList;
+        timesList.erase(timesList.begin());
+        timesList.pop_back();
+
+
+        averageTimesList[yindex] = std::accumulate(timesList.begin(), timesList.end(), 0.f) / static_cast<float>(samples);
+        std::cout << std::accumulate(timesList.begin(), timesList.end(), 0.f) / samples << std::endl;
+        yindex++;
+    }
+    delete[] arr;
+    return averageTimesList;
 }
 
 
 std::vector<float> dae::ThrashCacheComponent::ThrashCacheInt(int samples) 
 {
-    std::vector<float> timesList;
-    timesList.resize(11);
 
-    for (int index{}; index < samples; index++)
+    std::vector<float> averageTimesList{};
+    averageTimesList.resize(11);
+
+
+    int* arr = new int[1000000]{};
+    int yindex{};
+    for (int stepsize = 1; stepsize <= 1024; stepsize *= 2)
     {
-
-        int yIndex{};
-        int* arr = new int[1000000] {};
-        for (int stepsize = 1; stepsize <= 1024; stepsize *= 2)
+        std::vector<float> timesList;
+        for (int index{  }; index < samples; index++)
         {
-
             const auto start = std::chrono::high_resolution_clock::now();
             for (int i = 0; i < 1000000; i += stepsize)
             {
@@ -327,22 +330,23 @@ std::vector<float> dae::ThrashCacheComponent::ThrashCacheInt(int samples)
             }
             const auto end = std::chrono::high_resolution_clock::now();
             const auto total = static_cast<float>(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count());
-
-
-            timesList[yIndex] += total;
-            yIndex++;
-
+            timesList.push_back(total);
         }
-        delete[] arr;
-    }
 
-    for (float& times : timesList)
-    {
-        times /= samples;
-        std::cout << times << std::endl;
-    }
 
-    return timesList;
+        std::sort(timesList.begin(), timesList.end());
+
+        timesList.erase(timesList.begin());
+        timesList.pop_back();
+
+
+        averageTimesList[yindex] = std::accumulate(timesList.begin(), timesList.end(), 0.f) / static_cast<float>(samples);
+        std::cout << std::accumulate(timesList.begin(), timesList.end(), 0.f) / samples << std::endl;
+        yindex++;
+    }
+    delete[] arr;
+    return averageTimesList;
+
 }
 
 dae::ThrashCacheComponent::ThrashCacheComponent(GameObject* pOwner) : ObjectComponent(pOwner)
