@@ -14,6 +14,7 @@
 #include "TextComponent.h"
 #include "Scene.h"
 #include "FPSCounterComponent.h"
+#include "InputManager.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -82,6 +83,14 @@ static void load()
 	auto thr = std::make_unique<dae::ThrashCacheComponent>(Menu.get());
 	Menu.get()->AddComponent(std::move(thr));
 	scene.Add(std::move(Menu));
+
+	auto TestCMD = std::make_unique<TestCommand>();
+	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_B, dae::KeyState::Pressed, std::move(TestCMD));
+	//dae::InputManager::GetInstance().UnbindCommand(SDL_SCANCODE_B, dae::KeyState::Down);
+
+
+
+	
 }
 
 int main(int, char*[]) {
