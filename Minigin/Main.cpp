@@ -1,5 +1,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
+#include <Windows.h>
+#include <Xinput.h>
 
 #if _DEBUG && __has_include(<vld.h>)
 #include <vld.h>
@@ -15,6 +17,7 @@
 #include "Scene.h"
 #include "FPSCounterComponent.h"
 #include "InputManager.h"
+
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -55,37 +58,60 @@ static void load()
 	
 	scene.Add(std::move(fpso));
 
-	auto pivot = std::make_unique<dae::GameObject>();
-	pivot.get()->SetPosition(250, 100);
 
 	go = std::make_unique<dae::GameObject>();
 	gor = std::make_unique<dae::RenderComponent>(go.get(), "Bomb.png");
-	auto gom = std::make_unique<dae::MovementComponent>(go.get(), 5.f, 25.f);
+	auto gom = std::make_unique<dae::MovementComponent>(go.get(), 50.f);
 	go.get()->AddComponent(std::move(gor));
 	go.get()->AddComponent(std::move(gom));
-	go.get()->SetParent(pivot.get());
+	go.get()->SetPosition(250, 100);
+
+
+	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_D, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(go.get()), std::make_unique<dae::CommandValue>( glm::vec2 { 1.f, 0.f }));
+	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_A, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(go.get()), std::make_unique<dae::CommandValue>( glm::vec2 { -1.f, 0.f }));
+	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_W, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(go.get()), std::make_unique<dae::CommandValue>( glm::vec2{ 0.f, -1.f }));
+	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_S, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(go.get()), std::make_unique<dae::CommandValue>( glm::vec2{ 0.f, 1.f }));
+
+
+
 
 	
+	
+
+	auto Dgo = std::make_unique<dae::GameObject>();
+	gor = std::make_unique<dae::RenderComponent>(Dgo.get(), "Bomberman.png");
+	gom = std::make_unique<dae::MovementComponent>(Dgo.get(), 100.f);
+	Dgo.get()->AddComponent(std::move(gor));
+	Dgo.get()->AddComponent(std::move(gom));
+	Dgo.get()->SetPosition(300, 100);
+
+	dae::InputManager::GetInstance().BindAxis(std::make_unique<dae::MoveAround>(Dgo.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 1.f }), true);
 
 	auto child = std::make_unique<dae::GameObject>();
 	gor = std::make_unique<dae::RenderComponent>(child.get(), "Bomberman.png");
-	gom = std::make_unique<dae::MovementComponent>(child.get(), -10.f, 50.f);
+	gom = std::make_unique<dae::MovementComponent>(child.get(), 100.f);
 	child.get()->AddComponent(std::move(gor));
 	child.get()->AddComponent(std::move(gom));
-	child.get()->SetParent(go.get());
+	child.get()->SetPosition(350, 100);
 
-	scene.Add(std::move(pivot));
+	dae::InputManager::GetInstance().BindCommand(XINPUT_GAMEPAD_DPAD_DOWN, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(child.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, 1.f }));
+	dae::InputManager::GetInstance().BindCommand(XINPUT_GAMEPAD_DPAD_UP, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(child.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, -1.f }));
+	dae::InputManager::GetInstance().BindCommand(XINPUT_GAMEPAD_DPAD_RIGHT, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(child.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0 }));
+	dae::InputManager::GetInstance().BindCommand(XINPUT_GAMEPAD_DPAD_LEFT, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(child.get()), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0 }));
+
+
 
 	scene.Add(std::move(go));
+	scene.Add(std::move(Dgo));
 	scene.Add(std::move(child));
+
 
 	auto Menu = std::make_unique<dae::GameObject>();
 	auto thr = std::make_unique<dae::ThrashCacheComponent>(Menu.get());
 	Menu.get()->AddComponent(std::move(thr));
 	scene.Add(std::move(Menu));
 
-	auto TestCMD = std::make_unique<TestCommand>();
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_B, dae::KeyState::Pressed, std::move(TestCMD));
+
 	//dae::InputManager::GetInstance().UnbindCommand(SDL_SCANCODE_B, dae::KeyState::Down);
 
 

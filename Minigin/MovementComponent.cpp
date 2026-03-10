@@ -1,27 +1,30 @@
 #include "MovementComponent.h"
 #include "GameObject.h"
 #include "TimeManager.h"
+#include <iostream>
 
 
-dae::MovementComponent::MovementComponent(GameObject* pOwner) : MovementComponent(pOwner, 10.f, 50.f)
+dae::MovementComponent::MovementComponent(GameObject* pOwner, float speed) : ObjectComponent(pOwner), m_Speed{speed}
 {
 }
 
-dae::MovementComponent::MovementComponent(GameObject* pOwner, float speed, float radius) : ObjectComponent(pOwner), m_Angle{}, m_Speed{ speed }, m_Radius{ radius }
-{
-}
+
 
 void dae::MovementComponent::Update()
 {
 
-	m_Angle += m_Speed * TimeManager::GetInstance().GetDeltaTime() ;
 
+	float deltaT{ TimeManager::GetInstance().GetDeltaTime() };
 
-	glm::vec3 position{};
+	glm::vec3 position{ m_pOwner->GetWorldPosition()};
 
+	position.x += m_Velocity.x * m_Speed * deltaT;
+	position.y += m_Velocity.y * m_Speed * deltaT;
 
-	position.x = std::cos(m_Angle) * m_Radius;
-	position.y = std::sin(m_Angle) * m_Radius;
+	std::cout << m_Velocity.x << " " << m_Velocity.y << "\n";
+
+	m_Velocity = glm::vec3{ 0.f,0.f,0.f };
+
 
 	m_pOwner->SetPosition(position.x, position.y);
 }

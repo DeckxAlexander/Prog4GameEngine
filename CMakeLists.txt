@@ -27,7 +27,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   "Minigin/TextComponent.cpp"
   Minigin/Texture2D.cpp
   Minigin/Transform.cpp
- "Minigin/TimeManager.h" "Minigin/ObjectComponent.cpp" "Minigin/FPSCounterComponent.h" "Minigin/RenderComponent.h" "Minigin/RenderComponent.cpp" "Minigin/MovementComponent.h" "Minigin/MovementComponent.cpp" "Minigin/ThrashCacheComponent.cpp" "Minigin/Commands.h")
+ "Minigin/TimeManager.h" "Minigin/ObjectComponent.cpp" "Minigin/FPSCounterComponent.h" "Minigin/RenderComponent.h" "Minigin/RenderComponent.cpp" "Minigin/MovementComponent.h" "Minigin/MovementComponent.cpp" "Minigin/ThrashCacheComponent.cpp" "Minigin/Commands.h" "Minigin/Commands.cpp")
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
@@ -109,6 +109,9 @@ if (WIN32)
   find_package(VLD CONFIG)
 endif()
 
+if(WIN32 AND NOT EMSCRIPTEN)
+    target_compile_definitions(${TARGET_NAME} PRIVATE _WINDOWS _WIN32)
+endif()
 
 # Dear ImGui
 FetchContent_Declare(
@@ -167,6 +170,7 @@ target_include_directories("${TARGET_NAME}" PUBLIC
 
 target_link_libraries("${TARGET_NAME}" PUBLIC
   SDL3::SDL3
+  Xinput
   SDL3_ttf::SDL3_ttf
   glm::glm
   imgui
