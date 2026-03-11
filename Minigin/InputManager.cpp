@@ -6,16 +6,23 @@
 #include <Xinput.h>
 #endif
 
-
-
 struct dae::InputManager::Impl
 {
+#ifdef WIN32
 	XINPUT_STATE previousState{};
 	XINPUT_STATE currentState{};
+#endif
 };
 
 
-dae::InputManager::InputManager() : m_Impl(std::make_unique<Impl>())
+
+
+
+
+
+
+dae::InputManager::InputManager() 
+	: m_Impl(std::make_unique<Impl>())
 {
 }
 

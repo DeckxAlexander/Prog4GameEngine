@@ -38,7 +38,10 @@ namespace dae
 	class TestCommand final : public Command
 	{
 	public:
-		void Execute(CommandValue* value) override { value;  std::cout << "Test"; }
+		void Execute(CommandValue* value) override 
+		{ 
+			if (value == nullptr) std::cout << "Test"; 
+		}
 	};
 
 	class MoveAround final : public GameObjectCommand
