@@ -2,8 +2,6 @@
 #include "Singleton.h"
 #include <vector>
 #include <SDL3/SDL.h>
-//#include <Windows.h>
-//#include <Xinput.h>
 #include <cstdint>
 #include "Commands.h"
 

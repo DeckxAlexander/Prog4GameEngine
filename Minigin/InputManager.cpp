@@ -1,7 +1,7 @@
 #include <backends/imgui_impl_sdl3.h>
 #include "InputManager.h"
 #include <iostream>
-#ifdef _WIN32
+#ifdef WIN32
 #include <Windows.h>
 #include <Xinput.h>
 #endif
@@ -72,6 +72,7 @@ bool dae::InputManager::ProcessInput()
 	}
 
 	//Controller Support
+#ifdef WIN32
 
 	CopyMemory(&m_Impl->previousState, &m_Impl->currentState, sizeof(XINPUT_STATE));
 	ZeroMemory(&m_Impl->currentState, sizeof(XINPUT_STATE));
@@ -138,6 +139,7 @@ bool dae::InputManager::ProcessInput()
 
 	}
 
+#endif
 	return true;
 }
 
