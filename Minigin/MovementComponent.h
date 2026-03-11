@@ -18,7 +18,7 @@ namespace dae
 	public:
 		virtual void Update() override;
 		virtual void Render() const override;
-		virtual void AddVelocity(float x, float y) 
+		void AddVelocity(float x, float y) 
 		{
 			m_Velocity += glm::vec3{ x,y,0 };
 			float len = glm::length(m_Velocity);
