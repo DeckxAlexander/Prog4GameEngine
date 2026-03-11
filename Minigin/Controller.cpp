@@ -115,7 +115,11 @@ void dae::Controller::ProcessInput()
 
 	}
 #else
-	if (m_Impl->sdlController == nullptr) return;
+	if (m_Impl->sdlController == nullptr) 
+	{
+		m_Impl->sdlController = SDL_OpenGamepad(*SDL_GetGamepads(&m_ControllerIndex));
+		return;
+	}
 	m_Impl->previousButtons = m_Impl->currentButtons;
 	m_Impl->currentButtons = 0;
 
