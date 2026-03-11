@@ -25,7 +25,7 @@ dae::Controller::Controller(int controllerIndex) : m_ControllerIndex(controllerI
 {
 
 #ifndef WIN32
-	m_Impl->sdlController = SDL_OpenGamepad(*SDL_GetGamepads(&controllerIndex));
+	m_Impl->sdlController = SDL_OpenGamepad(*SDL_GetGamepads(&m_ControllerIndex));
 
 #endif
 	
