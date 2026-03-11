@@ -1,6 +1,27 @@
 #include <backends/imgui_impl_sdl3.h>
 #include "InputManager.h"
 #include <iostream>
+#ifdef _WIN32
+#include <Windows.h>
+#include <Xinput.h>
+#endif
+
+
+
+struct dae::InputManager::Impl
+{
+	XINPUT_STATE previousState{};
+	XINPUT_STATE currentState{};
+};
+
+
+dae::InputManager::InputManager() : m_Impl(std::make_unique<Impl>())
+{
+}
+
+dae::InputManager::~InputManager()
+{
+}
 
 bool dae::InputManager::ProcessInput()
 {
@@ -52,15 +73,15 @@ bool dae::InputManager::ProcessInput()
 
 	//Controller Support
 
-	CopyMemory(&m_PreviousState, &m_CurrentState, sizeof(XINPUT_STATE));
-	ZeroMemory(&m_CurrentState, sizeof(XINPUT_STATE));
-	DWORD dwResult = XInputGetState(0, &m_CurrentState);
+	CopyMemory(&m_Impl->previousState, &m_Impl->currentState, sizeof(XINPUT_STATE));
+	ZeroMemory(&m_Impl->currentState, sizeof(XINPUT_STATE));
+	DWORD dwResult = XInputGetState(0, &m_Impl->currentState);
 	if (dwResult == ERROR_SUCCESS) {
 
-		float leftX = m_CurrentState.Gamepad.sThumbLX;
-		float leftY = m_CurrentState.Gamepad.sThumbLY;
-		float rightX = m_CurrentState.Gamepad.sThumbRX;
-		float rightY = m_CurrentState.Gamepad.sThumbRY;
+		float leftX = m_Impl->currentState.Gamepad.sThumbLX;
+		float leftY = m_Impl->currentState.Gamepad.sThumbLY;
+		float rightX = m_Impl->currentState.Gamepad.sThumbRX;
+		float rightY = m_Impl->currentState.Gamepad.sThumbRY;
 		if (abs(leftX) < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) leftX = 0;
 		if (abs(leftY) < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) leftY = 0;
 
@@ -88,13 +109,13 @@ bool dae::InputManager::ProcessInput()
 		}
 
 
-		WORD buttonChanges = m_CurrentState.Gamepad.wButtons ^ m_PreviousState.Gamepad.wButtons;
-		WORD buttonsPressedThisFrame = buttonChanges & m_CurrentState.Gamepad.wButtons;
-		WORD buttonsReleasedThisFrame = buttonChanges & (~m_CurrentState.Gamepad.wButtons);
+		WORD buttonChanges = m_Impl->currentState.Gamepad.wButtons ^ m_Impl->previousState.Gamepad.wButtons;
+		WORD buttonsPressedThisFrame = buttonChanges & m_Impl->currentState.Gamepad.wButtons;
+		WORD buttonsReleasedThisFrame = buttonChanges & (~m_Impl->currentState.Gamepad.wButtons);
 
 		for (auto& binding : m_ControllerBindings)
 		{
-			bool isPressed = (m_CurrentState.Gamepad.wButtons & binding.button) != 0;
+			bool isPressed = (m_Impl->currentState.Gamepad.wButtons & binding.button) != 0;
 
 			switch (binding.state)
 			{
@@ -125,7 +146,7 @@ void dae::InputManager::BindCommand(SDL_Scancode key, KeyState state, std::uniqu
 	m_KeyBindings.push_back({ key, state, std::move(command), std::move(value) });
 }
 
-void dae::InputManager::BindCommand(WORD key, KeyState state, std::unique_ptr<Command> command, std::unique_ptr<CommandValue> value)
+void dae::InputManager::BindCommand(uint16_t key, KeyState state, std::unique_ptr<Command> command, std::unique_ptr<CommandValue> value)
 {
 	m_ControllerBindings.push_back({ key, state, std::move(command), std::move(value) });
 }
@@ -146,7 +167,7 @@ void dae::InputManager::UnbindCommand(SDL_Scancode key, KeyState state)
 		m_KeyBindings.end());
 }
 
-void dae::InputManager::UnbindCommand(WORD key, KeyState state)
+void dae::InputManager::UnbindCommand(uint16_t key, KeyState state)
 {
 	m_ControllerBindings.erase(
 		std::remove_if(m_ControllerBindings.begin(), m_ControllerBindings.end(),
