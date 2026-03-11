@@ -21,6 +21,14 @@ namespace dae
 
 	};
 
+	struct MouseBinding
+	{
+		uint8_t button;
+		KeyState state;
+		std::unique_ptr<Command> command;
+		std::unique_ptr<CommandValue> value;
+
+	};
 
 
 	class InputManager final : public Singleton<InputManager>
@@ -29,7 +37,9 @@ namespace dae
 
 		bool ProcessInput();
 		void BindCommand(SDL_Scancode key, KeyState state, std::unique_ptr<Command> command, std::unique_ptr<CommandValue> value);
+		void BindMouseCommand(uint8_t button, KeyState state, std::unique_ptr<Command> command, std::unique_ptr<CommandValue> value);
 		void UnbindCommand(SDL_Scancode key, KeyState state);
+		void UnbindMouseCommand(uint8_t button, KeyState state);
 
 		void AddController(std::unique_ptr<Controller> controller);
 		const std::vector<std::unique_ptr<Controller>>& GetControllers() 
@@ -44,6 +54,7 @@ namespace dae
 
 
 		std::vector<KeyBinding> m_KeyBindings{};
+		std::vector<MouseBinding> m_MouseBindings{};
 		std::vector<std::unique_ptr<Controller>> m_Controllers{};
 
 	};

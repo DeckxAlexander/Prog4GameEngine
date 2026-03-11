@@ -72,7 +72,6 @@ static void load()
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_W, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(go.get()), std::make_unique<dae::CommandValue>( glm::vec2{ 0.f, -1.f }));
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_S, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(go.get()), std::make_unique<dae::CommandValue>( glm::vec2{ 0.f, 1.f }));
 
-
 	auto Dgo = std::make_unique<dae::GameObject>();
 	gor = std::make_unique<dae::RenderComponent>(Dgo.get(), "Bomberman.png");
 	gom = std::make_unique<dae::MovementComponent>(Dgo.get(), 100.f);
