@@ -1,7 +1,6 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 
-
 #if _DEBUG && __has_include(<vld.h>)
 #include <vld.h>
 #endif
@@ -91,13 +90,13 @@ static void load()
 	child.get()->SetPosition(350, 100);
 
 	auto controller1 = std::make_unique<dae::Controller>(0);
-#ifdef WIN32
+
 	controller1->BindCommand(GAMEPAD_DPAD_DOWN, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(child.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, 1.f }));
 	controller1->BindCommand(GAMEPAD_DPAD_UP, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(child.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, -1.f }));
 	controller1->BindCommand(GAMEPAD_DPAD_RIGHT, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(child.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0 }));
 	controller1->BindCommand(GAMEPAD_DPAD_LEFT, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(child.get()), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0 }));
 	controller1->BindAxis(std::make_unique<dae::MoveAround>(Dgo.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 1.f }), true);
-#endif
+
 
 	dae::InputManager::GetInstance().AddController(std::move(controller1));
 
@@ -106,10 +105,10 @@ static void load()
 	scene.Add(std::move(child));
 
 
-	auto Menu = std::make_unique<dae::GameObject>();
-	auto thr = std::make_unique<dae::ThrashCacheComponent>(Menu.get());
-	Menu.get()->AddComponent(std::move(thr));
-	scene.Add(std::move(Menu));
+	//auto Menu = std::make_unique<dae::GameObject>();
+	//auto thr = std::make_unique<dae::ThrashCacheComponent>(Menu.get());
+	//Menu.get()->AddComponent(std::move(thr));
+	//scene.Add(std::move(Menu));
 
 
 	//dae::InputManager::GetInstance().UnbindCommand(SDL_SCANCODE_B, dae::KeyState::Down);

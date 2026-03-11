@@ -1,10 +1,9 @@
 #include "Controller.h"
-#include <SDL3/SDL.h>
 #ifdef WIN32
 #include <Windows.h>
 #include <Xinput.h>
 #else
-
+#include <SDL3/SDL.h>
 #endif
 
 
@@ -138,8 +137,8 @@ void dae::Controller::ProcessInput()
 
 	if (std::abs(leftX) < deadzone) leftX = 0;
 	if (std::abs(leftY) < deadzone) leftY = 0;
-	if (std::abs(rightX) < deadzone) leftX = 0;
-	if (std::abs(rightY) < deadzone) leftY = 0;
+	if (std::abs(rightX) < deadzone) rightX = 0;
+	if (std::abs(rightY) < deadzone) rightY = 0;
 
 	float normLX = leftX / 32767.f;
 	float normLY = leftY / 32767.f;
@@ -154,7 +153,7 @@ void dae::Controller::ProcessInput()
 			if (leftX == 0 && leftY == 0) continue;
 
 			binding.value->Vec2D.x = normLX;
-			binding.value->Vec2D.y = -normLY;
+			binding.value->Vec2D.y = normLY;
 
 			binding.command->Execute(binding.value.get());
 		}

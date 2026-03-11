@@ -12,7 +12,6 @@ else()
   set(TARGET_NAME minigin)
   set(TARGET_PARAM WIN32)
 endif()
-
 # list source files here
 add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Minigin/Font.cpp
