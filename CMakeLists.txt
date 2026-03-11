@@ -170,13 +170,16 @@ target_include_directories("${TARGET_NAME}" PUBLIC
 
 target_link_libraries("${TARGET_NAME}" PUBLIC
   SDL3::SDL3
-  Xinput
   SDL3_ttf::SDL3_ttf
   glm::glm
   imgui
   imgui_plot
   ${VLD_LIBRARIES}
 )
+
+if(WIN32)
+    target_link_libraries("${TARGET_NAME}" PUBLIC Xinput)
+endif()
 
 if(MSVC)
   # compile at warning level 4 + treat warnings as errors
