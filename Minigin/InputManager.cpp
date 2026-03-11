@@ -3,7 +3,6 @@
 #include <iostream>
 
 
-
 bool dae::InputManager::ProcessInput()
 {
 	SDL_Event e;

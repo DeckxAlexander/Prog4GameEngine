@@ -2,6 +2,7 @@
 #include <vector>
 #include <memory>
 #include "Commands.h"
+
 #ifdef WIN32
 #define GAMEPAD_DPAD_UP          0x0001
 #define GAMEPAD_DPAD_DOWN        0x0002
