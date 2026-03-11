@@ -1,20 +1,8 @@
 #include <backends/imgui_impl_sdl3.h>
 #include "InputManager.h"
 #include <iostream>
-#ifdef WIN32
-#include <Windows.h>
-#include <Xinput.h>
-#endif
 
 
-
-dae::InputManager::InputManager() 
-{
-}
-
-dae::InputManager::~InputManager()
-{
-}
 
 bool dae::InputManager::ProcessInput()
 {

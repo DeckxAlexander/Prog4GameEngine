@@ -75,8 +75,6 @@ void dae::Controller::ProcessInput()
 
 				binding.value.get()->Vec2D.x = normLX;
 				binding.value.get()->Vec2D.y = -normLY;
-
-
 				binding.command->Execute(binding.value.get());
 
 			}
@@ -86,8 +84,6 @@ void dae::Controller::ProcessInput()
 
 				binding.value.get()->Vec2D.x = normRX;
 				binding.value.get()->Vec2D.y = -normRY;
-
-
 				binding.command->Execute(binding.value.get());
 			}
 		}

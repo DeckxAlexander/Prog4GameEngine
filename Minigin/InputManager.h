@@ -6,12 +6,6 @@
 #include "Controller.h"
 #include "Commands.h"
 
-//###################
-//TODO
-//###################
-//- Create Controller Class and seperate Input
-//- Add SDL_Controller for Emscripten
-//- Allow for multiple controllers!
 
 
 namespace dae
@@ -32,8 +26,6 @@ namespace dae
 	class InputManager final : public Singleton<InputManager>
 	{
 	public:
-		InputManager();
-		~InputManager();
 
 		bool ProcessInput();
 		void BindCommand(SDL_Scancode key, KeyState state, std::unique_ptr<Command> command, std::unique_ptr<CommandValue> value);

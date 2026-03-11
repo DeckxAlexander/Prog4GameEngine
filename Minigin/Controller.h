@@ -17,7 +17,7 @@
 #define GAMEPAD_X                0x4000
 #define GAMEPAD_Y                0x8000
 
-#elif
+#else
 #define GAMEPAD_DPAD_UP          11
 #define GAMEPAD_DPAD_DOWN        12
 #define GAMEPAD_DPAD_LEFT        13

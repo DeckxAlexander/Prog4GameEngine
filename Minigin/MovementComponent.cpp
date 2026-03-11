@@ -21,7 +21,6 @@ void dae::MovementComponent::Update()
 	position.x += m_Velocity.x * m_Speed * deltaT;
 	position.y += m_Velocity.y * m_Speed * deltaT;
 
-	std::cout << m_Velocity.x << " " << m_Velocity.y << "\n";
 
 	m_Velocity = glm::vec3{ 0.f,0.f,0.f };
 
