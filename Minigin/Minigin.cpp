@@ -83,6 +83,13 @@ dae::Minigin::Minigin(const std::filesystem::path& dataPath)
 	freopen_s(&fp, "CONOUT$", "w", stdout);
 #endif
 
+	if (!SDL_InitSubSystem(SDL_INIT_GAMEPAD))
+	{
+		SDL_Log("Input error: %s", SDL_GetError());
+		throw std::runtime_error(std::string("Input Error: ") + SDL_GetError());
+	}
+	
+
 	Renderer::GetInstance().Init(g_window);
 	ResourceManager::GetInstance().Init(dataPath);
 }
