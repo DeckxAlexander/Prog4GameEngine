@@ -19,5 +19,5 @@ void dae::Damage::Execute([[maybe_unused]] CommandValue* value)
 
 void dae::AddScore::Execute([[maybe_unused]] CommandValue* value)
 {
-	if (auto comp = m_GameObject->GetComponentByType<ScoreComponent>()) comp->AddScore(1);
+	if (auto comp = m_GameObject->GetComponentByType<ScoreComponent>()) comp->AddScore(100);
 }

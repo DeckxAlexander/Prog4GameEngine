@@ -5,6 +5,7 @@
 #include <vld.h>
 #endif
 
+
 #include "Minigin.h"
 #include "SceneManager.h"
 #include "ResourceManager.h"
@@ -18,6 +19,7 @@
 #include "HealthObserver.h"
 #include "HealthComponent.h"
 #include "InputManager.h"
+#include "SteamObserver.h"
 
 
 #include <filesystem>
@@ -77,6 +79,10 @@ static void load()
 
 //Player 1
 
+
+	auto SteamObject = std::make_unique<dae::GameObject>();
+	auto steamObserver = std::make_unique<dae::SteamObserver>(SteamObject.get());
+
 	auto healthObject = std::make_unique<dae::GameObject>();
 	auto scoreObject = std::make_unique<dae::GameObject>();
 	auto healthObserver = std::make_unique<dae::HealthObserver>(healthObject.get());
@@ -89,7 +95,7 @@ static void load()
 	playerHealthComponent.get()->GetSubject()->AddObserver(healthObserver.get());
 	playerHealthComponent.get()->GetSubject()->AddObserver(playerScoreComponent.get());
 	playerScoreComponent.get()->GetSubject()->AddObserver(scoreObserver.get());
-
+	playerScoreComponent.get()->GetSubject()->AddObserver(steamObserver.get());
 	playerScoreComponent.get()->SetScore(50);
 
 	Player1.get()->AddComponent(std::move(playerRenderComponent));
@@ -97,6 +103,10 @@ static void load()
 	Player1.get()->AddComponent(std::move(playerMovementComponent));
 	Player1.get()->AddComponent(std::move(playerHealthComponent));
 	Player1.get()->SetPosition(300, 100);
+
+
+	SteamObject.get()->AddComponent(std::move(steamObserver));
+	scene.Add(std::move(SteamObject));
 
 
 
@@ -159,6 +169,7 @@ static void load()
 	scene.Add(std::move(healthObject));
 	scene.Add(std::move(scoreObject));
 	
+
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_U, dae::KeyState::Down, std::make_unique<dae::Damage>(Player1.get()), nullptr);
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_I, dae::KeyState::Down, std::make_unique<dae::AddScore>(Player1.get()), nullptr);
 
@@ -212,6 +223,7 @@ static void load()
 }
 
 int main(int, char*[]) {
+
 #if __EMSCRIPTEN__
 	fs::path data_location = "";
 #else

@@ -39,6 +39,12 @@ namespace dae
 			m_Score = score;
 			Event e{ EventType::ScoreChanged, this };
 			m_Subject.get()->Notify(e);
+			if (m_Score >= 500)
+			{
+				Event esteam{ EventType::Win, this };
+				m_Subject.get()->Notify(esteam);
+
+			}
 		}
 
 		void AddScore(int score)
@@ -46,7 +52,16 @@ namespace dae
 			m_Score += score;
 			Event e{ EventType::ScoreChanged, this };
 			m_Subject.get()->Notify(e);
+			if (m_Score >= 500)
+			{
+				Event esteam{ EventType::Win, this };
+				m_Subject.get()->Notify(esteam);
+				
+			}
+
+
 		}
+
 
         Subject* GetSubject() { return m_Subject.get(); }
         int GetScore() { return m_Score; }

@@ -11,7 +11,8 @@ namespace dae
     {
         //Add Events types here
         PlayerDead,
-        ScoreChanged
+        ScoreChanged,
+        Win
 
 
     };
