@@ -41,9 +41,10 @@ namespace dae
 				m_HasWon = true;
 			}
 			#else
-			achievementID;
+
 			m_HasWon = true;
 #endif
+			achievementID = "";
 		}
 	private:
 		bool m_HasWon{ false }; //TEMP
