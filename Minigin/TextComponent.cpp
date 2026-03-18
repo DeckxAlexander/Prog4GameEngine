@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "RenderComponent.h"
 #include "Texture2D.h"
+#include <sstream>
 
 
 dae::TextComponent::TextComponent(GameObject* pOwner, const std::string& text, std::shared_ptr<Font> font, const SDL_Color& color)
@@ -34,6 +35,18 @@ void dae::TextComponent::Update()
 		}
 		m_needsUpdate = false;
 	}
+
+
+}
+
+std::vector<std::string> dae::TextComponent::SplitLines(const std::string& text)
+{
+	std::vector<std::string> lines;
+	std::stringstream ss(text);
+	std::string line;
+	while (std::getline(ss, line))
+		lines.push_back(line);
+	return lines;
 }
 
 void dae::TextComponent::Render() const

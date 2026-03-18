@@ -13,18 +13,18 @@ namespace dae {
         {
         }
 
-        HealthComponent(GameObject* pOwner, int startHealth) : ObjectComponent(pOwner),  m_Subject{new Subject()}, m_Health{startHealth}
+        HealthComponent(GameObject* pOwner, int startHealth) : ObjectComponent(pOwner),  m_Subject{std::make_unique<Subject>()}, m_Health{startHealth}
         {
         }
 
-        Subject* GetSubject() { return m_Subject; }
+        Subject* GetSubject() { return m_Subject.get(); }
 
         void TakeDamage(int damage) {
             m_Health -= damage;
 
 
             Event e{ EventType::PlayerDead, this };
-            m_Subject->Notify(e);
+            m_Subject.get()->Notify(e);
             
         }
 
@@ -32,6 +32,6 @@ namespace dae {
 
     private:
         int m_Health;
-        Subject* m_Subject;
+        std::unique_ptr<Subject> m_Subject;
     };
 }

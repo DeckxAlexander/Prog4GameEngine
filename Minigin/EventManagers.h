@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 #include <algorithm>
+#include <memory>
+#include "ObjectComponent.h"
 namespace dae
 {
     class ObjectComponent;
@@ -8,7 +10,8 @@ namespace dae
     enum class EventType
     {
         //Add Events types here
-        PlayerDead
+        PlayerDead,
+        ScoreChanged
 
 
     };
@@ -20,37 +23,37 @@ namespace dae
 
     };
 
-    class Observer 
+    class Observer : public ObjectComponent
     {
     public:
+        Observer(GameObject* pOwner) : ObjectComponent(pOwner)
+        {}
         virtual ~Observer() = default;
         virtual void OnNotify(const Event& event) = 0;
+
+        virtual void Render() const override {}
+        virtual void Update() override {}
     };
 
     class Subject 
     {
     public:
         void AddObserver(Observer* observer) {
-            if (!observer) return;
+   
 
-            // prevent duplicates
-            if (std::find(m_Observers.begin(), m_Observers.end(), observer) == m_Observers.end()) {
+
                 m_Observers.push_back(observer);
-            }
+            
         }
+        void RemoveObserver(Observer* observer) { m_Observers.erase(std::remove(m_Observers.begin(), m_Observers.end(), observer), m_Observers.end()); }
 
-        void RemoveObserver(Observer* observer) {
-            m_Observers.erase(
-                std::remove(m_Observers.begin(), m_Observers.end(), observer),
-                m_Observers.end()
-            );
-        }
+        void Notify(const Event& event) 
+        {
 
-        void Notify(const Event& event) {
-
-            for (auto* observer : m_Observers) 
+            for (auto observer : m_Observers) 
             {
                 if (observer != nullptr) {
+
                     observer->OnNotify(event);
                 }
             }

@@ -3,6 +3,7 @@
 #include <memory>
 #include "ObjectComponent.h"
 #include "Transform.h"
+#include <SDL3/SDL.h> 
 
 namespace dae
 {
@@ -23,6 +24,8 @@ namespace dae
 		TextComponent(TextComponent&& other) = delete;
 		TextComponent& operator=(const TextComponent& other) = delete;
 		TextComponent& operator=(TextComponent&& other) = delete;
+
+		std::vector<std::string> SplitLines(const std::string& text);
 	protected:
 		bool m_needsUpdate{};
 		std::string m_text{};

@@ -64,5 +64,15 @@ namespace dae
 
 		void Execute([[maybe_unused]] CommandValue* value);
 	};
+
+	class AddScore final : public GameObjectCommand
+	{
+	public:
+		AddScore(GameObject* gameobject) : GameObjectCommand(gameobject)
+		{
+		}
+
+		void Execute([[maybe_unused]] CommandValue* value);
+	};
 	
 }

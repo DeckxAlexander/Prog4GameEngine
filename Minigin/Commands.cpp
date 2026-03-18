@@ -1,6 +1,7 @@
 #include "Commands.h"
 #include "GameObject.h"
 #include "MovementComponent.h"
+#include "ScoreManager.h"
 #include "HealthComponent.h"
 
 
@@ -14,4 +15,9 @@ void dae::MoveAround::Execute([[maybe_unused]] CommandValue* value)
 void dae::Damage::Execute([[maybe_unused]] CommandValue* value)
 {
 	if (auto comp = m_GameObject->GetComponentByType<HealthComponent>()) comp->TakeDamage(1);
+}
+
+void dae::AddScore::Execute([[maybe_unused]] CommandValue* value)
+{
+	if (auto comp = m_GameObject->GetComponentByType<ScoreComponent>()) comp->AddScore(1);
 }
