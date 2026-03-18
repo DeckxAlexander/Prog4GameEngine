@@ -15,7 +15,7 @@ namespace dae
         {
         }
 
-		ScoreComponent(GameObject* pOwner) : Observer(pOwner), m_Subject{ std::make_unique<Subject>() }, m_Score{0}
+		ScoreComponent(GameObject* pOwner) : Observer(pOwner), m_Score{ 0 }, m_Subject{ std::make_unique<Subject>() }
         {
         }
 
@@ -30,6 +30,9 @@ namespace dae
 				m_Subject.get()->Notify(e);
 				break;
 
+			default:
+				// do nothing 
+				break;
 
 			}
 		}
@@ -83,12 +86,16 @@ namespace dae
 
 		virtual void OnNotify(const Event& event) override
 		{
+			std::stringstream ss;
 			switch (event.event)
 			{
 			case EventType::ScoreChanged:
-				std::stringstream ss;
 				ss << std::to_string(dynamic_cast<ScoreComponent*>(event.sender)->GetScore()) << " Score";
 				if (auto textComp = m_pOwner->GetComponentByType<TextComponent>()) textComp->SetText(ss.str());
+				break;
+
+			default:
+				// do nothing 
 				break;
 			}
 		}

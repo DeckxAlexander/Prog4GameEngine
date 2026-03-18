@@ -105,8 +105,7 @@ static void load()
 	Player1.get()->SetPosition(300, 100);
 
 
-	SteamObject.get()->AddComponent(std::move(steamObserver));
-	scene.Add(std::move(SteamObject));
+
 
 
 
@@ -143,6 +142,7 @@ static void load()
 	playerHealthComponent.get()->GetSubject()->AddObserver(healthObserver.get());
 	playerHealthComponent.get()->GetSubject()->AddObserver(playerScoreComponent.get());
 	playerScoreComponent.get()->GetSubject()->AddObserver(scoreObserver.get());
+	playerScoreComponent.get()->GetSubject()->AddObserver(steamObserver.get());
 	playerScoreComponent.get()->SetScore(50);
 	Player2.get()->AddComponent(std::move(playerRenderComponent));
 	Player2.get()->AddComponent(std::move(playerMovementComponent));
@@ -169,6 +169,9 @@ static void load()
 	scene.Add(std::move(healthObject));
 	scene.Add(std::move(scoreObject));
 	
+
+	SteamObject.get()->AddComponent(std::move(steamObserver));
+	scene.Add(std::move(SteamObject));
 
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_U, dae::KeyState::Down, std::make_unique<dae::Damage>(Player1.get()), nullptr);
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_I, dae::KeyState::Down, std::make_unique<dae::AddScore>(Player1.get()), nullptr);

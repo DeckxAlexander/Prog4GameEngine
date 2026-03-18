@@ -13,7 +13,7 @@ namespace dae {
         {
         }
 
-        HealthComponent(GameObject* pOwner, int startHealth) : ObjectComponent(pOwner),  m_Subject{std::make_unique<Subject>()}, m_Health{startHealth}
+        HealthComponent(GameObject* pOwner, int startHealth) : ObjectComponent(pOwner), m_Health{ startHealth },  m_Subject{std::make_unique<Subject>()}
         {
         }
 

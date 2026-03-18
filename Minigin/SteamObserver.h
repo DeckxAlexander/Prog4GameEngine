@@ -25,6 +25,9 @@ namespace dae
 			case EventType::Win:
 
 				UnlockAchievement("ACH_WIN_ONE_GAME");
+			default:
+				// do nothing 
+				break;
 			}
 		}
 
@@ -37,6 +40,9 @@ namespace dae
 				printf("Achievement unlocked: %s\n", achievementID);
 				m_HasWon = true;
 			}
+			#else
+			achievementID;
+			m_HasWon = true;
 #endif
 		}
 	private:

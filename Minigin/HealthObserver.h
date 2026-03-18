@@ -14,13 +14,16 @@ namespace dae
 
 		virtual void OnNotify(const Event& event) override
 		{
+			std::stringstream ss;
 			switch (event.event)
 			{
 			case EventType::PlayerDead:
 
-				std::stringstream ss;
 				ss << std::to_string(dynamic_cast<HealthComponent*>(event.sender)->GetHealth()) << " Health";
 				if (auto textComp = m_pOwner->GetComponentByType<TextComponent>()) textComp->SetText(ss.str());
+				break;
+			default:
+				// do nothing for other events (or log)
 				break;
 			}
 		}
