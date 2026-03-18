@@ -38,7 +38,7 @@ namespace dae
 	class TestCommand final : public Command
 	{
 	public:
-		void Execute(CommandValue* value) override 
+		void Execute([[maybe_unused]] CommandValue* value) override
 		{ 
 			if (value == nullptr) std::cout << "Test"; 
 		}
@@ -51,6 +51,18 @@ namespace dae
 		{
 		}
 
-		void Execute(CommandValue* value);
+		void Execute([[maybe_unused]] CommandValue* value);
 	};
+
+
+	class Damage final : public GameObjectCommand
+	{
+	public:
+		Damage(GameObject* gameobject) : GameObjectCommand(gameobject)
+		{
+		}
+
+		void Execute([[maybe_unused]] CommandValue* value);
+	};
+	
 }

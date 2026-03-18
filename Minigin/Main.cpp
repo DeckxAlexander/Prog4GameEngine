@@ -14,6 +14,8 @@
 #include "TextComponent.h"
 #include "Scene.h"
 #include "FPSCounterComponent.h"
+#include "HealthDisplay.h"
+#include "HealthComponent.h"
 #include "InputManager.h"
 
 
@@ -72,15 +74,34 @@ static void load()
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_W, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(go.get()), std::make_unique<dae::CommandValue>( glm::vec2{ 0.f, -1.f }));
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_S, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(go.get()), std::make_unique<dae::CommandValue>( glm::vec2{ 0.f, 1.f }));
 
+	auto healthObject = std::make_unique<dae::GameObject>();
+	auto healthDisplayComp = std::make_unique<dae::HealthDisplayComponent>(healthObject.get());
+	auto obs = new dae::HealthObserver(healthDisplayComp.get());
 	auto Dgo = std::make_unique<dae::GameObject>();
 	gor = std::make_unique<dae::RenderComponent>(Dgo.get(), "Bomberman.png");
 	gom = std::make_unique<dae::MovementComponent>(Dgo.get(), 100.f);
+	auto goh = std::make_unique<dae::HealthComponent>(Dgo.get(), 3);
+	goh.get()->GetSubject()->AddObserver(obs);
+
 	Dgo.get()->AddComponent(std::move(gor));
 	Dgo.get()->AddComponent(std::move(gom));
+	Dgo.get()->AddComponent(std::move(goh));
 	Dgo.get()->SetPosition(300, 100);
 
-	
 
+
+
+	auto healthTextComp = std::make_unique<dae::TextComponent>(healthObject.get(), "Healh", font);
+	auto healthRenderComp = std::make_unique<dae::RenderComponent>(healthObject.get());
+	healthObject.get()->AddComponent(std::move(healthDisplayComp));
+	healthObject.get()->AddComponent(std::move(healthTextComp));
+	healthObject.get()->AddComponent(std::move(healthRenderComp));
+
+	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_U, dae::KeyState::Down, std::make_unique<dae::Damage>(Dgo.get()), nullptr);
+
+	healthObject.get()->SetPosition(200.f, 200.f);
+
+	scene.Add(std::move(healthObject));
 	auto child = std::make_unique<dae::GameObject>();
 	gor = std::make_unique<dae::RenderComponent>(child.get(), "Bomberman.png");
 	gom = std::make_unique<dae::MovementComponent>(child.get(), 100.f);
@@ -104,13 +125,13 @@ static void load()
 	scene.Add(std::move(child));
 
 
-	//auto Menu = std::make_unique<dae::GameObject>();
-	//auto thr = std::make_unique<dae::ThrashCacheComponent>(Menu.get());
-	//Menu.get()->AddComponent(std::move(thr));
-	//scene.Add(std::move(Menu));
+	auto Menu = std::make_unique<dae::GameObject>();
+	auto thr = std::make_unique<dae::ThrashCacheComponent>(Menu.get());
+	Menu.get()->AddComponent(std::move(thr));
+	scene.Add(std::move(Menu));
 
 
-	//dae::InputManager::GetInstance().UnbindCommand(SDL_SCANCODE_B, dae::KeyState::Down);
+	dae::InputManager::GetInstance().UnbindCommand(SDL_SCANCODE_B, dae::KeyState::Down);
 
 
 
