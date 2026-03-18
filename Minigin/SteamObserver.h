@@ -27,7 +27,7 @@ namespace dae
 #if USE_STEAMWORKS
 				UnlockAchievement("ACH_WIN_ONE_GAME");
 #else
-				m_HasWon
+				m_HasWon = true;
 #endif
 			default:
 				// do nothing 
