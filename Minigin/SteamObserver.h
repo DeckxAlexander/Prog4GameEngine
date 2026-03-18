@@ -24,29 +24,33 @@ namespace dae
 			{
 			case EventType::Win:
 
+#if USE_STEAMWORKS
 				UnlockAchievement("ACH_WIN_ONE_GAME");
+#else
+				m_HasWon
+#endif
 			default:
 				// do nothing 
 				break;
 			}
 		}
 
+#if USE_STEAMWORKS
 		void UnlockAchievement(const char* achievementID)
 		{
-#if USE_STEAMWORKS
+
 			if (SteamUserStats() && SteamUserStats()->SetAchievement(achievementID) && !m_HasWon)
 			{
 				SteamUserStats()->StoreStats(); // make sure it's saved
 				printf("Achievement unlocked: %s\n", achievementID);
 				m_HasWon = true;
 			}
-			#else
 
-			m_HasWon = true;
-#endif
-			achievementID = "";
 		}
+#endif
+
 	private:
 		bool m_HasWon{ false }; //TEMP
 	};
+
 }
