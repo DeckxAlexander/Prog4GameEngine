@@ -9,11 +9,12 @@
 namespace dae
 {
 	class Texture2D;
+	class GridComponent;
 	class GameObject final
 	{
 	private:
 
-		Transform m_transform;
+		std::unique_ptr<Transform> m_transform;
 		std::vector<std::unique_ptr<ObjectComponent>> m_Components;
 		bool m_MarkedForDelete{false};
 
@@ -26,10 +27,10 @@ namespace dae
 		void SetPosition(float x, float y); //MARK FOR CHANGE
 		void SetScale(float x, float y); //MARK FOR CHANGE
 
-		const glm::vec3& GetWorldPosition() { return m_transform.GetWorldPosition(); }
-		const glm::vec3& GetScale() { return m_transform.GetScale(); }
+		const glm::vec3& GetWorldPosition() { return m_transform.get()->GetWorldPosition(); }
+		const glm::vec3& GetScale() { return m_transform.get()->GetScale(); }
 		const std::vector<GameObject*>& GetChildren() { return m_Children; }
-		Transform& GetTransform() { return m_transform; }
+		Transform* GetTransform() { return m_transform.get(); }
 
 		
 		void AddComponent(std::unique_ptr<ObjectComponent> component);
@@ -67,6 +68,7 @@ namespace dae
 
 
 		GameObject();
+		GameObject(bool isGridObject, GridComponent* grid);
 		~GameObject();
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;

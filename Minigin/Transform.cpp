@@ -1,5 +1,6 @@
 #include "Transform.h"
 #include "GameObject.h"
+#include "GridComponent.h"
 
 
 
@@ -34,7 +35,7 @@ void dae::Transform::SetPositionDirty()
 
 	for (GameObject* child : m_pOwner->GetChildren()) 
 	{
-		child->GetTransform().SetPositionDirty();
+		child->GetTransform()->SetPositionDirty();
 	}
 
 }
@@ -53,6 +54,29 @@ void dae::Transform::UpdateWorldPosition()
 		{
 			m_WorldPosition = pParent->GetWorldPosition() + m_LocalPosition;
 		}
+	}
+	m_PositionIsDirty = false;
+
+}
+
+void dae::GridTransform::UpdateWorldPosition()
+{
+	if (m_PositionIsDirty)
+	{
+		GameObject* pParent = m_pOwner->GetParent();
+
+		if (pParent == nullptr)
+		{
+			m_WorldPosition = m_LocalPosition;
+		}
+		else
+		{
+			m_WorldPosition = pParent->GetWorldPosition() + m_LocalPosition;
+		}
+
+		m_WorldPosition.x = SnapToGrid(m_WorldPosition.x, m_pGrid->GetTileScale().x);
+		m_WorldPosition.y = SnapToGrid(m_WorldPosition.y, m_pGrid->GetTileScale().y);
+
 	}
 	m_PositionIsDirty = false;
 

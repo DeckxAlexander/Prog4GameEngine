@@ -4,6 +4,7 @@
 namespace dae
 {
 	class GameObject;
+	class GridComponent;
 	class Transform
 	{
 	public:
@@ -18,18 +19,38 @@ namespace dae
 		void SetPosition(const glm::vec3& position) { SetLocalPosition(position); }; //SetPosition still used as SetLocalPosition
 		const glm::vec3& GetWorldPosition();
 		const glm::vec3& GetPosition() { return GetWorldPosition(); } //GetPosition still used as GetWorldPosition
-		void UpdateWorldPosition();
+		virtual void UpdateWorldPosition();
 		void SetPositionDirty();
 
 
 
-	private:
+	protected:
 		GameObject* m_pOwner;
 
 		glm::vec3 m_scale;
 		glm::vec3 m_LocalPosition;
 		glm::vec3 m_WorldPosition;
 		bool m_PositionIsDirty;
+
+	};
+
+	class GridTransform final : public Transform
+	{
+	public:
+		GridTransform(GameObject* pOwner, GridComponent* grid) : Transform{pOwner}, m_pGrid{ grid }
+		{
+		}
+
+		float SnapToGrid(float value, float tileSize)
+		{
+			return floorf(value / tileSize) * tileSize;
+		}
+
+		virtual void UpdateWorldPosition() override;
+
+	protected:
+		GridComponent* m_pGrid;
+
 
 	};
 

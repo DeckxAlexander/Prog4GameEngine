@@ -3,8 +3,21 @@
 #include "ResourceManager.h"
 #include "Renderer.h"
 
-dae::GameObject::GameObject() : m_transform{ this }, m_Components{}, m_pParent{ nullptr }, m_Children{}
+dae::GameObject::GameObject() : m_transform{ std::make_unique<Transform>(this)}, m_Components{}, m_pParent{nullptr}, m_Children{}
 {
+}
+
+
+dae::GameObject::GameObject(bool isGridObject, GridComponent* grid) : m_transform{}, m_Components{}, m_pParent{nullptr}, m_Children{}
+{
+	if (isGridObject) 
+	{
+		m_transform = std::make_unique<GridTransform>(this, grid);
+	}
+	else 
+	{
+		m_transform = std::make_unique<Transform>(this);
+	}
 }
 
 void dae::GameObject::MarkForDelete()
@@ -41,13 +54,13 @@ void dae::GameObject::SetParent(GameObject* gameObject, bool keepWorldPosition)
 		gameObject->m_Children.push_back(this);
 		if (keepWorldPosition) 
 		{
-			m_transform.SetLocalPosition(m_transform.GetWorldPosition() - gameObject->GetWorldPosition());
+			m_transform.get()->SetLocalPosition(m_transform.get()->GetWorldPosition() - gameObject->GetWorldPosition());
 		}
-		m_transform.SetPositionDirty();
+		m_transform.get()->SetPositionDirty();
 	}
 	else 
 	{
-		m_transform.SetLocalPosition(m_transform.GetWorldPosition());
+		m_transform.get()->SetLocalPosition(m_transform.get()->GetWorldPosition());
 	}
 	m_pParent = gameObject;
 
@@ -82,14 +95,14 @@ void dae::GameObject::Render() const
 
 void dae::GameObject::SetPosition(float x, float y)
 {
-	m_transform.SetPosition({ x, y, 0.0f });
+	m_transform.get()->SetPosition({ x, y, 0.0f });
 
 
 }
 
 void dae::GameObject::SetScale(float x, float y)
 {
-	m_transform.SetScale(x, y, 1.0f);
+	m_transform.get()->SetScale(x, y, 1.0f);
 
 }
 

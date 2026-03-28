@@ -30,14 +30,29 @@ static void load()
 {
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
 
+
 	auto go = std::make_unique<dae::GameObject>();
 	auto playerRenderComponent = std::make_unique<dae::RenderComponent>(go.get(), "background.png");
 	go.get()->AddComponent(std::move(playerRenderComponent));
 	scene.Add(std::move(go));
 
-	go = std::make_unique<dae::GameObject>();
+
+
+	auto GridManager = std::make_unique<dae::GameObject>();
+	auto GridComp = std::make_unique<dae::GridComponent>(GridManager.get(), 32, 18);
+
+	go = std::make_unique<dae::GameObject>(true, GridComp.get());
 	playerRenderComponent = std::make_unique<dae::RenderComponent>(go.get(), "logo.png");
 	go.get()->AddComponent(std::move(playerRenderComponent));
+
+
+	GridComp->SetTileScale(32.f, 32.f);
+	GridManager.get()->AddComponent(std::move(GridComp));
+	GridManager.get()->SetPosition(-0.3f, -0.3f);
+	scene.Add(std::move(GridManager));
+
+
+
 
 	go->SetPosition(358, 180);
 	scene.Add(std::move(go));
@@ -62,12 +77,7 @@ static void load()
 	
 	scene.Add(std::move(fpso));
 
-	auto GridManager = std::make_unique<dae::GameObject>();
-	auto GridComp = std::make_unique<dae::GridComponent>(GridManager.get(),32, 18);
-	GridComp->SetTileScale(32.f, 32.f);
-	GridManager.get()->AddComponent(std::move(GridComp));
-	GridManager.get()->SetPosition(-0.3f, -0.3f);
-	scene.Add(std::move(GridManager));
+
 
 	//auto Menu = std::make_unique<dae::GameObject>();
 	//auto thr = std::make_unique<dae::ThrashCacheComponent>(Menu.get());

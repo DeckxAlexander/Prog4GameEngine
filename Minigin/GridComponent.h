@@ -21,6 +21,11 @@ namespace dae
 
 		void SetTileScale(float x, float y);
 
+		glm::vec2 GetTileScale() const
+		{
+			return m_TileScale;
+		}
+
 		GridComponent(GameObject* pOwner, int colums, int rows);
 		~GridComponent() = default;
 		GridComponent(const GridComponent& other) = delete;
