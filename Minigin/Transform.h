@@ -4,22 +4,16 @@
 namespace dae
 {
 	class GameObject;
-	class Transform final
+	class Transform
 	{
 	public:
-		Transform(GameObject* pOwner) : m_pOwner{ pOwner }, m_scale{1.f,1.f,1.f}, m_LocalPosition{ 0.f,0.f,0.f }, m_WorldPosition{ 0.f,0.f,0.f }, m_PositionIsDirty{true}
+		Transform(GameObject* pOwner) : m_pOwner{ pOwner }, m_scale{ 1.f,1.f,1.f }, m_LocalPosition{ 0.f,0.f,0.f }, m_WorldPosition{ 0.f,0.f,0.f }, m_PositionIsDirty{ true }
 		{
 		}
 
-		
-
-		//void SetPosition(const glm::vec3& position);
-
-		void SetScale(float x, float y, float z=0);
+		void SetScale(float x, float y, float z = 0);
 		void SetScale(const glm::vec3& scale);
 		const glm::vec3& GetScale() const { return m_scale; }
-
-		//New SceneGraph Positions
 		void SetLocalPosition(const glm::vec3& position);
 		void SetPosition(const glm::vec3& position) { SetLocalPosition(position); }; //SetPosition still used as SetLocalPosition
 		const glm::vec3& GetWorldPosition();
@@ -32,10 +26,12 @@ namespace dae
 	private:
 		GameObject* m_pOwner;
 
-		glm::vec3 m_scale; 
+		glm::vec3 m_scale;
 		glm::vec3 m_LocalPosition;
 		glm::vec3 m_WorldPosition;
 		bool m_PositionIsDirty;
 
 	};
+
+
 }

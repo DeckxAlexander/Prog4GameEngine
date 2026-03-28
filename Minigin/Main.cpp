@@ -20,6 +20,7 @@
 #include "HealthComponent.h"
 #include "InputManager.h"
 #include "SteamObserver.h"
+#include "GridComponent.h"
 
 
 #include <filesystem>
@@ -61,157 +62,12 @@ static void load()
 	
 	scene.Add(std::move(fpso));
 
-
-	go = std::make_unique<dae::GameObject>();
-	playerRenderComponent = std::make_unique<dae::RenderComponent>(go.get(), "Bomb.png");
-	auto playerMovementComponent = std::make_unique<dae::MovementComponent>(go.get(), 50.f);
-	go.get()->AddComponent(std::move(playerRenderComponent));
-	go.get()->AddComponent(std::move(playerMovementComponent));
-	go.get()->SetPosition(250, 100);
-
-
-	
-
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_D, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(go.get()), std::make_unique<dae::CommandValue>( glm::vec2 { 1.f, 0.f }));
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_A, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(go.get()), std::make_unique<dae::CommandValue>( glm::vec2 { -1.f, 0.f }));
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_W, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(go.get()), std::make_unique<dae::CommandValue>( glm::vec2{ 0.f, -1.f }));
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_S, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(go.get()), std::make_unique<dae::CommandValue>( glm::vec2{ 0.f, 1.f }));
-
-//Player 1
-
-
-	auto SteamObject = std::make_unique<dae::GameObject>();
-	auto steamObserver = std::make_unique<dae::SteamObserver>(SteamObject.get());
-
-	auto healthObject = std::make_unique<dae::GameObject>();
-	auto scoreObject = std::make_unique<dae::GameObject>();
-	auto healthObserver = std::make_unique<dae::HealthObserver>(healthObject.get());
-	auto scoreObserver = std::make_unique<dae::ScoreObserver>(scoreObject.get());
-	auto Player1 = std::make_unique<dae::GameObject>();
-	playerRenderComponent = std::make_unique<dae::RenderComponent>(Player1.get(), "Bomberman.png");
-	playerMovementComponent = std::make_unique<dae::MovementComponent>(Player1.get(), 100.f);
-	auto playerHealthComponent = std::make_unique<dae::HealthComponent>(Player1.get(), 3);
-	auto playerScoreComponent = std::make_unique<dae::ScoreComponent>(Player1.get());
-	playerHealthComponent.get()->GetSubject()->AddObserver(healthObserver.get());
-	playerHealthComponent.get()->GetSubject()->AddObserver(playerScoreComponent.get());
-	playerScoreComponent.get()->GetSubject()->AddObserver(scoreObserver.get());
-	playerScoreComponent.get()->GetSubject()->AddObserver(steamObserver.get());
-	playerScoreComponent.get()->SetScore(50);
-
-	Player1.get()->AddComponent(std::move(playerRenderComponent));
-	Player1.get()->AddComponent(std::move(playerScoreComponent));
-	Player1.get()->AddComponent(std::move(playerMovementComponent));
-	Player1.get()->AddComponent(std::move(playerHealthComponent));
-	Player1.get()->SetPosition(300, 100);
-
-
-
-
-
-
-
-	auto scoreTextComp = std::make_unique<dae::TextComponent>(scoreObject.get(), "50 Score", font);
-	auto scoreRenderComp = std::make_unique<dae::RenderComponent>(scoreObject.get());
-	scoreObject.get()->AddComponent(std::move(scoreTextComp));
-	scoreObject.get()->AddComponent(std::move(scoreRenderComp));
-	scoreObject.get()->AddComponent(std::move(scoreObserver));
-	scoreObject.get()->SetPosition(10.f, 250.f);
-
-	auto healthTextComp = std::make_unique<dae::TextComponent>(healthObject.get(), "3 Health", font);
-	auto healthRenderComp = std::make_unique<dae::RenderComponent>(healthObject.get());
-	healthObject.get()->AddComponent(std::move(healthTextComp));
-	healthObject.get()->AddComponent(std::move(healthRenderComp));
-	healthObject.get()->AddComponent(std::move(healthObserver));
-	healthObject.get()->SetPosition(10.f, 200.f);
-	scene.Add(std::move(healthObject));
-	scene.Add(std::move(scoreObject));
-
-
-	//Player2
-
-
-	healthObject = std::make_unique<dae::GameObject>();
-	scoreObject = std::make_unique<dae::GameObject>();
-	healthObserver = std::make_unique<dae::HealthObserver>(healthObject.get());
-	scoreObserver = std::make_unique<dae::ScoreObserver>(scoreObject.get());
-	auto Player2 = std::make_unique<dae::GameObject>();
-	playerRenderComponent = std::make_unique<dae::RenderComponent>(Player2.get(), "Bomberman.png");
-	playerMovementComponent = std::make_unique<dae::MovementComponent>(Player2.get(), 100.f);
-	playerHealthComponent = std::make_unique<dae::HealthComponent>(Player2.get(), 3);
-	playerScoreComponent = std::make_unique<dae::ScoreComponent>(Player2.get());
-	playerHealthComponent.get()->GetSubject()->AddObserver(healthObserver.get());
-	playerHealthComponent.get()->GetSubject()->AddObserver(playerScoreComponent.get());
-	playerScoreComponent.get()->GetSubject()->AddObserver(scoreObserver.get());
-	playerScoreComponent.get()->GetSubject()->AddObserver(steamObserver.get());
-	playerScoreComponent.get()->SetScore(50);
-	Player2.get()->AddComponent(std::move(playerRenderComponent));
-	Player2.get()->AddComponent(std::move(playerMovementComponent));
-	Player2.get()->AddComponent(std::move(playerHealthComponent));
-	Player2.get()->AddComponent(std::move(playerScoreComponent));
-
-
-	Player2.get()->SetPosition(350, 100);
-
-	scoreTextComp = std::make_unique<dae::TextComponent>(scoreObject.get(), "50 Score", font);
-	scoreRenderComp = std::make_unique<dae::RenderComponent>(scoreObject.get());
-	scoreObject.get()->AddComponent(std::move(scoreTextComp));
-	scoreObject.get()->AddComponent(std::move(scoreRenderComp));
-	scoreObject.get()->AddComponent(std::move(scoreObserver));
-	scoreObject.get()->SetPosition(10.f, 350.f);
-
-	healthTextComp = std::make_unique<dae::TextComponent>(healthObject.get(), "3 Health", font);
-	healthRenderComp = std::make_unique<dae::RenderComponent>(healthObject.get());
-	healthObject.get()->AddComponent(std::move(healthTextComp));
-	healthObject.get()->AddComponent(std::move(healthRenderComp));
-	healthObject.get()->AddComponent(std::move(healthObserver));
-	healthObject.get()->SetPosition(10.f, 300.f);
-
-	scene.Add(std::move(healthObject));
-	scene.Add(std::move(scoreObject));
-	
-
-	SteamObject.get()->AddComponent(std::move(steamObserver));
-	scene.Add(std::move(SteamObject));
-
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_U, dae::KeyState::Down, std::make_unique<dae::Damage>(Player1.get()), nullptr);
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_I, dae::KeyState::Down, std::make_unique<dae::AddScore>(Player1.get()), nullptr);
-
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_J, dae::KeyState::Down, std::make_unique<dae::Damage>(Player2.get()), nullptr);
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_K, dae::KeyState::Down, std::make_unique<dae::AddScore>(Player2.get()), nullptr);
-	auto controller1 = std::make_unique<dae::Controller>(0);
-
-	controller1->BindCommand(GAMEPAD_DPAD_DOWN, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(Player2.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, 1.f }));
-	controller1->BindCommand(GAMEPAD_DPAD_UP, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(Player2.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, -1.f }));
-	controller1->BindCommand(GAMEPAD_DPAD_RIGHT, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(Player2.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0 }));
-	controller1->BindCommand(GAMEPAD_DPAD_LEFT, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(Player2.get()), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0 }));
-	controller1->BindAxis(std::make_unique<dae::MoveAround>(Player1.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 1.f }), true);
-
-
-	dae::InputManager::GetInstance().AddController(std::move(controller1));
-
-
-
-	
-	scene.Add(std::move(go));
-	scene.Add(std::move(Player1));
-	scene.Add(std::move(Player2));
-
-
-	auto ExplanationObject = std::make_unique<dae::GameObject>();
-	auto ExplanationTextComp = std::make_unique<dae::TextComponent>(ExplanationObject.get(), "(U / J) - Decrease Health and Score", font);
-	auto ExplanationRenderComp = std::make_unique<dae::RenderComponent>(ExplanationObject.get());
-	ExplanationObject.get()->AddComponent(std::move(ExplanationTextComp));
-	ExplanationObject.get()->AddComponent(std::move(ExplanationRenderComp));
-	ExplanationObject.get()->SetPosition(10.f, 400.f);
-	scene.Add(std::move(ExplanationObject));
-
-	ExplanationObject = std::make_unique<dae::GameObject>();
-	ExplanationTextComp = std::make_unique<dae::TextComponent>(ExplanationObject.get(), "(I / K) - Increase Score", font);
-	ExplanationRenderComp = std::make_unique<dae::RenderComponent>(ExplanationObject.get());
-	ExplanationObject.get()->AddComponent(std::move(ExplanationTextComp));
-	ExplanationObject.get()->AddComponent(std::move(ExplanationRenderComp));
-	ExplanationObject.get()->SetPosition(10.f, 440.f);
-	scene.Add(std::move(ExplanationObject));
+	auto GridManager = std::make_unique<dae::GameObject>();
+	auto GridComp = std::make_unique<dae::GridComponent>(GridManager.get(),32, 18);
+	GridComp->SetTileScale(32.f, 32.f);
+	GridManager.get()->AddComponent(std::move(GridComp));
+	GridManager.get()->SetPosition(-0.3f, -0.3f);
+	scene.Add(std::move(GridManager));
 
 	//auto Menu = std::make_unique<dae::GameObject>();
 	//auto thr = std::make_unique<dae::ThrashCacheComponent>(Menu.get());
