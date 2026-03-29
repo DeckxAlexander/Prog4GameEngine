@@ -1,5 +1,6 @@
 #include "Transform.h"
 #include "GameObject.h"
+#include "CollisionComponent.h"
 #include "GridComponent.h"
 
 
@@ -36,6 +37,12 @@ void dae::Transform::SetPositionDirty()
 	for (GameObject* child : m_pOwner->GetChildren()) 
 	{
 		child->GetTransform()->SetPositionDirty();
+	}
+
+	CollisionComponent* collisionComp = m_pOwner->GetComponentByType<CollisionComponent>();
+	if (collisionComp != nullptr)
+	{
+		collisionComp->SetCollisionRectDirty();
 	}
 
 }
@@ -79,5 +86,16 @@ void dae::GridTransform::UpdateWorldPosition()
 
 	}
 	m_PositionIsDirty = false;
+
+}
+
+
+void dae::GridTransform::SetGridTile(int tileX, int tileY)
+{
+	glm::vec3 screenPos{};
+	screenPos.x = tileX * m_pGrid->GetTileScale().x;
+	screenPos.y = tileY * m_pGrid->GetTileScale().y;
+
+	SetLocalPosition(screenPos);
 
 }

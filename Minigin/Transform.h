@@ -46,6 +46,9 @@ namespace dae
 			return floorf(value / tileSize) * tileSize;
 		}
 
+
+		void SetGridTile(int tileX, int tileY);
+
 		virtual void UpdateWorldPosition() override;
 
 	protected:

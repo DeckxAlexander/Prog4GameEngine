@@ -1,0 +1,64 @@
+#include "CollisionComponent.h"
+#include "CollisionsManager.h"
+#include "GameObject.h"
+
+
+glm::vec4 dae::CollisionComponent::GetCollisionRect() 
+{
+	if (m_CollisionRectIsDirty) UpdateCollisionRect();
+	return m_CollisionRect;
+
+}
+
+void dae::CollisionComponent::UpdateCollisionRect() 
+{
+	auto pos = m_pOwner->GetWorldPosition();
+
+	m_CollisionRect.x = pos.x ;
+	m_CollisionRect.y = pos.y ;
+
+	m_CollisionRectIsDirty = false;
+}
+
+dae::CollisionComponent::CollisionComponent(GameObject* pOwner, float width, float height) : ObjectComponent(pOwner)
+{
+	m_CollisionRect.z = width;
+	m_CollisionRect.w = height;
+
+    CollisionsManager::GetInstance().AddCollision(this);
+
+
+}
+
+dae::CollisionComponent::~CollisionComponent()
+{
+
+
+    CollisionsManager::GetInstance().RemoveCollision(this);
+
+
+}
+
+
+bool dae::CollisionComponent::CheckCollision(CollisionComponent* collisionA, CollisionComponent* collisionB)
+{
+    auto a = collisionA->GetCollisionRect();
+    auto b = collisionB->GetCollisionRect();
+
+    float leftA = a.x;
+    float rightA = a.x + a.z;
+    float topA = a.y;
+    float bottomA = a.y + a.w;
+
+    float leftB = b.x;
+    float rightB = b.x + b.z;
+    float topB = b.y;
+    float bottomB = b.y + b.w;
+
+    return (
+        leftA < rightB &&
+        rightA > leftB &&
+        topA < bottomB &&
+        bottomA > topB
+        );
+}

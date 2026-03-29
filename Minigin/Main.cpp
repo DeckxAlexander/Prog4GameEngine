@@ -31,31 +31,44 @@ static void load()
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
 
 
-	auto go = std::make_unique<dae::GameObject>();
-	auto playerRenderComponent = std::make_unique<dae::RenderComponent>(go.get(), "background.png");
-	go.get()->AddComponent(std::move(playerRenderComponent));
-	scene.Add(std::move(go));
-
+	auto tileGameObject = std::make_unique<dae::GameObject>();
+	auto tileRenderComponent = std::make_unique<dae::RenderComponent>(tileGameObject.get(), "background.png");
+	tileGameObject.get()->AddComponent(std::move(tileRenderComponent));
+	scene.Add(std::move(tileGameObject));
 
 
 	auto GridManager = std::make_unique<dae::GameObject>();
 	auto GridComp = std::make_unique<dae::GridComponent>(GridManager.get(), 32, 18);
-
-	go = std::make_unique<dae::GameObject>(true, GridComp.get());
-	playerRenderComponent = std::make_unique<dae::RenderComponent>(go.get(), "logo.png");
-	go.get()->AddComponent(std::move(playerRenderComponent));
-
-
+	dae::GridComponent* grid = GridComp.get();
 	GridComp->SetTileScale(32.f, 32.f);
 	GridManager.get()->AddComponent(std::move(GridComp));
 	GridManager.get()->SetPosition(-0.3f, -0.3f);
 	scene.Add(std::move(GridManager));
 
+	//Create Grid
+	for (int indexX{}; indexX < 32; indexX++) 
+	{
+		for (int indexY{}; indexY < 18; indexY++) 
+		{
+			tileGameObject = std::make_unique<dae::GameObject>(true, grid);
+			if (indexX == 0 || indexX == 31 || indexY == 0 || indexY == 17) 
+			{
+				tileRenderComponent = std::make_unique<dae::RenderComponent>(tileGameObject.get(), "HardStoneTile.png");
+			}
+			else 
+			{
+				tileRenderComponent = std::make_unique<dae::RenderComponent>(tileGameObject.get(), "GreenTile.png");
+			}
 
+			
+			tileGameObject.get()->AddComponent(std::move(tileRenderComponent));
+			tileGameObject->SetScale(2.f, 2.f);
+			dynamic_cast<dae::GridTransform*>(tileGameObject->GetTransform())->SetGridTile(indexX, indexY);
+			scene.Add(std::move(tileGameObject));
+		}
 
+	}
 
-	go->SetPosition(358, 180);
-	scene.Add(std::move(go));
 
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto to = std::make_unique<dae::GameObject>();
@@ -77,12 +90,6 @@ static void load()
 	
 	scene.Add(std::move(fpso));
 
-
-
-	//auto Menu = std::make_unique<dae::GameObject>();
-	//auto thr = std::make_unique<dae::ThrashCacheComponent>(Menu.get());
-	//Menu.get()->AddComponent(std::move(thr));
-	//scene.Add(std::move(Menu));
 
 	dae::InputManager::GetInstance().UnbindCommand(SDL_SCANCODE_B, dae::KeyState::Down);
 
