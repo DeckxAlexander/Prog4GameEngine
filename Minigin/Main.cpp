@@ -22,6 +22,7 @@
 #include "SteamObserver.h"
 #include "GridComponent.h"
 #include "CollisionComponent.h"
+#include "BombComponent.h"
 
 
 #include <filesystem>
@@ -91,7 +92,19 @@ static void load()
 	scene.Add(std::move(playerGameObject));
 
 
+	//Place TestBomb
+	auto bombGameObject = std::make_unique<dae::GameObject>(true, grid);
+	auto bombRenderComponent = std::make_unique<dae::RenderComponent>(bombGameObject.get(), "Bomb.png");
+	auto bombBombComponent = std::make_unique<dae::BombComponent>(bombGameObject.get(), 5.f);
+	auto bombEx = bombBombComponent.get();
+	bombGameObject.get()->AddComponent(std::move(bombRenderComponent));
+	bombGameObject.get()->AddComponent(std::move(bombBombComponent));
+	bombGameObject.get()->SetPosition(35, 35);
+	bombGameObject.get()->SetScale(1.5f, 1.5f);
 
+
+	scene.Add(std::move(bombGameObject));
+	bombEx->StartDetonate();
 
 	
 }

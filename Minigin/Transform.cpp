@@ -99,3 +99,14 @@ void dae::GridTransform::SetGridTile(int tileX, int tileY)
 	SetLocalPosition(screenPos);
 
 }
+
+glm::ivec2 dae::GridTransform::GetGridTiles()
+{
+	glm::ivec2 tile{};
+	auto pos = GetWorldPosition();
+
+	tile.x = static_cast<int>(pos.x / m_pGrid->GetTileScale().x);
+	tile.y = static_cast<int>(pos.y / m_pGrid->GetTileScale().y);
+
+	return tile;
+}

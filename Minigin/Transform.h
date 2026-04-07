@@ -49,7 +49,11 @@ namespace dae
 
 		void SetGridTile(int tileX, int tileY);
 
+		glm::ivec2 GetGridTiles();
+
 		virtual void UpdateWorldPosition() override;
+
+		GridComponent* GetGrid() { return m_pGrid; }
 
 	protected:
 		GridComponent* m_pGrid;

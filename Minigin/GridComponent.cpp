@@ -8,6 +8,7 @@
 dae::GridComponent::GridComponent(GameObject* pOwner, int colums, int rows) : ObjectComponent(pOwner), m_Colums{colums}, m_Rows{rows}
 {
     m_GridLayout.resize(m_Colums * m_Rows);
+    m_GridPointers.resize(m_Colums * m_Rows);
 }
 
 
@@ -68,7 +69,7 @@ void dae::GridComponent::SpawnGrid()
 			int x = i % m_Colums;
 			int y = i / m_Colums;
 			dynamic_cast<dae::GridTransform*>(tileGameObject->GetTransform())->SetGridTile(x, y);
-			m_GridPointers.push_back(tileGameObject.get());
+			m_GridPointers[i] = (tileGameObject.get());
 
 			scene.Add(std::move(tileGameObject));
 		}
@@ -85,7 +86,7 @@ void dae::GridComponent::SpawnGrid()
 			int x = i % m_Colums;
 			int y = i / m_Colums;
 			dynamic_cast<dae::GridTransform*>(tileGameObject->GetTransform())->SetGridTile(x, y);
-			m_GridPointers.push_back(tileGameObject.get());
+			m_GridPointers[i] = (tileGameObject.get());
 
 			scene.Add(std::move(tileGameObject));
 		}

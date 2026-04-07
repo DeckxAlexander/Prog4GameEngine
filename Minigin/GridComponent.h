@@ -8,28 +8,11 @@ namespace dae
 
 	class GridComponent final : public ObjectComponent
 	{
-	private:
-		//Grid
-		int m_Colums;
-		int m_Rows;
-		glm::vec2 m_TileScale{1.f,1.f };
-
-		bool m_ShowDebug{ true };
-
-
-		//GridObjects
+	public:
 		enum class GridValue {
 			empty, hard, soft, spawn
 		};
 
-		int m_SoftBlocksAmount{75};
-		std::vector<GridValue> m_GridLayout{};
-		std::vector<GameObject*> m_GridPointers{};
-
-
-
-
-	public:
 		virtual void Update() override;
 		virtual void Render() const override;
 
@@ -37,6 +20,9 @@ namespace dae
 		void SetupGrid();
 		void SpawnGrid();
 
+
+		const std::vector<GameObject*>& GetGridPtrs() { return m_GridPointers; }
+		const std::vector<GridValue>& GetGridLayout() { return m_GridLayout; }
 
 		glm::vec2 GetTileScale() const
 		{
@@ -56,5 +42,20 @@ namespace dae
 		GridComponent(GridComponent&& other) = delete;
 		GridComponent& operator=(const GridComponent& other) = delete;
 		GridComponent& operator=(GridComponent&& other) = delete;
+	private:
+		//Grid
+		int m_Colums;
+		int m_Rows;
+		glm::vec2 m_TileScale{ 1.f,1.f };
+
+		bool m_ShowDebug{ true };
+
+
+		//GridObjects
+
+		int m_SoftBlocksAmount{ 150 };
+		std::vector<GridValue> m_GridLayout{};
+		std::vector<GameObject*> m_GridPointers{};
+
 	};
 }
