@@ -46,27 +46,9 @@ static void load()
 	GridManager.get()->SetPosition(-0.3f, -0.3f);
 	scene.Add(std::move(GridManager));
 
-	//Create Grid
-	for (int indexX{}; indexX < 32; indexX++) 
-	{
-		for (int indexY{}; indexY < 18; indexY++) 
-		{
+	grid->SpawnGrid();
 
-			if ((indexX == 0 || indexX == 31 || indexY == 0 || indexY == 17) || (indexX % 2 == 0 && indexY % 2 == 0)) 
-			{
-				tileGameObject = std::make_unique<dae::GameObject>(true, grid);
-				tileRenderComponent = std::make_unique<dae::RenderComponent>(tileGameObject.get(), "HardStoneTile.png");
-				auto tilecoll = std::make_unique<dae::CollisionComponent>(tileGameObject.get(), 32.f, 32.f);
-				tileGameObject.get()->AddComponent(std::move(tileRenderComponent));
-				tileGameObject.get()->AddComponent(std::move(tilecoll));
-				tileGameObject->SetScale(2.f, 2.f);
-				dynamic_cast<dae::GridTransform*>(tileGameObject->GetTransform())->SetGridTile(indexX, indexY);
-				scene.Add(std::move(tileGameObject));
-			}
 
-		}
-
-	}
 
 
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);

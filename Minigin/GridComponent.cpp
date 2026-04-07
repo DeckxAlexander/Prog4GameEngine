@@ -1,7 +1,9 @@
 #include "GridComponent.h"
 #include "Renderer.h"
 #include "GameObject.h"
-
+#include "RenderComponent.h"
+#include "CollisionComponent.h"
+#include "SceneManager.h"
 
 dae::GridComponent::GridComponent(GameObject* pOwner, int colums, int rows) : ObjectComponent(pOwner), m_Colums{colums}, m_Rows{rows}
 {
@@ -10,7 +12,42 @@ dae::GridComponent::GridComponent(GameObject* pOwner, int colums, int rows) : Ob
 
 void dae::GridComponent::SpawnGrid() 
 {
+	auto& scene = dae::SceneManager::GetInstance().CreateScene();
+	//SetupGrid
+	for (int indexX{}; indexX < m_Colums; indexX++)
+	{
+		for (int indexY{}; indexY < m_Rows; indexY++)
+		{
+			if ((indexX == 0 || indexX == 31 || indexY == 0 || indexY == 17) || (indexX % 2 == 0 && indexY % 2 == 0))
+			{
+				m_GridLayout[GridToIndex(indexX, indexY)] = GridValue::hard;
+			}
 
+		}
+
+	}
+
+
+	for (int i{}; i < m_GridLayout.size(); i++)
+	{
+		auto val = m_GridLayout[i];
+		if (val == GridValue::hard) 
+		{
+			auto tileGameObject = std::make_unique<dae::GameObject>(true, this);
+			auto tileRenderComponent = std::make_unique<dae::RenderComponent>(tileGameObject.get(), "HardStoneTile.png");
+			auto tilecoll = std::make_unique<dae::CollisionComponent>(tileGameObject.get(), 32.f, 32.f);
+			tileGameObject.get()->AddComponent(std::move(tileRenderComponent));
+			tileGameObject.get()->AddComponent(std::move(tilecoll));
+			tileGameObject->SetScale(2.f, 2.f);
+
+			int x = i % m_Colums;
+			int y = i / m_Colums;
+			dynamic_cast<dae::GridTransform*>(tileGameObject->GetTransform())->SetGridTile(x, y);
+			m_GridPointers.push_back(tileGameObject.get());
+
+			scene.Add(std::move(tileGameObject));
+		}
+	}
 }
 
 

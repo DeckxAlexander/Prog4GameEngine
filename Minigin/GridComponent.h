@@ -22,7 +22,7 @@ namespace dae
 
 
 		std::vector<GridValue> m_GridLayout{};
-		std::vector<GameObject> m_GridPointers{};
+		std::vector<GameObject*> m_GridPointers{};
 
 
 	public:
@@ -35,6 +35,11 @@ namespace dae
 		glm::vec2 GetTileScale() const
 		{
 			return m_TileScale;
+		}
+
+		int GridToIndex(int x, int y)
+		{
+			return y * m_Colums + x;
 		}
 
 		GridComponent(GameObject* pOwner, int colums, int rows);
