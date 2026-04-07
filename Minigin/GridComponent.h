@@ -9,20 +9,24 @@ namespace dae
 	class GridComponent final : public ObjectComponent
 	{
 	private:
+		//Grid
 		int m_Colums;
 		int m_Rows;
-
 		glm::vec2 m_TileScale{1.f,1.f };
 
 		bool m_ShowDebug{ true };
 
+
+		//GridObjects
 		enum class GridValue {
-			empty, hard, soft
+			empty, hard, soft, spawn
 		};
 
-
+		int m_SoftBlocksAmount{75};
 		std::vector<GridValue> m_GridLayout{};
 		std::vector<GameObject*> m_GridPointers{};
+
+
 
 
 	public:
@@ -30,7 +34,9 @@ namespace dae
 		virtual void Render() const override;
 
 		void SetTileScale(float x, float y);
+		void SetupGrid();
 		void SpawnGrid();
+
 
 		glm::vec2 GetTileScale() const
 		{
@@ -41,6 +47,8 @@ namespace dae
 		{
 			return y * m_Colums + x;
 		}
+
+		void SetSoftBlocksAmount(int amount) { m_SoftBlocksAmount = amount; }
 
 		GridComponent(GameObject* pOwner, int colums, int rows);
 		~GridComponent() = default;

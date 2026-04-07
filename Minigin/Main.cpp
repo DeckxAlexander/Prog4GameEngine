@@ -46,6 +46,7 @@ static void load()
 	GridManager.get()->SetPosition(-0.3f, -0.3f);
 	scene.Add(std::move(GridManager));
 
+	grid->SetupGrid();
 	grid->SpawnGrid();
 
 
@@ -74,13 +75,14 @@ static void load()
 
 	//Player
 	auto playerGameObject = std::make_unique<dae::GameObject>();
-	auto playerRenderComponent = std::make_unique<dae::RenderComponent>(playerGameObject.get(), "Bomb.png");
+	auto playerRenderComponent = std::make_unique<dae::RenderComponent>(playerGameObject.get(), "Bomberman.png");
 	auto playerMovementComponent = std::make_unique<dae::MovementComponent>(playerGameObject.get(), 50.f);
-	auto playerCollider = std::make_unique<dae::CollisionComponent>(playerGameObject.get(), 15.f, 15.f);
+	auto playerCollider = std::make_unique<dae::CollisionComponent>(playerGameObject.get(), 18.f, 27.f);
 	playerGameObject.get()->AddComponent(std::move(playerRenderComponent));
 	playerGameObject.get()->AddComponent(std::move(playerMovementComponent));
 	playerGameObject.get()->AddComponent(std::move(playerCollider));
-	playerGameObject.get()->SetPosition(250, 100);
+	playerGameObject.get()->SetPosition(35, 35);
+	playerGameObject.get()->SetScale(1.5f, 1.5f);
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_D, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_A, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_W, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, -1.f }));

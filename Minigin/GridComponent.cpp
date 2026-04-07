@@ -10,10 +10,14 @@ dae::GridComponent::GridComponent(GameObject* pOwner, int colums, int rows) : Ob
     m_GridLayout.resize(m_Colums * m_Rows);
 }
 
-void dae::GridComponent::SpawnGrid() 
+
+void dae::GridComponent::SetupGrid() 
 {
-	auto& scene = dae::SceneManager::GetInstance().CreateScene();
-	//SetupGrid
+	//Create Hard blocks
+
+	m_GridLayout[GridToIndex(1, 1)] = GridValue::spawn;
+
+
 	for (int indexX{}; indexX < m_Colums; indexX++)
 	{
 		for (int indexY{}; indexY < m_Rows; indexY++)
@@ -27,6 +31,27 @@ void dae::GridComponent::SpawnGrid()
 
 	}
 
+	int softblocksSpawned{ 0 };
+
+	while (softblocksSpawned < m_SoftBlocksAmount)
+	{
+		int index = rand() % (m_Colums * m_Rows);
+		if (m_GridLayout[index] == GridValue::empty) 
+		{
+			m_GridLayout[index] = GridValue::soft;
+			softblocksSpawned++;
+		}
+	}
+
+
+	//Create softblocks
+
+}
+
+void dae::GridComponent::SpawnGrid() 
+{
+	auto& scene = dae::SceneManager::GetInstance().CreateScene();
+
 
 	for (int i{}; i < m_GridLayout.size(); i++)
 	{
@@ -35,6 +60,23 @@ void dae::GridComponent::SpawnGrid()
 		{
 			auto tileGameObject = std::make_unique<dae::GameObject>(true, this);
 			auto tileRenderComponent = std::make_unique<dae::RenderComponent>(tileGameObject.get(), "HardStoneTile.png");
+			auto tilecoll = std::make_unique<dae::CollisionComponent>(tileGameObject.get(), 32.f, 32.f);
+			tileGameObject.get()->AddComponent(std::move(tileRenderComponent));
+			tileGameObject.get()->AddComponent(std::move(tilecoll));
+			tileGameObject->SetScale(2.f, 2.f);
+
+			int x = i % m_Colums;
+			int y = i / m_Colums;
+			dynamic_cast<dae::GridTransform*>(tileGameObject->GetTransform())->SetGridTile(x, y);
+			m_GridPointers.push_back(tileGameObject.get());
+
+			scene.Add(std::move(tileGameObject));
+		}
+
+		if (val == GridValue::soft)
+		{
+			auto tileGameObject = std::make_unique<dae::GameObject>(true, this);
+			auto tileRenderComponent = std::make_unique<dae::RenderComponent>(tileGameObject.get(), "SoftStoneTile.png");
 			auto tilecoll = std::make_unique<dae::CollisionComponent>(tileGameObject.get(), 32.f, 32.f);
 			tileGameObject.get()->AddComponent(std::move(tileRenderComponent));
 			tileGameObject.get()->AddComponent(std::move(tilecoll));

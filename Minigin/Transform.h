@@ -41,7 +41,7 @@ namespace dae
 		{
 		}
 
-		float SnapToGrid(float value, float tileSize)
+		static float SnapToGrid(float value, float tileSize)
 		{
 			return floorf(value / tileSize) * tileSize;
 		}
