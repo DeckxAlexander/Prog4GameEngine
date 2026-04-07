@@ -20,7 +20,7 @@ void dae::Transform::SetScale(const glm::vec3& scale)
 void dae::Transform::SetLocalPosition(const glm::vec3& position)
 {
 	m_LocalPosition = position;
-	m_PositionIsDirty = true;
+	SetPositionDirty();
 }
 
 const glm::vec3& dae::Transform::GetWorldPosition() 

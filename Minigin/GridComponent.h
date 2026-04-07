@@ -15,11 +15,22 @@ namespace dae
 		glm::vec2 m_TileScale{1.f,1.f };
 
 		bool m_ShowDebug{ true };
+
+		enum class GridValue {
+			empty, hard, soft
+		};
+
+
+		std::vector<GridValue> m_GridLayout{};
+		std::vector<GameObject> m_GridPointers{};
+
+
 	public:
 		virtual void Update() override;
 		virtual void Render() const override;
 
 		void SetTileScale(float x, float y);
+		void SpawnGrid();
 
 		glm::vec2 GetTileScale() const
 		{

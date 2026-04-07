@@ -5,6 +5,11 @@
 
 dae::GridComponent::GridComponent(GameObject* pOwner, int colums, int rows) : ObjectComponent(pOwner), m_Colums{colums}, m_Rows{rows}
 {
+    m_GridLayout.resize(m_Colums * m_Rows);
+}
+
+void dae::GridComponent::SpawnGrid() 
+{
 
 }
 

@@ -21,6 +21,7 @@
 #include "InputManager.h"
 #include "SteamObserver.h"
 #include "GridComponent.h"
+#include "CollisionComponent.h"
 
 
 #include <filesystem>
@@ -32,7 +33,7 @@ static void load()
 
 
 	auto tileGameObject = std::make_unique<dae::GameObject>();
-	auto tileRenderComponent = std::make_unique<dae::RenderComponent>(tileGameObject.get(), "background.png");
+	auto tileRenderComponent = std::make_unique<dae::RenderComponent>(tileGameObject.get(), "background2.png");
 	tileGameObject.get()->AddComponent(std::move(tileRenderComponent));
 	scene.Add(std::move(tileGameObject));
 
@@ -50,21 +51,19 @@ static void load()
 	{
 		for (int indexY{}; indexY < 18; indexY++) 
 		{
-			tileGameObject = std::make_unique<dae::GameObject>(true, grid);
-			if (indexX == 0 || indexX == 31 || indexY == 0 || indexY == 17) 
+
+			if ((indexX == 0 || indexX == 31 || indexY == 0 || indexY == 17) || (indexX % 2 == 0 && indexY % 2 == 0)) 
 			{
+				tileGameObject = std::make_unique<dae::GameObject>(true, grid);
 				tileRenderComponent = std::make_unique<dae::RenderComponent>(tileGameObject.get(), "HardStoneTile.png");
-			}
-			else 
-			{
-				tileRenderComponent = std::make_unique<dae::RenderComponent>(tileGameObject.get(), "GreenTile.png");
+				auto tilecoll = std::make_unique<dae::CollisionComponent>(tileGameObject.get(), 32.f, 32.f);
+				tileGameObject.get()->AddComponent(std::move(tileRenderComponent));
+				tileGameObject.get()->AddComponent(std::move(tilecoll));
+				tileGameObject->SetScale(2.f, 2.f);
+				dynamic_cast<dae::GridTransform*>(tileGameObject->GetTransform())->SetGridTile(indexX, indexY);
+				scene.Add(std::move(tileGameObject));
 			}
 
-			
-			tileGameObject.get()->AddComponent(std::move(tileRenderComponent));
-			tileGameObject->SetScale(2.f, 2.f);
-			dynamic_cast<dae::GridTransform*>(tileGameObject->GetTransform())->SetGridTile(indexX, indexY);
-			scene.Add(std::move(tileGameObject));
 		}
 
 	}
@@ -91,7 +90,22 @@ static void load()
 	scene.Add(std::move(fpso));
 
 
-	dae::InputManager::GetInstance().UnbindCommand(SDL_SCANCODE_B, dae::KeyState::Down);
+	//Player
+	auto playerGameObject = std::make_unique<dae::GameObject>();
+	auto playerRenderComponent = std::make_unique<dae::RenderComponent>(playerGameObject.get(), "Bomb.png");
+	auto playerMovementComponent = std::make_unique<dae::MovementComponent>(playerGameObject.get(), 50.f);
+	auto playerCollider = std::make_unique<dae::CollisionComponent>(playerGameObject.get(), 15.f, 15.f);
+	playerGameObject.get()->AddComponent(std::move(playerRenderComponent));
+	playerGameObject.get()->AddComponent(std::move(playerMovementComponent));
+	playerGameObject.get()->AddComponent(std::move(playerCollider));
+	playerGameObject.get()->SetPosition(250, 100);
+	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_D, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
+	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_A, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
+	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_W, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, -1.f }));
+	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_S, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, 1.f }));
+
+	scene.Add(std::move(playerGameObject));
+
 
 
 

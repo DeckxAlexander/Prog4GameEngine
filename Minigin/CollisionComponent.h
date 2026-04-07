@@ -17,7 +17,7 @@ namespace dae
 
 	public:
 		virtual void Update() override {};
-		virtual void Render() const override {};
+		virtual void Render() const override;
 
 		glm::vec4 GetCollisionRect();
 		void SetCollisionRectDirty() { m_CollisionRectIsDirty = true; }

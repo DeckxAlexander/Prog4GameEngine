@@ -7,7 +7,7 @@
 
 dae::GameObject* dae::ObjectComponent::GetOwner()
 {
-	return nullptr;
+	return m_pOwner;
 }
 
 

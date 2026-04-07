@@ -1,6 +1,7 @@
 #include "CollisionComponent.h"
 #include "CollisionsManager.h"
 #include "GameObject.h"
+#include "Renderer.h"
 
 
 glm::vec4 dae::CollisionComponent::GetCollisionRect() 
@@ -18,6 +19,17 @@ void dae::CollisionComponent::UpdateCollisionRect()
 	m_CollisionRect.y = pos.y ;
 
 	m_CollisionRectIsDirty = false;
+}
+
+void dae::CollisionComponent::Render() const
+{
+
+    auto pos = m_pOwner->GetWorldPosition();
+
+    Renderer::GetInstance().RenderLine(pos.x, pos.y, pos.x + m_CollisionRect.z, pos.y);
+    Renderer::GetInstance().RenderLine(pos.x + m_CollisionRect.z, pos.y, pos.x + m_CollisionRect.z, pos.y + m_CollisionRect.w);
+    Renderer::GetInstance().RenderLine(pos.x, pos.y + m_CollisionRect.w, pos.x + m_CollisionRect.z, pos.y + m_CollisionRect.w);
+    Renderer::GetInstance().RenderLine(pos.x, pos.y , pos.x , pos.y + m_CollisionRect.w);
 }
 
 dae::CollisionComponent::CollisionComponent(GameObject* pOwner, float width, float height) : ObjectComponent(pOwner)
