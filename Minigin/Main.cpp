@@ -23,6 +23,7 @@
 #include "GridComponent.h"
 #include "CollisionComponent.h"
 #include "BombComponent.h"
+#include "PlaceBombComponent.h"
 
 
 #include <filesystem>
@@ -79,32 +80,35 @@ static void load()
 	auto playerRenderComponent = std::make_unique<dae::RenderComponent>(playerGameObject.get(), "Bomberman.png");
 	auto playerMovementComponent = std::make_unique<dae::MovementComponent>(playerGameObject.get(), 50.f);
 	auto playerCollider = std::make_unique<dae::CollisionComponent>(playerGameObject.get(), 18.f, 27.f);
+	auto playerplacebombcomponent = std::make_unique<dae::PlaceBombComponent>(playerGameObject.get(), grid);
 	playerGameObject.get()->AddComponent(std::move(playerRenderComponent));
 	playerGameObject.get()->AddComponent(std::move(playerMovementComponent));
 	playerGameObject.get()->AddComponent(std::move(playerCollider));
+	playerGameObject.get()->AddComponent(std::move(playerplacebombcomponent));
 	playerGameObject.get()->SetPosition(35, 35);
 	playerGameObject.get()->SetScale(1.5f, 1.5f);
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_D, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_A, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_W, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, -1.f }));
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_S, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, 1.f }));
+	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_X, dae::KeyState::Pressed, std::make_unique<dae::PlaceBomb>(playerGameObject.get()),nullptr);
 
 	scene.Add(std::move(playerGameObject));
 
 
-	//Place TestBomb
-	auto bombGameObject = std::make_unique<dae::GameObject>(true, grid);
-	auto bombRenderComponent = std::make_unique<dae::RenderComponent>(bombGameObject.get(), "Bomb.png");
-	auto bombBombComponent = std::make_unique<dae::BombComponent>(bombGameObject.get(), 5.f);
-	auto bombEx = bombBombComponent.get();
-	bombGameObject.get()->AddComponent(std::move(bombRenderComponent));
-	bombGameObject.get()->AddComponent(std::move(bombBombComponent));
-	bombGameObject.get()->SetPosition(35, 35);
-	bombGameObject.get()->SetScale(1.5f, 1.5f);
+	////Place TestBomb
+	//auto bombGameObject = std::make_unique<dae::GameObject>(true, grid);
+	//auto bombRenderComponent = std::make_unique<dae::RenderComponent>(bombGameObject.get(), "Bomb.png");
+	//auto bombBombComponent = std::make_unique<dae::BombComponent>(bombGameObject.get(), 5.f);
+	//auto bombEx = bombBombComponent.get();
+	//bombGameObject.get()->AddComponent(std::move(bombRenderComponent));
+	//bombGameObject.get()->AddComponent(std::move(bombBombComponent));
+	//bombGameObject.get()->SetPosition(35, 35);
+	//bombGameObject.get()->SetScale(1.5f, 1.5f);
 
 
-	scene.Add(std::move(bombGameObject));
-	bombEx->StartDetonate();
+	//scene.Add(std::move(bombGameObject));
+	//bombEx->StartDetonate();
 
 	
 }

@@ -3,6 +3,7 @@
 #include "MovementComponent.h"
 #include "ScoreManager.h"
 #include "HealthComponent.h"
+#include "PlaceBombComponent.h"
 
 
 
@@ -12,12 +13,8 @@ void dae::MoveAround::Execute([[maybe_unused]] CommandValue* value)
 	if (value != nullptr)comp->AddVelocity(value->Vec2D.x, value->Vec2D.y);
 }
 
-void dae::Damage::Execute([[maybe_unused]] CommandValue* value)
+void dae::PlaceBomb::Execute([[maybe_unused]] CommandValue* value)
 {
-	if (auto comp = m_GameObject->GetComponentByType<HealthComponent>()) comp->TakeDamage(1);
+	if (auto comp = m_GameObject->GetComponentByType<PlaceBombComponent>()) comp->PlaceBomb();
 }
 
-void dae::AddScore::Execute([[maybe_unused]] CommandValue* value)
-{
-	if (auto comp = m_GameObject->GetComponentByType<ScoreComponent>()) comp->AddScore(100);
-}

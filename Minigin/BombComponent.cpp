@@ -2,6 +2,7 @@
 #include "TimeManager.h"
 #include "GridComponent.h"
 #include "GameObject.h"
+#include "PlaceBombComponent.h"
 #include <iostream>
 
 
@@ -33,20 +34,35 @@ void dae::BombComponent::Explode()
 
 	//Affect Surrounding tiles
 	auto tileLayout = grid->GetGridLayout();
-	for (int xIndex{gridPos.x - 1}; xIndex <= gridPos.x + 1; xIndex++) 
-	{
-		for (int yIndex{ gridPos.y - 1 }; yIndex <= gridPos.y + 1; yIndex++) 
-		{
-			int gridIndex = grid->GridToIndex(xIndex, yIndex);
-			if (tileLayout[gridIndex] == GridComponent::GridValue::soft) 
-			{
-				grid->GetGridPtrs()[gridIndex]->MarkForDelete();
-			}
 
-		}
+	//Temporary
+	int gridIndex = grid->GridToIndex(gridPos.x, gridPos.y-1);
+	if (tileLayout[gridIndex] == GridComponent::GridValue::soft) 
+	{
+				grid->GetGridPtrs()[gridIndex]->MarkForDelete();
+	}
+
+	 gridIndex = grid->GridToIndex(gridPos.x, gridPos.y + 1);
+	if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
+	{
+		grid->GetGridPtrs()[gridIndex]->MarkForDelete();
+	}
+
+	 gridIndex = grid->GridToIndex(gridPos.x - 1, gridPos.y);
+	if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
+	{
+		grid->GetGridPtrs()[gridIndex]->MarkForDelete();
+	}
+
+	 gridIndex = grid->GridToIndex(gridPos.x + 1, gridPos.y);
+	if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
+	{
+		grid->GetGridPtrs()[gridIndex]->MarkForDelete();
 	}
 
 	std::cout << "Explode";
+
+	if (m_Placer) m_Placer->UnlockCanPlace();
 
 	GetOwner()->MarkForDelete();
 

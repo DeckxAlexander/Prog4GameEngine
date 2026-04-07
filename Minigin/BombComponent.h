@@ -3,13 +3,14 @@
 
 namespace dae
 {
-
+	class PlaceBombComponent;
 	class BombComponent final : public ObjectComponent
 	{
 	private:
 		float m_TimePassed{};
 		float m_DetonationTime;
 		bool m_IsDetonating{ false };
+		PlaceBombComponent* m_Placer;
 		void Explode();
 
 	public:
@@ -20,7 +21,7 @@ namespace dae
 		}
 
 
-		BombComponent(GameObject* pOwner, float detonationTime) : ObjectComponent(pOwner), m_DetonationTime{detonationTime}
+		BombComponent(GameObject* pOwner, float detonationTime, PlaceBombComponent* placer) : ObjectComponent(pOwner), m_DetonationTime{detonationTime}, m_Placer{ placer }
 		{
 		}
 		~BombComponent() {}

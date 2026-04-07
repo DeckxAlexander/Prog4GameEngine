@@ -28,7 +28,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   "Minigin/TextComponent.cpp"
   Minigin/Texture2D.cpp
   Minigin/Transform.cpp
- "Minigin/TimeManager.h" "Minigin/ObjectComponent.cpp" "Minigin/FPSCounterComponent.h" "Minigin/RenderComponent.h" "Minigin/RenderComponent.cpp" "Minigin/MovementComponent.h" "Minigin/MovementComponent.cpp" "Minigin/ThrashCacheComponent.cpp" "Minigin/Commands.h" "Minigin/Commands.cpp" "Minigin/Controller.h" "Minigin/Controller.cpp" "Minigin/EventManagers.h" "Minigin/HealthObserver.h" "Minigin/HealthComponent.h" "Minigin/ScoreManager.h" "Minigin/SteamObserver.h" "Minigin/GridComponent.h" "Minigin/GridComponent.cpp" "Minigin/CollisionComponent.h" "Minigin/CollisionComponent.cpp" "Minigin/CollisionsManager.h" "Minigin/DestructibleComponent.h" "Minigin/BombComponent.h" "Minigin/BombComponent.cpp")
+ "Minigin/TimeManager.h" "Minigin/ObjectComponent.cpp" "Minigin/FPSCounterComponent.h" "Minigin/RenderComponent.h" "Minigin/RenderComponent.cpp" "Minigin/MovementComponent.h" "Minigin/MovementComponent.cpp" "Minigin/ThrashCacheComponent.cpp" "Minigin/Commands.h" "Minigin/Commands.cpp" "Minigin/Controller.h" "Minigin/Controller.cpp" "Minigin/EventManagers.h" "Minigin/HealthObserver.h" "Minigin/HealthComponent.h" "Minigin/ScoreManager.h" "Minigin/SteamObserver.h" "Minigin/GridComponent.h" "Minigin/GridComponent.cpp" "Minigin/CollisionComponent.h" "Minigin/CollisionComponent.cpp" "Minigin/CollisionsManager.h" "Minigin/DestructibleComponent.h" "Minigin/BombComponent.h" "Minigin/BombComponent.cpp" "Minigin/PlaceBombComponent.h" "Minigin/PlaceBombComponent.cpp")
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
