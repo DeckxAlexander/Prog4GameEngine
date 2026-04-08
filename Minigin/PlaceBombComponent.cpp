@@ -7,7 +7,7 @@
 void dae::PlaceBombComponent::PlaceBomb() 
 {
 	if (m_pGrid == nullptr || m_CanPlace == false) return;
-	auto& scene = dae::SceneManager::GetInstance().CreateScene();
+	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
 
 	m_CanPlace = false;
 	//Place Bomb

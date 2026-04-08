@@ -22,6 +22,7 @@ namespace dae
 		glm::vec4 GetCollisionRect();
 		void SetCollisionRectDirty() { m_CollisionRectIsDirty = true; }
 		static bool CheckCollision(CollisionComponent* collisionA, CollisionComponent* collisionB);
+		static bool CheckCollision(glm::vec4 collisionRectA, glm::vec4 collisionRectB);
 
 
 		CollisionComponent(GameObject* pOwner, float width, float height);

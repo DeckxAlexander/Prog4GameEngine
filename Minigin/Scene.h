@@ -23,6 +23,23 @@ namespace dae
 		Scene& operator=(const Scene& other) = delete;
 		Scene& operator=(Scene&& other) = delete;
 
+		template <typename T>
+		std::vector<GameObject*> GetAllObjectsByComponent() 
+		{
+
+			std::vector<GameObject*> result{};
+
+			static_assert(std::is_base_of<ObjectComponent, T>::value, "Type must derive from ObjectComponent");
+			for (const auto& object : m_objects)
+			{
+				if (object.get()->GetComponentByType<T>() != nullptr)
+				{
+					result.push_back(object.get());
+				}
+			}
+
+			return result;
+		}
 
 
 	private:

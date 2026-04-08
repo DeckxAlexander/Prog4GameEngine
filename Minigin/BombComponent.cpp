@@ -3,8 +3,10 @@
 #include "GridComponent.h"
 #include "GameObject.h"
 #include "PlaceBombComponent.h"
+#include "SceneManager.h"
+#include "HealthComponent.h"
+#include "CollisionComponent.h"
 #include <iostream>
-
 
 void dae::BombComponent::Update()
 {
@@ -21,44 +23,30 @@ void dae::BombComponent::Update()
 	}
 }
 
+
+void dae::BombComponent::Render() const 
+{
+}
+
 void dae::BombComponent::Explode() 
 {
 	m_IsDetonating = false;
 
-	auto GridTransform = dynamic_cast<dae::GridTransform*>(GetOwner()->GetTransform());
-	if (GridTransform == nullptr) return;
+	auto gridTransform = dynamic_cast<dae::GridTransform*>(GetOwner()->GetTransform());
+	if (gridTransform == nullptr) return;
 
-	auto gridPos = GridTransform->GetGridTiles();
-	auto grid = GridTransform->GetGrid();
+	auto gridPos = gridTransform->GetGridTiles();
+	auto grid = gridTransform->GetGrid();
 
 
 	//Affect Surrounding tiles
-	auto tileLayout = grid->GetGridLayout();
+	BreakSoftBlocks(grid, gridPos);
+	KillSurrounding(gridTransform);
 
-	//Temporary
-	int gridIndex = grid->GridToIndex(gridPos.x, gridPos.y-1);
-	if (tileLayout[gridIndex] == GridComponent::GridValue::soft) 
-	{
-				grid->GetGridPtrs()[gridIndex]->MarkForDelete();
-	}
 
-	 gridIndex = grid->GridToIndex(gridPos.x, gridPos.y + 1);
-	if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
-	{
-		grid->GetGridPtrs()[gridIndex]->MarkForDelete();
-	}
+	
 
-	 gridIndex = grid->GridToIndex(gridPos.x - 1, gridPos.y);
-	if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
-	{
-		grid->GetGridPtrs()[gridIndex]->MarkForDelete();
-	}
 
-	 gridIndex = grid->GridToIndex(gridPos.x + 1, gridPos.y);
-	if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
-	{
-		grid->GetGridPtrs()[gridIndex]->MarkForDelete();
-	}
 
 	std::cout << "Explode";
 
@@ -75,4 +63,66 @@ void dae::BombComponent::Explode()
 
 
 
+}
+
+void dae::BombComponent::KillSurrounding(dae::GridTransform* gridTransform) 
+{
+	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
+	auto KillableObjects = scene.GetAllObjectsByComponent<HealthComponent>();
+	glm::vec4 colliderRectVer{
+		gridTransform->GetPosition().x,
+		gridTransform->GetPosition().y - gridTransform->GetGrid()->GetTileScale().y,
+		gridTransform->GetGrid()->GetTileScale().x,
+		3 * gridTransform->GetGrid()->GetTileScale().y
+	};
+
+	glm::vec4 colliderRectHor{
+	gridTransform->GetPosition().x - gridTransform->GetGrid()->GetTileScale().x,
+	gridTransform->GetPosition().y,
+	3 * gridTransform->GetGrid()->GetTileScale().x,
+	 gridTransform->GetGrid()->GetTileScale().y
+	};
+
+	for (auto obj : KillableObjects)
+	{
+		auto ColliderComp = obj->GetComponentByType<CollisionComponent>();
+		if (ColliderComp != nullptr)
+		{
+			auto rect = ColliderComp->GetCollisionRect();
+
+			if (CollisionComponent::CheckCollision(colliderRectHor, rect) || CollisionComponent::CheckCollision(colliderRectVer, rect)) obj->MarkForDelete();
+
+		}
+	}
+}
+
+
+void dae::BombComponent::BreakSoftBlocks(dae::GridComponent* grid, glm::ivec2 gpos) 
+{
+	auto tileLayout = grid->GetGridLayout();
+
+	//Temporary
+	int gridIndex = grid->GridToIndex(gpos.x, gpos.y - 1);
+	if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
+	{
+		grid->GetGridPtrs()[gridIndex]->MarkForDelete();
+	}
+
+	gridIndex = grid->GridToIndex(gpos.x, gpos.y + 1);
+	if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
+	{
+		grid->GetGridPtrs()[gridIndex]->MarkForDelete();
+	}
+
+	gridIndex = grid->GridToIndex(gpos.x - 1, gpos.y);
+	if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
+	{
+		grid->GetGridPtrs()[gridIndex]->MarkForDelete();
+	}
+
+	gridIndex = grid->GridToIndex(gpos.x + 1, gpos.y);
+	if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
+	{
+		grid->GetGridPtrs()[gridIndex]->MarkForDelete();
+	}
 }

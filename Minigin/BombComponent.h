@@ -12,13 +12,16 @@ namespace dae
 		bool m_IsDetonating{ false };
 		PlaceBombComponent* m_Placer;
 		void Explode();
+		void BreakSoftBlocks(dae::GridComponent* grid, glm::ivec2 gpos);
+		void KillSurrounding(dae::GridTransform* gridTransform);
 
 	public:
 		virtual void Update() override;
-		virtual void Render() const override {};
+		virtual void Render() const override;
 		void StartDetonate(bool value = true) {
 			m_IsDetonating = value;
 		}
+
 
 
 		BombComponent(GameObject* pOwner, float detonationTime, PlaceBombComponent* placer) : ObjectComponent(pOwner), m_DetonationTime{detonationTime}, m_Placer{ placer }

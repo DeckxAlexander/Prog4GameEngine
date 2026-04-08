@@ -5,7 +5,7 @@
 
 
 
-dae::GameObject* dae::ObjectComponent::GetOwner()
+dae::GameObject* dae::ObjectComponent::GetOwner() const
 {
 	return m_pOwner;
 }

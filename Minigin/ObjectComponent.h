@@ -22,7 +22,7 @@ namespace dae
 
 
 
-		GameObject* GetOwner();
+		GameObject* GetOwner() const;
 		ObjectComponent(GameObject* pOwner);
 		virtual ~ObjectComponent() = default;
 		ObjectComponent(const ObjectComponent& other) = delete;

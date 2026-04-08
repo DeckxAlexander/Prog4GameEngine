@@ -12,6 +12,7 @@ namespace dae
 	{
 	public:
 		Scene& CreateScene();
+		Scene& GetScene(int index);
 
 		void Update();
 		void Render();

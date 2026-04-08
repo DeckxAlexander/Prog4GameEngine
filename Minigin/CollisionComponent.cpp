@@ -74,3 +74,26 @@ bool dae::CollisionComponent::CheckCollision(CollisionComponent* collisionA, Col
         bottomA > topB
         );
 }
+
+bool dae::CollisionComponent::CheckCollision(glm::vec4 collisionRectA, glm::vec4 collisionRectB)
+{
+    auto a = collisionRectA;
+    auto b = collisionRectB;
+
+    float leftA = a.x;
+    float rightA = a.x + a.z;
+    float topA = a.y;
+    float bottomA = a.y + a.w;
+
+    float leftB = b.x;
+    float rightB = b.x + b.z;
+    float topB = b.y;
+    float bottomB = b.y + b.w;
+
+    return (
+        leftA < rightB &&
+        rightA > leftB &&
+        topA < bottomB &&
+        bottomA > topB
+        );
+}

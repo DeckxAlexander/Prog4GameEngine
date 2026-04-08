@@ -51,7 +51,7 @@ void dae::GridComponent::SetupGrid()
 
 void dae::GridComponent::SpawnGrid() 
 {
-	auto& scene = dae::SceneManager::GetInstance().CreateScene();
+	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
 
 
 	for (int i{}; i < m_GridLayout.size(); i++)

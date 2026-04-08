@@ -31,6 +31,8 @@ namespace fs = std::filesystem;
 
 static void load()
 {
+
+	srand(int(time(nullptr)));
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
 
 
@@ -79,12 +81,14 @@ static void load()
 	auto playerGameObject = std::make_unique<dae::GameObject>();
 	auto playerRenderComponent = std::make_unique<dae::RenderComponent>(playerGameObject.get(), "Bomberman.png");
 	auto playerMovementComponent = std::make_unique<dae::MovementComponent>(playerGameObject.get(), 50.f);
+	auto playerHealthComponent = std::make_unique<dae::HealthComponent>(playerGameObject.get(), 5);
 	auto playerCollider = std::make_unique<dae::CollisionComponent>(playerGameObject.get(), 18.f, 27.f);
 	auto playerplacebombcomponent = std::make_unique<dae::PlaceBombComponent>(playerGameObject.get(), grid);
 	playerGameObject.get()->AddComponent(std::move(playerRenderComponent));
 	playerGameObject.get()->AddComponent(std::move(playerMovementComponent));
 	playerGameObject.get()->AddComponent(std::move(playerCollider));
 	playerGameObject.get()->AddComponent(std::move(playerplacebombcomponent));
+	playerGameObject.get()->AddComponent(std::move(playerHealthComponent));
 	playerGameObject.get()->SetPosition(35, 35);
 	playerGameObject.get()->SetScale(1.5f, 1.5f);
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_D, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
