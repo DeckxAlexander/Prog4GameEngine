@@ -13,10 +13,9 @@
 #include "MovementComponent.h"
 #include "ThrashCacheComponent.h"
 #include "TextComponent.h"
-#include "ScoreManager.h"
 #include "Scene.h"
 #include "FPSCounterComponent.h"
-#include "HealthObserver.h"
+
 #include "HealthComponent.h"
 #include "InputManager.h"
 #include "SteamObserver.h"
@@ -82,7 +81,7 @@ static void load()
 	auto playerRenderComponent = std::make_unique<dae::RenderComponent>(playerGameObject.get(), "Bomberman.png");
 	auto playerMovementComponent = std::make_unique<dae::MovementComponent>(playerGameObject.get(), 50.f);
 	auto playerHealthComponent = std::make_unique<dae::HealthComponent>(playerGameObject.get(), 5);
-	auto playerCollider = std::make_unique<dae::CollisionComponent>(playerGameObject.get(), 18.f, 27.f);
+	auto playerCollider = std::make_unique<dae::CollisionComponent>(playerGameObject.get(), 18.f, 27.f, 'e');
 	auto playerplacebombcomponent = std::make_unique<dae::PlaceBombComponent>(playerGameObject.get(), grid);
 	playerGameObject.get()->AddComponent(std::move(playerRenderComponent));
 	playerGameObject.get()->AddComponent(std::move(playerMovementComponent));
@@ -98,21 +97,66 @@ static void load()
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_X, dae::KeyState::Pressed, std::make_unique<dae::PlaceBomb>(playerGameObject.get()),nullptr);
 
 	scene.Add(std::move(playerGameObject));
+	auto gridLayout = grid->GetGridLayout();
+	int EnemiesSpawned = 0;
+	std::vector<int> possibleIndexes{};
 
 
-	////Place TestBomb
-	//auto bombGameObject = std::make_unique<dae::GameObject>(true, grid);
-	//auto bombRenderComponent = std::make_unique<dae::RenderComponent>(bombGameObject.get(), "Bomb.png");
-	//auto bombBombComponent = std::make_unique<dae::BombComponent>(bombGameObject.get(), 5.f);
-	//auto bombEx = bombBombComponent.get();
-	//bombGameObject.get()->AddComponent(std::move(bombRenderComponent));
-	//bombGameObject.get()->AddComponent(std::move(bombBombComponent));
-	//bombGameObject.get()->SetPosition(35, 35);
-	//bombGameObject.get()->SetScale(1.5f, 1.5f);
 
 
-	//scene.Add(std::move(bombGameObject));
-	//bombEx->StartDetonate();
+	for (int i{}; i < gridLayout.size(); i++)
+	{
+		auto gridVal = gridLayout[i];
+
+		if (gridVal != dae::GridComponent::GridValue::empty) continue;
+
+		possibleIndexes.push_back(i);
+	}
+
+
+
+	while (EnemiesSpawned < 10)
+	{
+		//Choose Index
+
+		int chosenIndex = possibleIndexes[rand() % possibleIndexes.size()];
+		possibleIndexes.erase(std::remove(possibleIndexes.begin(), possibleIndexes.end(), chosenIndex), possibleIndexes.end());
+
+		auto enemyGameObject = std::make_unique<dae::GameObject>();
+		auto enemyRenderComponent = std::make_unique<dae::RenderComponent>(enemyGameObject.get(), "Bomberman.png");
+		auto enemyMovementComponent = std::make_unique<dae::AIMovementComponent>(enemyGameObject.get(), 50.f);
+
+
+
+		if (rand()%2 == 1) 
+		{
+			enemyMovementComponent.get()->SetVelocity(0.f, 1.f);
+		}
+		else enemyMovementComponent.get()->SetVelocity(1.f, 0.f);
+
+
+		auto enemyHealthComponent = std::make_unique<dae::HealthComponent>(enemyGameObject.get(), 5);
+		auto enemyCollider = std::make_unique<dae::CollisionComponent>(enemyGameObject.get(), 18.f, 27.f, 'e');
+		auto enemyplacebombcomponent = std::make_unique<dae::PlaceBombComponent>(enemyGameObject.get(), grid);
+		enemyGameObject.get()->AddComponent(std::move(enemyRenderComponent));
+		enemyGameObject.get()->AddComponent(std::move(enemyMovementComponent));
+		enemyGameObject.get()->AddComponent(std::move(enemyCollider));
+		enemyGameObject.get()->AddComponent(std::move(enemyplacebombcomponent));
+		enemyGameObject.get()->AddComponent(std::move(enemyHealthComponent));
+		int x = chosenIndex % grid->GetColums();
+		int y = chosenIndex / grid->GetColums();
+		enemyGameObject.get()->SetPosition(32*float(x), 32*float(y));
+		enemyGameObject.get()->SetScale(1.5f, 1.5f);
+
+		scene.Add(std::move(enemyGameObject));
+		EnemiesSpawned++;
+		if (EnemiesSpawned >= 10) break;
+	}
+
+
+
+
+
 
 	
 }

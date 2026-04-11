@@ -5,16 +5,11 @@
 
 namespace dae
 {
-
-
-	class MovementComponent final : public ObjectComponent
+	class MovementComponent : public ObjectComponent
 	{
-	private:
+	protected:
 		glm::vec3 m_Velocity{};
 		float m_Speed{};
-
-		
-
 	public:
 		virtual void Update() override;
 		virtual void Render() const override;
@@ -25,6 +20,7 @@ namespace dae
 
 			if (len > 0) m_Velocity /= len;
 		};
+		virtual void HitCollider([[maybe_unused]] bool horizontal) {}
 
 		MovementComponent(GameObject* pOwner, float speed);
 		~MovementComponent() = default;
@@ -32,5 +28,35 @@ namespace dae
 		MovementComponent(MovementComponent&& other) = delete;
 		MovementComponent& operator=(const MovementComponent& other) = delete;
 		MovementComponent& operator=(MovementComponent&& other) = delete;
+	};
+
+	class AIMovementComponent final : public MovementComponent
+	{
+	private:
+		glm::vec3 m_DesiredVelocity{};
+	public:
+		virtual void Update() override;
+		virtual void HitCollider(bool horizontal) 
+		{
+			if (horizontal) m_DesiredVelocity.x = -m_DesiredVelocity.x;
+			else m_DesiredVelocity.y = -m_DesiredVelocity.y;
+
+			float len = glm::length(m_DesiredVelocity);
+			if (len > 0) m_DesiredVelocity /= len;
+		}
+
+		void SetVelocity(float x, float y)
+		{
+			m_DesiredVelocity = glm::vec3{ x,y,0 };
+			float len = glm::length(m_DesiredVelocity);
+			if (len > 0) m_DesiredVelocity /= len;
+		};
+
+		AIMovementComponent(GameObject* pOwner, float speed);
+		~AIMovementComponent() = default;
+		AIMovementComponent(const AIMovementComponent& other) = delete;
+		AIMovementComponent(AIMovementComponent&& other) = delete;
+		AIMovementComponent& operator=(const AIMovementComponent& other) = delete;
+		AIMovementComponent& operator=(AIMovementComponent&& other) = delete;
 	};
 }

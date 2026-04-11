@@ -36,6 +36,8 @@ namespace dae
 
 		void SetSoftBlocksAmount(int amount) { m_SoftBlocksAmount = amount; }
 
+		int GetColums() { return m_Colums; }
+
 		GridComponent(GameObject* pOwner, int colums, int rows);
 		~GridComponent() = default;
 		GridComponent(const GridComponent& other) = delete;
@@ -53,7 +55,7 @@ namespace dae
 
 		//GridObjects
 
-		int m_SoftBlocksAmount{ 150 };
+		int m_SoftBlocksAmount{ 100 };
 		std::vector<GridValue> m_GridLayout{};
 		std::vector<GameObject*> m_GridPointers{};
 

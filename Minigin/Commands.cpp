@@ -1,7 +1,6 @@
 #include "Commands.h"
 #include "GameObject.h"
 #include "MovementComponent.h"
-#include "ScoreManager.h"
 #include "HealthComponent.h"
 #include "PlaceBombComponent.h"
 

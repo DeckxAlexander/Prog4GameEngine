@@ -24,16 +24,13 @@ namespace dae
 
     };
 
-    class Observer : public ObjectComponent
+    class Observer
     {
     public:
-        Observer(GameObject* pOwner) : ObjectComponent(pOwner)
-        {}
+        Observer() = default;
         virtual ~Observer() = default;
         virtual void OnNotify(const Event& event) = 0;
 
-        virtual void Render() const override {}
-        virtual void Update() override {}
     };
 
     class Subject 

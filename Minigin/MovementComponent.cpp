@@ -42,7 +42,7 @@ void dae::MovementComponent::Update()
     {
         if (other == collider) continue;
 
-        if (CollisionComponent::CheckCollision(
+        if (CollisionComponent::CheckBlockingCollision(
             collider,
             other))
         {
@@ -59,6 +59,7 @@ void dae::MovementComponent::Update()
             }
 
             collider->SetCollisionRectDirty();
+            HitCollider(true);
         }
     }
 
@@ -71,7 +72,7 @@ void dae::MovementComponent::Update()
     {
         if (other == collider) continue;
 
-        if (CollisionComponent::CheckCollision(
+        if (CollisionComponent::CheckBlockingCollision(
             collider,
             other))
         {
@@ -88,6 +89,7 @@ void dae::MovementComponent::Update()
             }
 
             collider->SetCollisionRectDirty();
+            HitCollider(false);
         }
     }
     
@@ -103,4 +105,12 @@ void dae::MovementComponent::Render() const
 	//Empty
 }
 
+dae::AIMovementComponent::AIMovementComponent(GameObject* pOwner, float speed) : MovementComponent(pOwner, speed)
+{
+}
 
+void dae::AIMovementComponent::Update()
+{
+    m_Velocity = m_DesiredVelocity;
+    MovementComponent::Update();
+}

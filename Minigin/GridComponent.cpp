@@ -61,7 +61,9 @@ void dae::GridComponent::SpawnGrid()
 		{
 			auto tileGameObject = std::make_unique<dae::GameObject>(true, this);
 			auto tileRenderComponent = std::make_unique<dae::RenderComponent>(tileGameObject.get(), "HardStoneTile.png");
-			auto tilecoll = std::make_unique<dae::CollisionComponent>(tileGameObject.get(), 32.f, 32.f);
+			auto tilecoll = std::make_unique<dae::CollisionComponent>(tileGameObject.get(), 32.f, 32.f, 'w');
+			tilecoll.get()->AddBlockingTag('e');
+
 			tileGameObject.get()->AddComponent(std::move(tileRenderComponent));
 			tileGameObject.get()->AddComponent(std::move(tilecoll));
 			tileGameObject->SetScale(2.f, 2.f);
@@ -78,7 +80,8 @@ void dae::GridComponent::SpawnGrid()
 		{
 			auto tileGameObject = std::make_unique<dae::GameObject>(true, this);
 			auto tileRenderComponent = std::make_unique<dae::RenderComponent>(tileGameObject.get(), "SoftStoneTile.png");
-			auto tilecoll = std::make_unique<dae::CollisionComponent>(tileGameObject.get(), 32.f, 32.f);
+			auto tilecoll = std::make_unique<dae::CollisionComponent>(tileGameObject.get(), 32.f, 32.f, 'w');
+			tilecoll.get()->AddBlockingTag('e');
 			tileGameObject.get()->AddComponent(std::move(tileRenderComponent));
 			tileGameObject.get()->AddComponent(std::move(tilecoll));
 			tileGameObject->SetScale(2.f, 2.f);
