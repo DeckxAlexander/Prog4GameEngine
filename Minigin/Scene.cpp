@@ -27,6 +27,7 @@ void dae::Scene::Cleanup()
 			m_objects.end(),
 			[](const std::unique_ptr<GameObject>& obj)
 			{
+				
 				return obj->IsMarkedForDelete();
 			}
 		),

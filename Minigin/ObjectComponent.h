@@ -30,4 +30,22 @@ namespace dae
 		ObjectComponent& operator=(const ObjectComponent& other) = delete;
 		ObjectComponent& operator=(ObjectComponent&& other) = delete;
 	};
+
+
+	class PlayerComponent : public ObjectComponent
+	{
+	private:
+		int m_PlayerIndex;
+	public:
+		virtual void Update() override {};
+		virtual void Render() const override {};
+		PlayerComponent(GameObject* pOwner, int index) : ObjectComponent(pOwner), m_PlayerIndex{index}
+		{
+		}
+		virtual ~PlayerComponent() = default;
+		PlayerComponent(const PlayerComponent& other) = delete;
+		PlayerComponent(PlayerComponent&& other) = delete;
+		PlayerComponent& operator=(const PlayerComponent& other) = delete;
+		PlayerComponent& operator=(PlayerComponent&& other) = delete;
+	};
 }

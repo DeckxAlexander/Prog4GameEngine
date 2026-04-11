@@ -23,6 +23,7 @@
 #include "CollisionComponent.h"
 #include "BombComponent.h"
 #include "PlaceBombComponent.h"
+#include "EnemyComponent.h"
 
 
 #include <filesystem>
@@ -83,11 +84,13 @@ static void load()
 	auto playerHealthComponent = std::make_unique<dae::HealthComponent>(playerGameObject.get(), 5);
 	auto playerCollider = std::make_unique<dae::CollisionComponent>(playerGameObject.get(), 18.f, 27.f, 'e');
 	auto playerplacebombcomponent = std::make_unique<dae::PlaceBombComponent>(playerGameObject.get(), grid);
+	auto playerComponent = std::make_unique<dae::PlayerComponent>(playerGameObject.get(), 0);
 	playerGameObject.get()->AddComponent(std::move(playerRenderComponent));
 	playerGameObject.get()->AddComponent(std::move(playerMovementComponent));
 	playerGameObject.get()->AddComponent(std::move(playerCollider));
 	playerGameObject.get()->AddComponent(std::move(playerplacebombcomponent));
 	playerGameObject.get()->AddComponent(std::move(playerHealthComponent));
+	playerGameObject.get()->AddComponent(std::move(playerComponent));
 	playerGameObject.get()->SetPosition(35, 35);
 	playerGameObject.get()->SetScale(1.5f, 1.5f);
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_D, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
@@ -138,11 +141,13 @@ static void load()
 		auto enemyHealthComponent = std::make_unique<dae::HealthComponent>(enemyGameObject.get(), 5);
 		auto enemyCollider = std::make_unique<dae::CollisionComponent>(enemyGameObject.get(), 18.f, 27.f, 'e');
 		auto enemyplacebombcomponent = std::make_unique<dae::PlaceBombComponent>(enemyGameObject.get(), grid);
+		auto enemyComponent = std::make_unique<dae::EnemyComponent>(enemyGameObject.get());
 		enemyGameObject.get()->AddComponent(std::move(enemyRenderComponent));
 		enemyGameObject.get()->AddComponent(std::move(enemyMovementComponent));
 		enemyGameObject.get()->AddComponent(std::move(enemyCollider));
 		enemyGameObject.get()->AddComponent(std::move(enemyplacebombcomponent));
 		enemyGameObject.get()->AddComponent(std::move(enemyHealthComponent));
+		enemyGameObject.get()->AddComponent(std::move(enemyComponent));
 		int x = chosenIndex % grid->GetColums();
 		int y = chosenIndex / grid->GetColums();
 		enemyGameObject.get()->SetPosition(32*float(x), 32*float(y));
