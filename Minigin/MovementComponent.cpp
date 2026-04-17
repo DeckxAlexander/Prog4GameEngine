@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "TimeManager.h"
 #include "CollisionsManager.h"
+#include "GridComponent.h"
 #include <iostream>
 
 
@@ -59,7 +60,7 @@ void dae::MovementComponent::Update()
             }
 
             collider->SetCollisionRectDirty();
-            HitCollider(true);
+            HitCollider();
         }
     }
 
@@ -89,7 +90,7 @@ void dae::MovementComponent::Update()
             }
 
             collider->SetCollisionRectDirty();
-            HitCollider(false);
+            HitCollider();
         }
     }
     
@@ -105,7 +106,7 @@ void dae::MovementComponent::Render() const
 	//Empty
 }
 
-dae::AIMovementComponent::AIMovementComponent(GameObject* pOwner, float speed) : MovementComponent(pOwner, speed)
+dae::AIMovementComponent::AIMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid) : MovementComponent(pOwner, speed), m_pGrid{pGrid}
 {
 }
 
@@ -113,4 +114,46 @@ void dae::AIMovementComponent::Update()
 {
     m_Velocity = m_DesiredVelocity;
     MovementComponent::Update();
+}
+
+glm::vec3 dae::AIMovementComponent::FindNewDirection()
+{
+
+    if (m_pGrid == nullptr) return -m_DesiredVelocity;
+
+    auto pos = GetOwner()->GetTransform()->GetPosition();
+
+    int gridX = int(GridTransform::SnapToGrid(pos.x, m_pGrid->GetTileScale().x) / m_pGrid->GetTileScale().x);
+    int gridY = int(GridTransform::SnapToGrid(pos.y, m_pGrid->GetTileScale().y) / m_pGrid->GetTileScale().y);
+
+    auto layout = m_pGrid->GetGridLayout();
+
+
+    std::vector<glm::vec3> possibleDirections{ {1,0,0},
+        {0,1,0}, {-1,0,0}, {0,-1,0} };
+
+
+    //Check Surrounding Tiles
+    //Oposite should get prioritized
+    auto desiredVel = -m_DesiredVelocity;
+    int desiredGridX = gridX + int(desiredVel.x);
+    int desiredGridY = gridY + int(desiredVel.y);
+    int index = m_pGrid->GridToIndex(desiredGridX, desiredGridY);
+    if (index <= layout.size() && layout[index] == GridComponent::GridValue::empty) return desiredVel;
+
+    for (auto dir : possibleDirections) 
+    {
+        if (dir == m_DesiredVelocity || dir == -m_DesiredVelocity) continue;
+        desiredVel = dir;
+        desiredGridX = gridX + int(desiredVel.x);
+        desiredGridY = gridY + int(desiredVel.y);
+        index = m_pGrid->GridToIndex(desiredGridX, desiredGridY);
+        if (index <= layout.size() && layout[index] == GridComponent::GridValue::empty) return desiredVel;
+    }
+
+
+    return -m_DesiredVelocity; //Incase no other direction works. Pick Negative
+
+
+
 }

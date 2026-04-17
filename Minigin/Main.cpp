@@ -127,7 +127,7 @@ static void load()
 
 		auto enemyGameObject = std::make_unique<dae::GameObject>();
 		auto enemyRenderComponent = std::make_unique<dae::RenderComponent>(enemyGameObject.get(), "Bomberman.png");
-		auto enemyMovementComponent = std::make_unique<dae::AIMovementComponent>(enemyGameObject.get(), 50.f);
+		auto enemyMovementComponent = std::make_unique<dae::AIMovementComponent>(enemyGameObject.get(), 50.f, grid);
 
 
 

@@ -20,7 +20,7 @@ namespace dae
 
 			if (len > 0) m_Velocity /= len;
 		};
-		virtual void HitCollider([[maybe_unused]] bool horizontal) {}
+		virtual void HitCollider() {}
 
 		MovementComponent(GameObject* pOwner, float speed);
 		~MovementComponent() = default;
@@ -34,13 +34,15 @@ namespace dae
 	{
 	private:
 		glm::vec3 m_DesiredVelocity{};
+		GridComponent* m_pGrid;
+
+		glm::vec3 FindNewDirection();
+
 	public:
 		virtual void Update() override;
-		virtual void HitCollider(bool horizontal) 
+		virtual void HitCollider() 
 		{
-			if (horizontal) m_DesiredVelocity.x = -m_DesiredVelocity.x;
-			else m_DesiredVelocity.y = -m_DesiredVelocity.y;
-
+			m_DesiredVelocity = FindNewDirection();
 			float len = glm::length(m_DesiredVelocity);
 			if (len > 0) m_DesiredVelocity /= len;
 		}
@@ -52,7 +54,7 @@ namespace dae
 			if (len > 0) m_DesiredVelocity /= len;
 		};
 
-		AIMovementComponent(GameObject* pOwner, float speed);
+		AIMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid = nullptr);
 		~AIMovementComponent() = default;
 		AIMovementComponent(const AIMovementComponent& other) = delete;
 		AIMovementComponent(AIMovementComponent&& other) = delete;

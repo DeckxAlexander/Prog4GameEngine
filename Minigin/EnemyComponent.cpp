@@ -12,7 +12,6 @@ void dae::EnemyComponent::InitializePlayers()
 
 void dae::EnemyComponent::Update()
 {
-	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
 	auto enemyCollider = GetOwner()->GetComponentByType<CollisionComponent>();
 	for(auto player : m_Players)
 	{

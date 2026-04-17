@@ -42,25 +42,10 @@ void dae::BombComponent::Explode()
 	//Affect Surrounding tiles
 	BreakSoftBlocks(grid, gridPos);
 	KillSurrounding(gridTransform);
-
-
-	
-
-
-
 	std::cout << "Explode";
-
 	if (m_Placer) m_Placer->UnlockCanPlace();
 
 	GetOwner()->MarkForDelete();
-
-
-
-
-
-
-
-
 
 
 }
