@@ -140,6 +140,7 @@ static void load()
 
 		auto enemyHealthComponent = std::make_unique<dae::HealthComponent>(enemyGameObject.get(), 5);
 		auto enemyCollider = std::make_unique<dae::CollisionComponent>(enemyGameObject.get(), 18.f, 27.f, 'e');
+		enemyCollider.get()->AddBlockingTag('b');
 		auto enemyplacebombcomponent = std::make_unique<dae::PlaceBombComponent>(enemyGameObject.get(), grid);
 		auto enemyComponent = std::make_unique<dae::EnemyComponent>(enemyGameObject.get());
 		enemyGameObject.get()->AddComponent(std::move(enemyRenderComponent));

@@ -3,6 +3,7 @@
 #include "SceneManager.h"
 #include "RenderComponent.h"
 #include "BombComponent.h"
+#include "CollisionComponent.h"
 
 void dae::PlaceBombComponent::PlaceBomb() 
 {
@@ -14,9 +15,11 @@ void dae::PlaceBombComponent::PlaceBomb()
 	auto bombGameObject = std::make_unique<dae::GameObject>(true, m_pGrid);
 	auto bombRenderComponent = std::make_unique<dae::RenderComponent>(bombGameObject.get(), "Bomb.png");
 	auto bombBombComponent = std::make_unique<dae::BombComponent>(bombGameObject.get(), 5.f, this);
+	auto bombCollisionComponent = std::make_unique<dae::CollisionComponent>(bombGameObject.get(),32.f,32.f,'b');
 	auto bombEx = bombBombComponent.get();
 	bombGameObject.get()->AddComponent(std::move(bombRenderComponent));
 	bombGameObject.get()->AddComponent(std::move(bombBombComponent));
+	bombGameObject.get()->AddComponent(std::move(bombCollisionComponent));
 
 	auto pos = GetOwner()->GetTransform()->GetWorldPosition();
 
