@@ -139,7 +139,7 @@ glm::vec3 dae::AIMovementComponent::FindNewDirection()
     int desiredGridX = gridX + int(desiredVel.x);
     int desiredGridY = gridY + int(desiredVel.y);
     int index = m_pGrid->GridToIndex(desiredGridX, desiredGridY);
-    if (index <= layout.size() && layout[index] == GridComponent::GridValue::empty) return desiredVel;
+    if (index <= int(layout.size()) && layout[index] == GridComponent::GridValue::empty) return desiredVel;
 
     for (auto dir : possibleDirections) 
     {
@@ -148,7 +148,7 @@ glm::vec3 dae::AIMovementComponent::FindNewDirection()
         desiredGridX = gridX + int(desiredVel.x);
         desiredGridY = gridY + int(desiredVel.y);
         index = m_pGrid->GridToIndex(desiredGridX, desiredGridY);
-        if (index <= layout.size() && layout[index] == GridComponent::GridValue::empty) return desiredVel;
+        if (index <= int(layout.size()) && layout[index] == GridComponent::GridValue::empty) return desiredVel;
     }
 
 
