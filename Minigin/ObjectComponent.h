@@ -35,9 +35,9 @@ namespace dae
 	class PlayerComponent : public ObjectComponent
 	{
 	private:
-		int m_PlayerIndex;
+		[[maybe_unused]] int m_PlayerIndex;
 	public:
-		virtual void Update() override { m_PlayerIndex; };
+		virtual void Update() override { };
 		virtual void Render() const override {};
 		PlayerComponent(GameObject* pOwner, int index) : ObjectComponent(pOwner), m_PlayerIndex{index}
 		{
