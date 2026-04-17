@@ -12,6 +12,8 @@ namespace dae
 		{
 		}
 
+		virtual ~Transform() = default;
+
 		void SetScale(float x, float y, float z = 0);
 		void SetScale(const glm::vec3& scale);
 		const glm::vec3& GetScale() const { return m_scale; }
@@ -40,6 +42,8 @@ namespace dae
 		GridTransform(GameObject* pOwner, GridComponent* grid) : Transform{pOwner}, m_pGrid{ grid }
 		{
 		}
+
+		~GridTransform() = default;
 
 		static float SnapToGrid(float value, float tileSize)
 		{

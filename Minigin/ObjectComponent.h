@@ -35,11 +35,11 @@ namespace dae
 	class PlayerComponent : public ObjectComponent
 	{
 	private:
-		int m_PlayerIndex;
+		//int m_PlayerIndex;
 	public:
 		virtual void Update() override {};
 		virtual void Render() const override {};
-		PlayerComponent(GameObject* pOwner, int index) : ObjectComponent(pOwner), m_PlayerIndex{index}
+		PlayerComponent(GameObject* pOwner, int index) : ObjectComponent(pOwner)//, m_PlayerIndex{index}
 		{
 		}
 		virtual ~PlayerComponent() = default;
