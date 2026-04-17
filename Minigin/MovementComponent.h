@@ -40,7 +40,7 @@ namespace dae
 
 	public:
 		virtual void Update() override;
-		virtual void HitCollider() 
+		virtual void HitCollider() override
 		{
 			m_DesiredVelocity = FindNewDirection();
 			float len = glm::length(m_DesiredVelocity);

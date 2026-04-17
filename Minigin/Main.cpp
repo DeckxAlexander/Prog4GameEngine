@@ -107,13 +107,13 @@ static void load()
 
 
 
-	for (int i{}; i < gridLayout.size(); i++)
+	for (size_t i{}; i < gridLayout.size(); i++)
 	{
-		auto gridVal = gridLayout[i];
+		auto gridVal = gridLayout[int(i)];
 
 		if (gridVal != dae::GridComponent::GridValue::empty) continue;
 
-		possibleIndexes.push_back(i);
+		possibleIndexes.push_back(int(i));
 	}
 
 
