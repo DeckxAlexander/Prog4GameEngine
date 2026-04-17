@@ -54,7 +54,7 @@ void dae::GridComponent::SpawnGrid()
 	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
 
 
-	for (int i{}; i < m_GridLayout.size(); i++)
+	for (int i{}; i < int(m_GridLayout.size()); i++)
 	{
 		auto val = m_GridLayout[i];
 		if (val == GridValue::hard) 
