@@ -8,7 +8,6 @@
 #include <chrono>
 #include "Renderer.h"
 #include "SceneManager.h"
-#include "ThrashCacheComponent.h"
 #include "Texture2D.h"
 
 

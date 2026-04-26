@@ -35,35 +35,7 @@ namespace dae
 	};
 
 
-	class TestCommand final : public Command
-	{
-	public:
-		void Execute([[maybe_unused]] CommandValue* value) override
-		{ 
-			if (value == nullptr) std::cout << "Test"; 
-		}
-	};
-
-	class MoveAround final : public GameObjectCommand
-	{
-	public:
-		MoveAround(GameObject* gameobject) : GameObjectCommand(gameobject) 
-		{
-		}
-
-		void Execute([[maybe_unused]] CommandValue* value);
-	};
-
-
-	class PlaceBomb final : public GameObjectCommand
-	{
-	public:
-		PlaceBomb(GameObject* gameobject) : GameObjectCommand(gameobject)
-		{
-		}
-
-		void Execute([[maybe_unused]] CommandValue* value);
-	};
+	
 
 	
 }

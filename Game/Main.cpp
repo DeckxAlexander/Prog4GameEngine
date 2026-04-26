@@ -5,7 +5,6 @@
 #include <vld.h>
 #endif
 
-
 #include "Minigin.h"
 #include "SceneManager.h"
 #include "ResourceManager.h"
@@ -24,6 +23,7 @@
 #include "BombComponent.h"
 #include "PlaceBombComponent.h"
 #include "EnemyComponent.h"
+#include "GameCommands.h"
 
 
 #include <filesystem>

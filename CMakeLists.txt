@@ -14,23 +14,57 @@ else()
   set(TARGET_NAME minigin)
   set(TARGET_PARAM WIN32)
 endif()
-# list source files here
-add_executable(${TARGET_NAME} ${TARGET_PARAM}
+
+add_library(MiniginEngine STATIC
   Minigin/Font.cpp
   Minigin/GameObject.cpp
   Minigin/InputManager.cpp
-  Minigin/Main.cpp
   Minigin/Minigin.cpp
   Minigin/Renderer.cpp
   Minigin/ResourceManager.cpp
   Minigin/Scene.cpp
   Minigin/SceneManager.cpp
-  "Minigin/TextComponent.cpp"
   Minigin/Texture2D.cpp
   Minigin/Transform.cpp
- "Minigin/TimeManager.h" "Minigin/ObjectComponent.cpp" "Minigin/FPSCounterComponent.h" "Minigin/RenderComponent.h" "Minigin/RenderComponent.cpp" "Minigin/MovementComponent.h" "Minigin/MovementComponent.cpp" "Minigin/ThrashCacheComponent.cpp" "Minigin/Commands.h" "Minigin/Commands.cpp" "Minigin/Controller.h" "Minigin/Controller.cpp" "Minigin/EventManagers.h"  "Minigin/HealthComponent.h"  "Minigin/SteamObserver.h" "Minigin/GridComponent.h" "Minigin/GridComponent.cpp" "Minigin/CollisionComponent.h" "Minigin/CollisionComponent.cpp" "Minigin/CollisionsManager.h" "Minigin/DestructibleComponent.h" "Minigin/BombComponent.h" "Minigin/BombComponent.cpp" "Minigin/PlaceBombComponent.h" "Minigin/PlaceBombComponent.cpp" "Minigin/EnemyComponent.h" "Minigin/EnemyComponent.cpp")
+  Minigin/TimeManager.h
+  Minigin/ObjectComponent.cpp
+  Minigin/RenderComponent.h
+  Minigin/RenderComponent.cpp
+  Minigin/Controller.h
+  Minigin/Controller.cpp
+  Minigin/EventManagers.h
+  Minigin/SteamObserver.h
+  Minigin/GridComponent.h
+  Minigin/GridComponent.cpp
+  Minigin/CollisionComponent.h
+  Minigin/CollisionComponent.cpp
+  Minigin/CollisionsManager.h
+  Minigin/Commands.h
+)
+
+
+# list source files here
+add_executable(${TARGET_NAME} ${TARGET_PARAM}
+  Game/Main.cpp
+  Game/TextComponent.cpp
+  Game/FPSCounterComponent.h
+  Game/MovementComponent.h
+  Game/MovementComponent.cpp
+  Game/ThrashCacheComponent.cpp 
+  Game/HealthComponent.h 
+  Game/DestructibleComponent.h
+  Game/BombComponent.h
+  Game/BombComponent.cpp
+  Game/PlaceBombComponent.h 
+  Game/PlaceBombComponent.cpp 
+  Game/EnemyComponent.h
+  Game/EnemyComponent.cpp
+  Game/GameCommands.h
+  Game/GameCommands.cpp
+)
 
 # enable c++20 features
+target_compile_features(MiniginEngine PUBLIC cxx_std_20)
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
 
 include(FetchContent)
@@ -130,7 +164,7 @@ add_library(imgui STATIC
   ${imgui_SOURCE_DIR}/imgui_widgets.cpp
   ${imgui_SOURCE_DIR}/imgui_demo.cpp
   ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp
-  ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp    )
+  ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp     "Game/GameCommands.cpp")
 
 target_include_directories(imgui PUBLIC ${imgui_SOURCE_DIR} ${sdl3_SOURCE_DIR}/include)
 target_link_libraries(imgui PUBLIC SDL3::SDL3)
@@ -156,7 +190,7 @@ target_link_libraries(imgui_plot PUBLIC imgui)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/steam")
 find_package(Steamworks QUIET)
 
-target_include_directories("${TARGET_NAME}" PUBLIC
+target_include_directories(MiniginEngine PUBLIC
   ${CMAKE_SOURCE_DIR}/Minigin/
   ${glm_SOURCE_DIR}
   ${sdl3_SOURCE_DIR}/include
@@ -167,9 +201,7 @@ target_include_directories("${TARGET_NAME}" PUBLIC
 )
 
 
-
-
-target_link_libraries("${TARGET_NAME}" PUBLIC
+target_link_libraries(MiniginEngine PUBLIC
   SDL3::SDL3
   SDL3_ttf::SDL3_ttf
   glm::glm
@@ -178,8 +210,16 @@ target_link_libraries("${TARGET_NAME}" PUBLIC
   ${VLD_LIBRARIES}
 )
 
+target_include_directories(${TARGET_NAME} PRIVATE
+  ${CMAKE_SOURCE_DIR}/Game/
+)
+
+target_link_libraries(${TARGET_NAME} PUBLIC
+  MiniginEngine
+)
+
 if(WIN32)
-    target_link_libraries("${TARGET_NAME}" PUBLIC Xinput)
+    target_link_libraries(MiniginEngine PUBLIC Xinput)
 endif()
 
 if(MSVC)
