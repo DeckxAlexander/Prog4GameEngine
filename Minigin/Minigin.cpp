@@ -2,6 +2,7 @@
 #include <sstream>
 #include <iostream>
 #include <thread>
+#include <SDL3_mixer/SDL_mixer.h>
 
 #if WIN32
 #define WIN32_LEAN_AND_MEAN 
@@ -96,6 +97,13 @@ dae::Minigin::Minigin(const std::filesystem::path& dataPath)
 		SDL_Log("Input error: %s", SDL_GetError());
 		throw std::runtime_error(std::string("Input Error: ") + SDL_GetError());
 	}
+
+	if (!SDL_InitSubSystem(SDL_INIT_AUDIO) )
+	{
+		std::cout << "SDL Init failed\n";
+	}
+
+
 	
 #if USE_STEAMWORKS
 	if (!SteamAPI_Init())

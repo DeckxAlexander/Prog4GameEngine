@@ -40,7 +40,7 @@ add_library(MiniginEngine STATIC
   Minigin/CollisionComponent.cpp
   Minigin/CollisionsManager.h
   Minigin/Commands.h
-)
+ "Minigin/SoundSystem.h" "Minigin/SoundEventQueue.h" "Minigin/SDLSoundSystem.h" "Minigin/SDLSoundSystem.cpp")
 
 
 # list source files here
@@ -164,7 +164,7 @@ add_library(imgui STATIC
   ${imgui_SOURCE_DIR}/imgui_widgets.cpp
   ${imgui_SOURCE_DIR}/imgui_demo.cpp
   ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp
-  ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp     "Game/GameCommands.cpp")
+  ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp)
 
 target_include_directories(imgui PUBLIC ${imgui_SOURCE_DIR} ${sdl3_SOURCE_DIR}/include)
 target_link_libraries(imgui PUBLIC SDL3::SDL3)
@@ -182,6 +182,12 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(imgui_plot)
 target_link_libraries(imgui_plot PUBLIC imgui)
 
+FetchContent_Declare(
+    SDL_mixer
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
+    GIT_TAG release-3.2.0
+)
+FetchContent_MakeAvailable(SDL_mixer)
 
 
 
@@ -203,6 +209,7 @@ target_include_directories(MiniginEngine PUBLIC
 
 target_link_libraries(MiniginEngine PUBLIC
   SDL3::SDL3
+  SDL3_mixer::SDL3_mixer
   SDL3_ttf::SDL3_ttf
   glm::glm
   imgui

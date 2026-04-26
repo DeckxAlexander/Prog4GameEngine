@@ -24,6 +24,7 @@
 #include "PlaceBombComponent.h"
 #include "EnemyComponent.h"
 #include "GameCommands.h"
+#include "SDLSoundSystem.h"
 
 
 #include <filesystem>
@@ -161,10 +162,18 @@ static void load()
 
 
 
+	//SOUND
+
+	fs::path data_location = "./Data/";
+	if (!fs::exists(data_location))
+		data_location = "../Data/";
 
 
+	const auto fullPath = data_location / "TestSound.mp3";
+	const auto filename = fs::path(fullPath).filename().string();
+	dae::SoundSystemLocator::register_sound_system(std::make_unique<dae::SDLSoundSystem>());
+	//dae::SoundSystemLocator::get_sound_system().LoadSound(0, filename);
 
-	
 }
 
 int main(int, char*[]) {
