@@ -1,3 +1,4 @@
+#include "GameObject.h"
 #include <string>
 #include "GameObject.h"
 #include "ResourceManager.h"
@@ -73,6 +74,14 @@ dae::GameObject::~GameObject() = default;
 
 
 
+void dae::GameObject::Start()
+{
+	for (auto& comp : m_Components) 
+	{
+		comp.get()->Start();
+	}
+}
+
 void dae::GameObject::Update()
 {
 	for (auto& component : m_Components)
@@ -109,8 +118,10 @@ void dae::GameObject::SetScale(float x, float y)
 
 void dae::GameObject::AddComponent(std::unique_ptr<ObjectComponent> component)
 {
-	component.get()->m_pOwner = this;
+	auto comp = component.get();
+	comp->m_pOwner = this;
 	m_Components.emplace_back(std::move(component));
+
 	
 }
 

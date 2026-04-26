@@ -3,13 +3,17 @@
 #include <glm/glm.hpp>
 //#define PI 3.14159265358979323846
 
+
 namespace dae
 {
+	class CollisionComponent;
 	class MovementComponent : public ObjectComponent
 	{
 	protected:
 		glm::vec3 m_Velocity{};
 		float m_Speed{};
+		CollisionComponent* m_Collider{};
+		std::vector<CollisionComponent*> m_Colliders{};
 	public:
 		virtual void Update() override;
 		virtual void Render() const override;
@@ -21,6 +25,9 @@ namespace dae
 			if (len > 0) m_Velocity /= len;
 		};
 		virtual void HitCollider() {}
+		void Start() override;
+
+
 
 		MovementComponent(GameObject* pOwner, float speed);
 		~MovementComponent() = default;

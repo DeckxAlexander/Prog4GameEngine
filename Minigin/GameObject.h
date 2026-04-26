@@ -22,6 +22,7 @@ namespace dae
 		std::vector<GameObject*> m_Children;
 
 	public:
+		void Start();
 		void Update();
 		void Render() const;
 		void SetPosition(float x, float y); //MARK FOR CHANGE

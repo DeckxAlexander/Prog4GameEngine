@@ -38,6 +38,9 @@ namespace dae
 		static bool CheckCollision(glm::vec4 collisionRectA, glm::vec4 collisionRectB);
 
 
+		
+
+
 		CollisionComponent(GameObject* pOwner, float width, float height, char tag);
 		~CollisionComponent();
 		CollisionComponent(const CollisionComponent& other) = delete;

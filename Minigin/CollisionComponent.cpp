@@ -1,4 +1,5 @@
 #include "CollisionComponent.h"
+#include "CollisionComponent.h"
 #include "CollisionsManager.h"
 #include "GameObject.h"
 #include "Renderer.h"
@@ -67,6 +68,10 @@ bool dae::CollisionComponent::CheckBlockingCollision(CollisionComponent* collisi
     return false;
 
 }
+
+
+
+
 
 
     

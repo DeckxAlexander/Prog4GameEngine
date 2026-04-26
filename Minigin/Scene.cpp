@@ -1,3 +1,4 @@
+#include "Scene.h"
 #include <algorithm>
 #include "Scene.h"
 
@@ -57,6 +58,14 @@ void Scene::Render() const
 	for (const auto& object : m_objects)
 	{
 		object->Render();
+	}
+}
+
+void dae::Scene::Start()
+{
+	for (const auto& object : m_objects)
+	{
+		object->Start();
 	}
 }
 

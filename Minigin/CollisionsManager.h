@@ -18,5 +18,8 @@ namespace dae
 		friend class Singleton<CollisionsManager>;
 		CollisionsManager() = default;
 		std::vector<CollisionComponent*> m_Collisions{};
+		
+
+
 	};
 }

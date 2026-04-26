@@ -7,95 +7,168 @@
 #include <iostream>
 
 
+void dae::MovementComponent::Start()
+{
+
+     m_Collider = GetOwner()->GetComponentByType<CollisionComponent>();
+     m_Colliders = CollisionsManager::GetInstance().GetColliders();
+
+
+
+}
+
 dae::MovementComponent::MovementComponent(GameObject* pOwner, float speed) : ObjectComponent(pOwner), m_Speed{speed}
 {
+
+
+
 }
 
 
 
 void dae::MovementComponent::Update()
 {
+    if (m_Velocity.length() == 0) return;
 
     float deltaT{ TimeManager::GetInstance().GetDeltaTime() };
-    CollisionComponent* collider = GetOwner()->GetComponentByType<CollisionComponent>();
-    
-
     glm::vec3 pos = GetOwner()->GetTransform()->GetPosition();
-    glm::vec3 velocity = m_Velocity * m_Speed *deltaT;
+    glm::vec3 velocity = m_Velocity * m_Speed * deltaT;
     m_Velocity = { 0.f, 0.f, 0.f };
 
 
-    if (!collider) { 
+    if (m_Collider == nullptr) {
         pos.x += velocity.x;
         pos.y += velocity.y;
         m_pOwner->SetPosition(pos.x, pos.y);
-        return; }
+        return;
+    }
 
     //Collisions Checks
-    const auto& colliders = CollisionsManager::GetInstance().GetColliders();
+   /* const auto& colliders = CollisionsManager::GetInstance().GetColliders();*/
 
+    bool hasHit = false;
     //X
-    pos.x += velocity.x;
-    m_pOwner->SetPosition(pos.x, pos.y);
-
-
-    for (auto* other : colliders)
+    if (velocity.x != 0)
     {
-        if (other == collider) continue;
+        pos.x += velocity.x;
+        m_pOwner->SetPosition(pos.x, pos.y);
 
-        if (CollisionComponent::CheckBlockingCollision(
-            collider,
-            other))
+
+        for (auto* other : m_Colliders)
         {
-            auto a = collider->GetCollisionRect();
-            auto b = other->GetCollisionRect();
+            if (other == m_Collider) continue;
 
-            if (velocity.x > 0)
+            //Wall Check
+            if (other->GetTag() == 'w') 
             {
-                pos.x = b.x - a.z;
-            }
-            else if (velocity.x < 0)
-            {
-                pos.x = b.x + b.z;
+                auto a = m_Collider->GetCollisionRect();
+                auto b = other->GetCollisionRect();
+                auto posCol = glm::vec3(b.x, b.y, 0.f);
+                if ((posCol - pos).length() > 5.f) continue;
+                if (CollisionComponent::CheckCollision(a,b)) 
+                {
+                    if (velocity.x > 0)
+                    {
+                        pos.x = b.x - a.z;
+                    }
+                    else if (velocity.x < 0)
+                    {
+                        pos.x = b.x + b.z;
+                    }
+                    hasHit = true;
+                    HitCollider();
+                }
+                continue;
+
             }
 
-            collider->SetCollisionRectDirty();
-            HitCollider();
+            //Other Collision Check
+            if (CollisionComponent::CheckBlockingCollision(
+                m_Collider,
+                other))
+            {
+                auto a = m_Collider->GetCollisionRect();
+                auto b = other->GetCollisionRect();
+
+                if (velocity.x > 0)
+                {
+                    pos.x = b.x - a.z;
+                }
+                else if (velocity.x < 0)
+                {
+                    pos.x = b.x + b.z;
+                }
+
+                HitCollider();
+                hasHit = true;
+            }
         }
     }
 
     //Y
-    pos.y += velocity.y;
-    m_pOwner->SetPosition(pos.x, pos.y);
-
-
-    for (auto* other : colliders)
+    if (velocity.y != 0) 
     {
-        if (other == collider) continue;
+        pos.y += velocity.y;
+        m_pOwner->SetPosition(pos.x, pos.y);
 
-        if (CollisionComponent::CheckBlockingCollision(
-            collider,
-            other))
+
+        for (auto* other : m_Colliders)
         {
-            auto a = collider->GetCollisionRect();
-            auto b = other->GetCollisionRect();
+            if (other == m_Collider) continue;
 
-            if (velocity.y > 0)
+            //WallCheck
+            if (other->GetTag() == 'w')
             {
-                pos.y = b.y - a.w;
-            }
-            else if (velocity.y < 0)
-            {
-                pos.y = b.y + b.w;
+                auto a = m_Collider->GetCollisionRect();
+                auto b = other->GetCollisionRect();
+                auto posCol = glm::vec3(b.x, b.y, 0.f);
+                if ((posCol - pos).length() > 5.f) continue;
+                if (CollisionComponent::CheckCollision(a, b))
+                {
+                    if (velocity.y > 0)
+                    {
+                        pos.y = b.y - a.w;
+                    }
+                    else if (velocity.y < 0)
+                    {
+                        pos.y = b.y + b.w;
+                    }
+                    hasHit = true;
+                    HitCollider();
+                }
+                continue;
+
             }
 
-            collider->SetCollisionRectDirty();
-            HitCollider();
+            //Other Collision Check
+            if (CollisionComponent::CheckBlockingCollision(
+                m_Collider,
+                other))
+            {
+                auto a = m_Collider->GetCollisionRect();
+                auto b = other->GetCollisionRect();
+
+                if (velocity.y > 0)
+                {
+                    pos.y = b.y - a.w;
+                }
+                else if (velocity.y < 0)
+                {
+                    pos.y = b.y + b.w;
+                }
+
+                HitCollider();
+                hasHit = true;
+
+            }
         }
     }
     
 
-    m_pOwner->SetPosition(pos.x, pos.y);
+    if (hasHit) m_pOwner->SetPosition(pos.x, pos.y);
+
+    
+
 
 
 
@@ -154,6 +227,6 @@ glm::vec3 dae::AIMovementComponent::FindNewDirection()
 
     return -m_DesiredVelocity; //Incase no other direction works. Pick Negative
 
-
+   
 
 }

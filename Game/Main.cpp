@@ -59,7 +59,7 @@ static void load()
 
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto to = std::make_unique<dae::GameObject>();
-	auto tc = std::make_unique<dae::TextComponent>(to.get(),"Dae Assignment Alexander", font);
+	auto tc = std::make_unique<dae::TextComponent>(to.get(), "Dae Assignment Alexander", font);
 	auto tor = std::make_unique<dae::RenderComponent>(to.get());
 	tc->SetColor({ 255, 255, 0, 255 });
 	to.get()->AddComponent(std::move(tc));
@@ -74,7 +74,7 @@ static void load()
 	fpso.get()->AddComponent(std::move(fpsc));
 	fpso.get()->AddComponent(std::move(fpst));
 	fpso.get()->AddComponent(std::move(fpsr));
-	
+
 	scene.Add(std::move(fpso));
 
 
@@ -98,7 +98,7 @@ static void load()
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_A, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_W, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, -1.f }));
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_S, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, 1.f }));
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_X, dae::KeyState::Pressed, std::make_unique<dae::PlaceBomb>(playerGameObject.get()),nullptr);
+	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_X, dae::KeyState::Pressed, std::make_unique<dae::PlaceBomb>(playerGameObject.get()), nullptr);
 
 	scene.Add(std::move(playerGameObject));
 	auto gridLayout = grid->GetGridLayout();
@@ -132,7 +132,7 @@ static void load()
 
 
 
-		if (rand()%2 == 1) 
+		if (rand() % 2 == 1)
 		{
 			enemyMovementComponent.get()->SetVelocity(0.f, 1.f);
 		}
@@ -145,14 +145,14 @@ static void load()
 		auto enemyplacebombcomponent = std::make_unique<dae::PlaceBombComponent>(enemyGameObject.get(), grid);
 		auto enemyComponent = std::make_unique<dae::EnemyComponent>(enemyGameObject.get());
 		enemyGameObject.get()->AddComponent(std::move(enemyRenderComponent));
-		enemyGameObject.get()->AddComponent(std::move(enemyMovementComponent));
 		enemyGameObject.get()->AddComponent(std::move(enemyCollider));
+		enemyGameObject.get()->AddComponent(std::move(enemyMovementComponent));
 		enemyGameObject.get()->AddComponent(std::move(enemyplacebombcomponent));
 		enemyGameObject.get()->AddComponent(std::move(enemyHealthComponent));
 		enemyGameObject.get()->AddComponent(std::move(enemyComponent));
 		int x = chosenIndex % grid->GetColums();
 		int y = chosenIndex / grid->GetColums();
-		enemyGameObject.get()->SetPosition(32*float(x), 32*float(y));
+		enemyGameObject.get()->SetPosition(32 * float(x), 32 * float(y));
 		enemyGameObject.get()->SetScale(1.5f, 1.5f);
 
 		scene.Add(std::move(enemyGameObject));
@@ -162,16 +162,20 @@ static void load()
 
 
 
+
+	scene.Start();
+
+
 	//SOUND
 
-	fs::path data_location = "./Data/";
+	/*fs::path data_location = "./Data/";
 	if (!fs::exists(data_location))
 		data_location = "../Data/";
 
 
 	const auto fullPath = data_location / "TestSound.mp3";
 	const auto filename = fs::path(fullPath).filename().string();
-	dae::SoundSystemLocator::register_sound_system(std::make_unique<dae::SDLSoundSystem>());
+	dae::SoundSystemLocator::register_sound_system(std::make_unique<dae::SDLSoundSystem>());*/
 	//dae::SoundSystemLocator::get_sound_system().LoadSound(0, filename);
 
 }
