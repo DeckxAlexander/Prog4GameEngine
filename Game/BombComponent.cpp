@@ -45,7 +45,7 @@ void dae::BombComponent::Explode()
 	KillSurrounding(gridTransform);
 	std::cout << "Explode";
 	if (m_Placer) m_Placer->UnlockCanPlace();
-	dae::SoundSystemLocator::get_sound_system().PlaySound(0, 10);
+	dae::SoundSystemLocator::get_sound_system().PlaySound(0);
 	GetOwner()->MarkForDelete();
 
 

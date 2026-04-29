@@ -95,7 +95,7 @@ namespace dae {
 
 
     SDLSoundSystem::~SDLSoundSystem() = default;
-    void SDLSoundSystem::PlaySound(const uint32_t id, const float volume)
+    void SDLSoundSystem::PlaySound(const uint32_t id)
     {
         m_Impl->Enqueue(id);
     }
