@@ -11,7 +11,6 @@ void dae::MovementComponent::Start()
 {
 
      m_Collider = GetOwner()->GetComponentByType<CollisionComponent>();
-     m_Colliders = CollisionsManager::GetInstance().GetColliders();
 
 
 
@@ -44,7 +43,7 @@ void dae::MovementComponent::Update()
     }
 
     //Collisions Checks
-   /* const auto& colliders = CollisionsManager::GetInstance().GetColliders();*/
+    const auto& colliders = CollisionsManager::GetInstance().GetColliders();
 
     bool hasHit = false;
     //X
@@ -54,7 +53,7 @@ void dae::MovementComponent::Update()
         m_pOwner->SetPosition(pos.x, pos.y);
 
 
-        for (auto* other : m_Colliders)
+        for (auto* other : colliders)
         {
             if (other == m_Collider) continue;
 
@@ -112,7 +111,7 @@ void dae::MovementComponent::Update()
         m_pOwner->SetPosition(pos.x, pos.y);
 
 
-        for (auto* other : m_Colliders)
+        for (auto* other : colliders)
         {
             if (other == m_Collider) continue;
 

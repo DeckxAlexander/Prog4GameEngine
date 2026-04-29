@@ -13,7 +13,6 @@ namespace dae
 		glm::vec3 m_Velocity{};
 		float m_Speed{};
 		CollisionComponent* m_Collider{};
-		std::vector<CollisionComponent*> m_Colliders{};
 	public:
 		virtual void Update() override;
 		virtual void Render() const override;

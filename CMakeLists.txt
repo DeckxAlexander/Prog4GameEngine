@@ -40,7 +40,7 @@ add_library(MiniginEngine STATIC
   Minigin/CollisionComponent.cpp
   Minigin/CollisionsManager.h
   Minigin/Commands.h
- "Minigin/SoundSystem.h" "Minigin/SoundEventQueue.h" "Minigin/SDLSoundSystem.h" "Minigin/SDLSoundSystem.cpp")
+ "Minigin/SoundSystem.h" "Minigin/SoundEventQueue.h" "Minigin/SDLSoundSystem.h" "Minigin/SDLSoundSystem.cpp" "Minigin/SoundSystem.cpp")
 
 
 # list source files here
@@ -208,14 +208,16 @@ target_include_directories(MiniginEngine PUBLIC
 
 
 target_link_libraries(MiniginEngine PUBLIC
+  glm::glm
   SDL3::SDL3
   SDL3_mixer::SDL3_mixer
   SDL3_ttf::SDL3_ttf
-  glm::glm
   imgui
   imgui_plot
   ${VLD_LIBRARIES}
 )
+
+
 
 target_include_directories(${TARGET_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/Game/
@@ -270,6 +272,7 @@ elseif(WIN32)
   set(SDL_RUNTIME_DLLS
     SDL3::SDL3
     SDL3_ttf::SDL3_ttf
+    SDL3_mixer::SDL3_mixer
   )
 
   foreach(dllTarget IN LISTS SDL_RUNTIME_DLLS)

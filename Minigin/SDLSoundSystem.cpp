@@ -15,7 +15,7 @@ namespace dae {
     public:
         Impl()
             : m_Running(true),
-            m_Worker(&Impl::Process, this), m_Mixer{}
+            m_Worker(&Impl::Process, this), m_Mixer{}, m_Device{}
         {
             MIX_Init();
             SDL_AudioSpec spec{};
@@ -23,23 +23,38 @@ namespace dae {
             spec.format = SDL_AUDIO_F32;
             spec.channels = 2;
 
-            m_Mixer = MIX_CreateMixer(&spec);
+            m_Device = SDL_OpenAudioDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec);
+            m_Mixer = MIX_CreateMixerDevice(m_Device, &spec);
         }
 
         ~Impl()
         {
+            m_Queue.Clear();
             m_Running = false;
-            m_Queue.Push({ 0 }); // wake thread
             m_Worker.join();
+            MIX_StopAllTracks(m_Mixer, 0);
+            MIX_DestroyMixer(m_Mixer);
+            m_Mixer = nullptr;
+            m_Sounds.clear();
+            
+            MIX_Quit();
 
-            for (auto& [id, data] : m_Sounds)
-                SDL_free(data);
         }
 
         void Enqueue(const uint32_t soundId)
         {
             std::lock_guard<std::mutex> lock(m_Mutex);
             m_Queue.Push({ soundId });
+        }
+
+        void LoadSound(const uint32_t id, const std::string& path)
+        {
+            auto* audio = MIX_LoadAudio(m_Mixer, path.c_str(), false);
+            auto* track = MIX_CreateTrack(m_Mixer);
+            MIX_SetTrackAudio(track, audio);
+            std::lock_guard lock(m_Mutex);
+            m_Sounds[id] = track;
+
         }
 
     private:
@@ -51,24 +66,18 @@ namespace dae {
                 m_Queue.Pop(event);
 
                 if (!m_Running) break;
-
+                std::lock_guard<std::mutex> lock(m_Mutex);
                 Play(event.SoundId);
             }
         }
 
         void Play(uint32_t id)
         {
+            if (m_Running == false) return;
 
             MIX_PlayTrack(m_Sounds[id], 0);
         }
 
-        void LoadSound(const uint32_t id, const std::string& path)
-        {
-            auto audio = MIX_LoadAudio(m_Mixer, path.c_str(), false);
-            m_Sounds[id] = MIX_CreateTrack(m_Mixer);
-            MIX_SetTrackAudio(m_Sounds[id], audio);
-
-        }
 
     private:
         std::atomic<bool> m_Running;
@@ -76,6 +85,7 @@ namespace dae {
         std::mutex m_Mutex;
         AudioEventQueue m_Queue;
         MIX_Mixer* m_Mixer;
+        SDL_AudioDeviceID m_Device;
         std::unordered_map<uint32_t, MIX_Track*> m_Sounds;
     };
 
@@ -92,6 +102,6 @@ namespace dae {
 
     void SDLSoundSystem::LoadSound(const uint32_t id, const std::string& path)
     {
-        m_Impl->Enqueue(id);
+        m_Impl->LoadSound(id, path);
     }
 }

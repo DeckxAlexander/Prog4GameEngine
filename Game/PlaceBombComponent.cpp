@@ -4,6 +4,7 @@
 #include "RenderComponent.h"
 #include "BombComponent.h"
 #include "CollisionComponent.h"
+#include "SDLSoundSystem.h"
 
 void dae::PlaceBombComponent::PlaceBomb() 
 {
@@ -29,6 +30,7 @@ void dae::PlaceBombComponent::PlaceBomb()
 
 	scene.Add(std::move(bombGameObject));
 	bombEx->StartDetonate();
+	dae::SoundSystemLocator::get_sound_system().PlaySound(0, 10);
 
 
 }

@@ -34,6 +34,13 @@ namespace dae {
 
         bool IsEmpty() { return m_Queue.empty(); }
 
+        void Clear() {
+            while (!m_Queue.empty())
+            {
+                m_Queue.pop();
+            }
+        }
+
     private:
         std::queue<AudioEvent> m_Queue;
         std::mutex m_Mutex;
