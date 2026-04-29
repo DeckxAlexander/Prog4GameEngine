@@ -6,6 +6,7 @@
 #include "SceneManager.h"
 #include "HealthComponent.h"
 #include "CollisionComponent.h"
+#include "SDLSoundSystem.h"
 #include <iostream>
 
 void dae::BombComponent::Update()
@@ -44,7 +45,7 @@ void dae::BombComponent::Explode()
 	KillSurrounding(gridTransform);
 	std::cout << "Explode";
 	if (m_Placer) m_Placer->UnlockCanPlace();
-
+	dae::SoundSystemLocator::get_sound_system().PlaySound(0, 10);
 	GetOwner()->MarkForDelete();
 
 
