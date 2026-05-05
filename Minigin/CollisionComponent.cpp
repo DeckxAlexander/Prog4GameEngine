@@ -12,12 +12,14 @@ glm::vec4 dae::CollisionComponent::GetCollisionRect()
 
 }
 
+
+
 void dae::CollisionComponent::UpdateCollisionRect() 
 {
 	auto pos = m_pOwner->GetWorldPosition();
 
-	m_CollisionRect.x = pos.x - 10.f;
-	m_CollisionRect.y = pos.y - 10.f;
+	m_CollisionRect.x = pos.x - m_CollisionRect.z*0.5f;
+	m_CollisionRect.y = pos.y - m_CollisionRect.w * 0.5f;
 
 	m_CollisionRectIsDirty = false;
 }
@@ -26,6 +28,8 @@ void dae::CollisionComponent::Render() const
 {
 
     auto pos = m_pOwner->GetWorldPosition();
+    pos.x -= m_CollisionRect.z/2.f;
+    pos.y -= m_CollisionRect.w/2.f;
 
     Renderer::GetInstance().RenderLine(pos.x, pos.y, pos.x + m_CollisionRect.z, pos.y);
     Renderer::GetInstance().RenderLine(pos.x + m_CollisionRect.z, pos.y, pos.x + m_CollisionRect.z, pos.y + m_CollisionRect.w);

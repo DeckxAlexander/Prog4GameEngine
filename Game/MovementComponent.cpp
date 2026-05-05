@@ -42,6 +42,10 @@ void dae::MovementComponent::Update()
         return;
     }
 
+
+
+    float snapSpeed{ 12.f };
+    float tileSize{ 32.f };
     //Collisions Checks
     const auto& colliders = CollisionsManager::GetInstance().GetColliders();
 
@@ -50,6 +54,10 @@ void dae::MovementComponent::Update()
     if (velocity.x != 0)
     {
         pos.x += velocity.x;
+
+        float targetY = std::round((pos.y - tileSize * 0.5f) / tileSize) * tileSize + tileSize * 0.5f;
+        pos.y = glm::mix(pos.y, targetY, snapSpeed * deltaT);
+
         m_pOwner->SetPosition(pos.x, pos.y);
 
 
@@ -66,13 +74,18 @@ void dae::MovementComponent::Update()
                 if ((posCol - pos).length() > 5.f) continue;
                 if (CollisionComponent::CheckCollision(a,b)) 
                 {
+                    float halfWidthA = a.z * 0.5f;
+                    float halfWidthB = b.z * 0.5f;
+
+                    float centerB = b.x + halfWidthB;
+
                     if (velocity.x > 0)
                     {
-                        pos.x = b.x - a.z;
+                        pos.x = centerB - halfWidthB - halfWidthA;
                     }
                     else if (velocity.x < 0)
                     {
-                        pos.x = b.x + b.z;
+                        pos.x = centerB + halfWidthB + halfWidthA;
                     }
                     hasHit = true;
                     HitCollider();
@@ -89,13 +102,18 @@ void dae::MovementComponent::Update()
                 auto a = m_Collider->GetCollisionRect();
                 auto b = other->GetCollisionRect();
 
+                float halfWidthA = a.z * 0.5f;
+                float halfWidthB = b.z * 0.5f;
+
+                float centerB = b.x + halfWidthB;
+
                 if (velocity.x > 0)
                 {
-                    pos.x = b.x - a.z;
+                    pos.x = centerB - halfWidthB - halfWidthA;
                 }
                 else if (velocity.x < 0)
                 {
-                    pos.x = b.x + b.z;
+                    pos.x = centerB + halfWidthB + halfWidthA;
                 }
 
                 HitCollider();
@@ -108,6 +126,10 @@ void dae::MovementComponent::Update()
     if (velocity.y != 0) 
     {
         pos.y += velocity.y;
+
+        float targetX = std::round((pos.x - tileSize * 0.5f) / tileSize) * tileSize + tileSize * 0.5f;
+        pos.x = glm::mix(pos.x, targetX, snapSpeed * deltaT);
+
         m_pOwner->SetPosition(pos.x, pos.y);
 
 
@@ -124,13 +146,18 @@ void dae::MovementComponent::Update()
                 if ((posCol - pos).length() > 5.f) continue;
                 if (CollisionComponent::CheckCollision(a, b))
                 {
+                    float halfHeightA = a.w * 0.5f;
+                    float halfHeightB = b.w * 0.5f;
+
+                    float centerB = b.y + halfHeightB;
+
                     if (velocity.y > 0)
                     {
-                        pos.y = b.y - a.w;
+                        pos.y = centerB - halfHeightB - halfHeightA;
                     }
                     else if (velocity.y < 0)
                     {
-                        pos.y = b.y + b.w;
+                        pos.y = centerB + halfHeightB + halfHeightA;
                     }
                     hasHit = true;
                     HitCollider();
@@ -147,13 +174,18 @@ void dae::MovementComponent::Update()
                 auto a = m_Collider->GetCollisionRect();
                 auto b = other->GetCollisionRect();
 
+                float halfHeightA = a.w * 0.5f;
+                float halfHeightB = b.w * 0.5f;
+
+                float centerB = b.y + halfHeightB;
+
                 if (velocity.y > 0)
                 {
-                    pos.y = b.y - a.w;
+                    pos.y = centerB - halfHeightB - halfHeightA;
                 }
                 else if (velocity.y < 0)
                 {
-                    pos.y = b.y + b.w;
+                    pos.y = centerB + halfHeightB + halfHeightA;
                 }
 
                 HitCollider();
@@ -259,11 +291,6 @@ glm::vec3 dae::ChaseMovementComponent::FindDirection()
         {1, 0}, {-1, 0}, {0, 1}, {0, -1}
     };
 
-    //std::sort(dirs.begin(), dirs.end(), [&](auto& a, auto& b) {
-    //    int da = glm::length((pos + a) - m_TargetGridPosition);
-    //    int db = glm::length((pos + b) - m_TargetGridPosition);
-    //    return da < db;
-    //    });
 
     for (auto& dir : dirs) {
         if (m_pGrid->GetGridLayout()[m_pGrid->GridToIndex(pos + preferred)] != GridComponent::GridValue::soft &&
@@ -271,7 +298,7 @@ glm::vec3 dae::ChaseMovementComponent::FindDirection()
             return { dir.x, dir.y, 0 };
         }
     }
-
+    std::cout << "NONE\n";
 
     return glm::vec3();
 }
@@ -282,6 +309,12 @@ void dae::ChaseMovementComponent::SetTarget(GameObject* target)
     SetVelocity(FindDirection());
 
 
+}
+
+void dae::ChaseMovementComponent::HitCollider()
+{
+
+    AddVelocity(m_DesiredVelocity.y, m_DesiredVelocity.x);
 }
 
 void dae::ChaseMovementComponent::Update()

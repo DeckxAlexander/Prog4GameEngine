@@ -89,6 +89,7 @@ namespace dae
 
 		void SetTarget(GameObject* target);
 
+		virtual void HitCollider() override;
 
 
 		virtual void Update() override;

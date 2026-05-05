@@ -54,7 +54,7 @@ namespace dae
 		int m_Rows;
 		glm::vec2 m_TileScale{ 1.f,1.f };
 
-		bool m_ShowDebug{ true };
+		bool m_ShowDebug{ false };
 
 
 		//GridObjects

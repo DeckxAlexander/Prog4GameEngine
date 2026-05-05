@@ -25,6 +25,7 @@ void dae::EnemyComponent::SetState(std::unique_ptr<EnemyState> state)
 void dae::EnemyComponent::SearchPlayer()
 {
 	auto grid = GridLocator::GetGrid();
+
 	auto enemyGridPosition = grid->WorldPosToTile(GetOwner()->GetWorldPosition());
 
 	for (auto player : m_Players) 

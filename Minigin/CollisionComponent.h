@@ -30,13 +30,10 @@ namespace dae
 		{ 
 			m_BlockingTags.erase(std::remove(m_BlockingTags.begin(), m_BlockingTags.end(), val), m_BlockingTags.end());
 		}
-
-
 		glm::vec4 GetCollisionRect();
 		void SetCollisionRectDirty() { m_CollisionRectIsDirty = true; }
 		static bool CheckBlockingCollision(CollisionComponent* collisionA, CollisionComponent* collisionB);
 		static bool CheckCollision(glm::vec4 collisionRectA, glm::vec4 collisionRectB);
-
 
 		
 

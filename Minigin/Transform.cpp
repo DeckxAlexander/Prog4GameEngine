@@ -94,7 +94,11 @@ void dae::GridTransform::SetGridTile(int tileX, int tileY)
 {
 	glm::vec3 screenPos{};
 	screenPos.x = tileX * m_pGrid->GetTileScale().x;
+	screenPos.x += m_pGrid->GetTileScale().x * 0.5f;
+
+
 	screenPos.y = tileY * m_pGrid->GetTileScale().y;
+	screenPos.y += m_pGrid->GetTileScale().y * 0.5f;
 
 	SetLocalPosition(screenPos);
 

@@ -92,7 +92,7 @@ static void load()
 	playerGameObject.get()->AddComponent(std::move(playerplacebombcomponent));
 	playerGameObject.get()->AddComponent(std::move(playerHealthComponent));
 	playerGameObject.get()->AddComponent(std::move(playerComponent));
-	playerGameObject.get()->SetPosition(35, 35);
+	playerGameObject.get()->SetPosition(50, 50);
 	playerGameObject.get()->SetScale(1.5f, 1.5f);
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_D, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_A, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
@@ -150,7 +150,7 @@ static void load()
 		enemyGameObject.get()->AddComponent(std::move(enemyComponent));
 		int x = chosenIndex % grid->GetColums();
 		int y = chosenIndex / grid->GetColums();
-		enemyGameObject.get()->SetPosition(32 * float(x), 32 * float(y));
+		enemyGameObject.get()->SetPosition(32 * float(x) + 16, 32 * float(y) + 16);
 		enemyGameObject.get()->SetScale(1.5f, 1.5f);
 		enemyGameObject->GetComponentByType<dae::EnemyComponent>()->SetState(std::make_unique<dae::WanderState>());
 		enemyGameObject->GetComponentByType<dae::ChaseMovementComponent>()->SetEnabled(false);
