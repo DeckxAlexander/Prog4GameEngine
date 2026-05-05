@@ -10,6 +10,7 @@ namespace dae
 	class MovementComponent : public ObjectComponent
 	{
 	protected:
+		GridComponent* m_pGrid;
 		glm::vec3 m_Velocity{};
 		float m_Speed{};
 		CollisionComponent* m_Collider{};
@@ -28,7 +29,7 @@ namespace dae
 
 
 
-		MovementComponent(GameObject* pOwner, float speed);
+		MovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid);
 		~MovementComponent() = default;
 		MovementComponent(const MovementComponent& other) = delete;
 		MovementComponent(MovementComponent&& other) = delete;
@@ -40,7 +41,6 @@ namespace dae
 	{
 	private:
 		glm::vec3 m_DesiredVelocity{};
-		GridComponent* m_pGrid;
 		glm::vec3 FindNewDirection();
 
 	public:
@@ -59,7 +59,7 @@ namespace dae
 			if (len > 0) m_DesiredVelocity /= len;
 		};
 
-		WanderMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid = nullptr);
+		WanderMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid);
 		~WanderMovementComponent() = default;
 		WanderMovementComponent(const WanderMovementComponent& other) = delete;
 		WanderMovementComponent(WanderMovementComponent&& other) = delete;
@@ -72,7 +72,6 @@ namespace dae
 	{
 	private:
 		glm::vec3 m_DesiredVelocity{};
-		GridComponent* m_pGrid;
 		GameObject* m_Target{};
 		glm::vec3 FindDirection();
 
@@ -89,7 +88,7 @@ namespace dae
 
 		void SetTarget(GameObject* target);
 
-		virtual void HitCollider() override;
+
 
 
 		virtual void Update() override;

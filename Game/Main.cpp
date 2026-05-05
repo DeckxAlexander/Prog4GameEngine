@@ -40,6 +40,7 @@ static void load()
 	auto tileGameObject = std::make_unique<dae::GameObject>();
 	auto tileRenderComponent = std::make_unique<dae::RenderComponent>(tileGameObject.get(), "background2.png");
 	tileGameObject.get()->AddComponent(std::move(tileRenderComponent));
+	tileGameObject->SetPosition(512.f, 288.f);
 	scene.Add(std::move(tileGameObject));
 
 
@@ -81,7 +82,7 @@ static void load()
 	//Player
 	auto playerGameObject = std::make_unique<dae::GameObject>();
 	auto playerRenderComponent = std::make_unique<dae::RenderComponent>(playerGameObject.get(), "Bomberman.png");
-	auto playerMovementComponent = std::make_unique<dae::MovementComponent>(playerGameObject.get(), 50.f);
+	auto playerMovementComponent = std::make_unique<dae::MovementComponent>(playerGameObject.get(), 50.f, grid);
 	auto playerHealthComponent = std::make_unique<dae::HealthComponent>(playerGameObject.get(), 5);
 	auto playerCollider = std::make_unique<dae::CollisionComponent>(playerGameObject.get(), 18.f, 27.f, 'e');
 	auto playerplacebombcomponent = std::make_unique<dae::PlaceBombComponent>(playerGameObject.get(), grid);

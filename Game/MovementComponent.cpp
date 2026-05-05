@@ -16,7 +16,7 @@ void dae::MovementComponent::Start()
 
 }
 
-dae::MovementComponent::MovementComponent(GameObject* pOwner, float speed) : ObjectComponent(pOwner), m_Speed{speed}
+dae::MovementComponent::MovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid) : ObjectComponent(pOwner), m_Speed{speed}, m_pGrid{pGrid}
 {
 
 
@@ -45,7 +45,8 @@ void dae::MovementComponent::Update()
 
 
     float snapSpeed{ 12.f };
-    float tileSize{ 32.f };
+    float tileSizeX{ m_pGrid->GetTileScale().x};
+    float tileSizeY{ m_pGrid->GetTileScale().y};
     //Collisions Checks
     const auto& colliders = CollisionsManager::GetInstance().GetColliders();
 
@@ -55,7 +56,7 @@ void dae::MovementComponent::Update()
     {
         pos.x += velocity.x;
 
-        float targetY = std::round((pos.y - tileSize * 0.5f) / tileSize) * tileSize + tileSize * 0.5f;
+        float targetY = std::round((pos.y - tileSizeY * 0.5f) / tileSizeY) * tileSizeY + tileSizeY * 0.5f;
         pos.y = glm::mix(pos.y, targetY, snapSpeed * deltaT);
 
         m_pOwner->SetPosition(pos.x, pos.y);
@@ -127,7 +128,7 @@ void dae::MovementComponent::Update()
     {
         pos.y += velocity.y;
 
-        float targetX = std::round((pos.x - tileSize * 0.5f) / tileSize) * tileSize + tileSize * 0.5f;
+        float targetX = std::round((pos.x - tileSizeX * 0.5f) / tileSizeX) * tileSizeX + tileSizeX * 0.5f;
         pos.x = glm::mix(pos.x, targetX, snapSpeed * deltaT);
 
         m_pOwner->SetPosition(pos.x, pos.y);
@@ -210,7 +211,7 @@ void dae::MovementComponent::Render() const
 	//Empty
 }
 
-dae::WanderMovementComponent::WanderMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid) : MovementComponent(pOwner, speed), m_pGrid{pGrid}
+dae::WanderMovementComponent::WanderMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid) : MovementComponent(pOwner, speed, pGrid)
 {
 }
 
@@ -311,11 +312,6 @@ void dae::ChaseMovementComponent::SetTarget(GameObject* target)
 
 }
 
-void dae::ChaseMovementComponent::HitCollider()
-{
-
-    AddVelocity(m_DesiredVelocity.y, m_DesiredVelocity.x);
-}
 
 void dae::ChaseMovementComponent::Update()
 {
@@ -332,6 +328,6 @@ void dae::ChaseMovementComponent::Update()
     MovementComponent::Update();
 }
 
-dae::ChaseMovementComponent::ChaseMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid) : MovementComponent(pOwner, speed), m_pGrid{ pGrid }
+dae::ChaseMovementComponent::ChaseMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid) : MovementComponent(pOwner, speed, pGrid)
 {
 }
