@@ -25,7 +25,7 @@
 #include "EnemyComponent.h"
 #include "GameCommands.h"
 #include "SDLSoundSystem.h"
-
+#include "EnemyStates.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -54,7 +54,7 @@ static void load()
 	grid->SetupGrid();
 	grid->SpawnGrid();
 
-
+	dae::GridLocator::SetGrid(grid);
 
 
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
@@ -105,9 +105,6 @@ static void load()
 	int EnemiesSpawned = 0;
 	std::vector<int> possibleIndexes{};
 
-
-
-
 	for (size_t i{}; i < gridLayout.size(); i++)
 	{
 		auto gridVal = gridLayout[int(i)];
@@ -128,7 +125,9 @@ static void load()
 
 		auto enemyGameObject = std::make_unique<dae::GameObject>();
 		auto enemyRenderComponent = std::make_unique<dae::RenderComponent>(enemyGameObject.get(), "Bomberman.png");
-		auto enemyMovementComponent = std::make_unique<dae::AIMovementComponent>(enemyGameObject.get(), 50.f, grid);
+		auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>(enemyGameObject.get(), 50.f, grid);
+		auto enemyChaseMovementComponent = std::make_unique<dae::ChaseMovementComponent>(enemyGameObject.get(), 50.f, grid);
+
 
 
 
@@ -142,22 +141,24 @@ static void load()
 		auto enemyHealthComponent = std::make_unique<dae::HealthComponent>(enemyGameObject.get(), 5);
 		auto enemyCollider = std::make_unique<dae::CollisionComponent>(enemyGameObject.get(), 18.f, 27.f, 'e');
 		enemyCollider.get()->AddBlockingTag('b');
-		auto enemyplacebombcomponent = std::make_unique<dae::PlaceBombComponent>(enemyGameObject.get(), grid);
 		auto enemyComponent = std::make_unique<dae::EnemyComponent>(enemyGameObject.get());
 		enemyGameObject.get()->AddComponent(std::move(enemyRenderComponent));
 		enemyGameObject.get()->AddComponent(std::move(enemyCollider));
 		enemyGameObject.get()->AddComponent(std::move(enemyMovementComponent));
-		enemyGameObject.get()->AddComponent(std::move(enemyplacebombcomponent));
+		enemyGameObject.get()->AddComponent(std::move(enemyChaseMovementComponent));
 		enemyGameObject.get()->AddComponent(std::move(enemyHealthComponent));
 		enemyGameObject.get()->AddComponent(std::move(enemyComponent));
 		int x = chosenIndex % grid->GetColums();
 		int y = chosenIndex / grid->GetColums();
 		enemyGameObject.get()->SetPosition(32 * float(x), 32 * float(y));
 		enemyGameObject.get()->SetScale(1.5f, 1.5f);
-
+		enemyGameObject->GetComponentByType<dae::EnemyComponent>()->SetState(std::make_unique<dae::WanderState>());
+		enemyGameObject->GetComponentByType<dae::ChaseMovementComponent>()->SetEnabled(false);
 		scene.Add(std::move(enemyGameObject));
 		EnemiesSpawned++;
 		if (EnemiesSpawned >= 10) break;
+
+
 	}
 
 

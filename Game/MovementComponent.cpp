@@ -178,17 +178,17 @@ void dae::MovementComponent::Render() const
 	//Empty
 }
 
-dae::AIMovementComponent::AIMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid) : MovementComponent(pOwner, speed), m_pGrid{pGrid}
+dae::WanderMovementComponent::WanderMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid) : MovementComponent(pOwner, speed), m_pGrid{pGrid}
 {
 }
 
-void dae::AIMovementComponent::Update()
+void dae::WanderMovementComponent::Update()
 {
     m_Velocity = m_DesiredVelocity;
     MovementComponent::Update();
 }
 
-glm::vec3 dae::AIMovementComponent::FindNewDirection()
+glm::vec3 dae::WanderMovementComponent::FindNewDirection()
 {
 
     if (m_pGrid == nullptr) return -m_DesiredVelocity;
@@ -228,4 +228,77 @@ glm::vec3 dae::AIMovementComponent::FindNewDirection()
 
    
 
+}
+
+glm::vec3 dae::ChaseMovementComponent::FindDirection()
+{
+
+    auto targetPos = m_pGrid->WorldPosToTile(m_Target->GetWorldPosition());
+    auto pos = m_pGrid->WorldPosToTile(GetOwner()->GetWorldPosition());
+    glm::ivec2 diff = targetPos - pos;
+
+    glm::ivec2 preferred;
+
+    if (abs(diff.x) > abs(diff.y)) {
+        preferred = (diff.x > 0) ? glm::ivec2(1, 0)
+            : glm::ivec2(-1, 0);
+    }
+    else {
+        preferred = (diff.y > 0) ? glm::ivec2(0, 1)
+            : glm::ivec2(0, -1);
+    }
+
+    if (m_pGrid->GetGridLayout()[m_pGrid->GridToIndex(pos + preferred)] != GridComponent::GridValue::soft &&
+        m_pGrid->GetGridLayout()[m_pGrid->GridToIndex(pos + preferred)] != GridComponent::GridValue::hard)
+    {
+        return {preferred.x, preferred.y, 0};
+    }
+
+
+    std::vector<glm::ivec2> dirs = {
+        {1, 0}, {-1, 0}, {0, 1}, {0, -1}
+    };
+
+    //std::sort(dirs.begin(), dirs.end(), [&](auto& a, auto& b) {
+    //    int da = glm::length((pos + a) - m_TargetGridPosition);
+    //    int db = glm::length((pos + b) - m_TargetGridPosition);
+    //    return da < db;
+    //    });
+
+    for (auto& dir : dirs) {
+        if (m_pGrid->GetGridLayout()[m_pGrid->GridToIndex(pos + preferred)] != GridComponent::GridValue::soft &&
+            m_pGrid->GetGridLayout()[m_pGrid->GridToIndex(pos + preferred)] != GridComponent::GridValue::hard) {
+            return { dir.x, dir.y, 0 };
+        }
+    }
+
+
+    return glm::vec3();
+}
+
+void dae::ChaseMovementComponent::SetTarget(GameObject* target)
+{
+    m_Target = target;
+    SetVelocity(FindDirection());
+
+
+}
+
+void dae::ChaseMovementComponent::Update()
+{
+    m_Velocity = m_DesiredVelocity;
+
+    m_RecalculateTimer += TimeManager::GetInstance().GetDeltaTime();
+    if (m_RecalculateTimer > m_RecalcMaxTime)
+    {
+        m_RecalculateTimer = 0.f;
+        std::cout << "recalc";
+        Recalculate();
+    }
+
+    MovementComponent::Update();
+}
+
+dae::ChaseMovementComponent::ChaseMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid) : MovementComponent(pOwner, speed), m_pGrid{ pGrid }
+{
 }

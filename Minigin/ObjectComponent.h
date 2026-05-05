@@ -14,6 +14,7 @@ namespace dae
 
 	protected:
 		//These variables are kept incase object has Render capabilities
+		bool m_IsEnabled{ true };
 		GameObject* m_pOwner;
 	public:
 		friend class GameObject;
@@ -22,7 +23,8 @@ namespace dae
 		virtual void Start() {}
 
 
-
+		virtual void SetEnabled(bool value) { m_IsEnabled = value; }
+		bool IsEnabled() {return m_IsEnabled; }
 		GameObject* GetOwner() const;
 		ObjectComponent(GameObject* pOwner);
 		virtual ~ObjectComponent() = default;

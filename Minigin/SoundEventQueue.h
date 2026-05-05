@@ -35,6 +35,7 @@ namespace dae {
         bool IsEmpty() { return m_Queue.empty(); }
 
         void Clear() {
+            std::lock_guard<std::mutex> lock(m_Mutex);
             while (!m_Queue.empty())
             {
                 m_Queue.pop();

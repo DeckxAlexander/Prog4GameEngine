@@ -1,9 +1,22 @@
 #include "GridComponent.h"
+#include "GridComponent.h"
 #include "Renderer.h"
 #include "GameObject.h"
 #include "RenderComponent.h"
 #include "CollisionComponent.h"
 #include "SceneManager.h"
+
+dae::GridComponent* dae::GridLocator::m_GridInstance = nullptr;
+
+
+glm::ivec2 dae::GridComponent::WorldPosToTile(const glm::vec3& worldPos) const
+{
+
+	return glm::ivec2(
+		static_cast<int>(std::floor(worldPos.x / m_TileScale.x)),
+		static_cast<int>(std::floor(worldPos.y / m_TileScale.y))
+	);
+}
 
 dae::GridComponent::GridComponent(GameObject* pOwner, int colums, int rows) : ObjectComponent(pOwner), m_Colums{colums}, m_Rows{rows}
 {

@@ -51,6 +51,7 @@ namespace dae
 		}
 
 
+
 		void SetGridTile(int tileX, int tileY);
 
 		glm::ivec2 GetGridTiles();

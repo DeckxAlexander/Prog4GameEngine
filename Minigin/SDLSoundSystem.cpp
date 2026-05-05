@@ -15,7 +15,7 @@ namespace dae {
     public:
         Impl()
             : m_Running(true),
-            m_Worker(&Impl::Process, this), m_Mixer{}, m_Device{}
+            m_Worker{}, m_Mixer{}, m_Device{}
         {
             MIX_Init();
             SDL_AudioSpec spec{};
@@ -25,19 +25,28 @@ namespace dae {
 
             m_Device = SDL_OpenAudioDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec);
             m_Mixer = MIX_CreateMixerDevice(m_Device, &spec);
+
+            m_Worker = std::jthread([this](std::stop_token st) {
+                Process(st);
+                });
         }
 
         ~Impl()
         {
-            m_Queue.Clear();
             m_Running = false;
+            m_Worker.request_stop();
+            m_Queue.Push({});
+
             m_Worker.join();
+
             MIX_StopAllTracks(m_Mixer, 0);
-            MIX_DestroyMixer(m_Mixer);
-            m_Mixer = nullptr;
             m_Sounds.clear();
-            
-            MIX_Quit();
+
+
+            //SDL_CloseAudioDevice(m_Device);
+            //MIX_DestroyMixer(m_Mixer);
+            //
+            //MIX_Quit();
 
         }
 
@@ -58,22 +67,23 @@ namespace dae {
         }
 
     private:
-        void Process()
+        void Process(std::stop_token st)
         {
-            while (m_Running)
+            while (!st.stop_requested())
             {
                 AudioEvent event;
                 m_Queue.Pop(event);
-
-                if (!m_Running) break;
-                std::lock_guard<std::mutex> lock(m_Mutex);
+                if (st.stop_requested()) break;
                 Play(event.SoundId);
+                std::cout << "Play";
             }
         }
 
         void Play(uint32_t id)
         {
+            std::lock_guard<std::mutex> lock(m_Mutex);
             if (m_Running == false) return;
+
 
             MIX_PlayTrack(m_Sounds[id], 0);
         }
@@ -81,11 +91,11 @@ namespace dae {
 
     private:
         std::atomic<bool> m_Running;
-        std::thread m_Worker;
+        std::jthread m_Worker;
         std::mutex m_Mutex;
         AudioEventQueue m_Queue;
-        MIX_Mixer* m_Mixer;
         SDL_AudioDeviceID m_Device;
+        MIX_Mixer* m_Mixer;
         std::unordered_map<uint32_t, MIX_Track*> m_Sounds;
     };
 

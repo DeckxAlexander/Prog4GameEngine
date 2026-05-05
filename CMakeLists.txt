@@ -40,7 +40,11 @@ add_library(MiniginEngine STATIC
   Minigin/CollisionComponent.cpp
   Minigin/CollisionsManager.h
   Minigin/Commands.h
- "Minigin/SoundSystem.h" "Minigin/SoundEventQueue.h" "Minigin/SDLSoundSystem.h" "Minigin/SDLSoundSystem.cpp" "Minigin/SoundSystem.cpp")
+  Minigin/SoundSystem.h
+  Minigin/SoundSystem.cpp
+  Minigin/SoundEventQueue.h
+  Minigin/SDLSoundSystem.h
+  Minigin/SDLSoundSystem.cpp)
 
 
 # list source files here
@@ -61,7 +65,8 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Game/EnemyComponent.cpp
   Game/GameCommands.h
   Game/GameCommands.cpp
-)
+  Game/EnemyStates.h
+  Game/EnemyStates.cpp)
 
 # enable c++20 features
 target_compile_features(MiniginEngine PUBLIC cxx_std_20)
@@ -208,12 +213,12 @@ target_include_directories(MiniginEngine PUBLIC
 
 
 target_link_libraries(MiniginEngine PUBLIC
-  glm::glm
   SDL3::SDL3
   SDL3_mixer::SDL3_mixer
   SDL3_ttf::SDL3_ttf
   imgui
   imgui_plot
+  glm::glm
   ${VLD_LIBRARIES}
 )
 

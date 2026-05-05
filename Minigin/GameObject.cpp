@@ -86,7 +86,7 @@ void dae::GameObject::Update()
 {
 	for (auto& component : m_Components)
 	{
-		component.get()->Update();
+		if (component.get()->IsEnabled()) component.get()->Update();
 	}
 }
 
@@ -116,9 +116,10 @@ void dae::GameObject::SetScale(float x, float y)
 }
 
 
-void dae::GameObject::AddComponent(std::unique_ptr<ObjectComponent> component)
+void dae::GameObject::AddComponent(std::unique_ptr<ObjectComponent> component, bool enabled )
 {
 	auto comp = component.get();
+	comp->SetEnabled(enabled);
 	comp->m_pOwner = this;
 	m_Components.emplace_back(std::move(component));
 

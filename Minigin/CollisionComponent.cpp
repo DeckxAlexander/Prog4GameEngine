@@ -16,8 +16,8 @@ void dae::CollisionComponent::UpdateCollisionRect()
 {
 	auto pos = m_pOwner->GetWorldPosition();
 
-	m_CollisionRect.x = pos.x ;
-	m_CollisionRect.y = pos.y ;
+	m_CollisionRect.x = pos.x - 10.f;
+	m_CollisionRect.y = pos.y - 10.f;
 
 	m_CollisionRectIsDirty = false;
 }

@@ -92,23 +92,28 @@ void dae::BombComponent::BreakSoftBlocks(dae::GridComponent* grid, glm::ivec2 gp
 	if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
 	{
 		grid->GetGridPtrs()[gridIndex]->MarkForDelete();
+		grid->GetGridLayout()[gridIndex] = GridComponent::GridValue::empty;
 	}
 
 	gridIndex = grid->GridToIndex(gpos.x, gpos.y + 1);
 	if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
 	{
 		grid->GetGridPtrs()[gridIndex]->MarkForDelete();
+		grid->GetGridLayout()[gridIndex] = GridComponent::GridValue::empty;
 	}
 
 	gridIndex = grid->GridToIndex(gpos.x - 1, gpos.y);
 	if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
 	{
 		grid->GetGridPtrs()[gridIndex]->MarkForDelete();
+		grid->GetGridLayout()[gridIndex] = GridComponent::GridValue::empty;
 	}
 
 	gridIndex = grid->GridToIndex(gpos.x + 1, gpos.y);
 	if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
 	{
+
 		grid->GetGridPtrs()[gridIndex]->MarkForDelete();
+		grid->GetGridLayout()[gridIndex] = GridComponent::GridValue::empty;
 	}
 }

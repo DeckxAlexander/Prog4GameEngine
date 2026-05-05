@@ -34,7 +34,7 @@ namespace dae
 		Transform* GetTransform() { return m_transform.get(); }
 
 		
-		void AddComponent(std::unique_ptr<ObjectComponent> component);
+		void AddComponent(std::unique_ptr<ObjectComponent> component, bool enabled = true);
 		void RemoveComponent(const ObjectComponent& component);
 		template <typename T>
 		T* GetComponentByType() const

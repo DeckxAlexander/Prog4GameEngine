@@ -36,12 +36,11 @@ namespace dae
 		MovementComponent& operator=(MovementComponent&& other) = delete;
 	};
 
-	class AIMovementComponent final : public MovementComponent
+	class WanderMovementComponent final : public MovementComponent
 	{
 	private:
 		glm::vec3 m_DesiredVelocity{};
 		GridComponent* m_pGrid;
-
 		glm::vec3 FindNewDirection();
 
 	public:
@@ -60,11 +59,55 @@ namespace dae
 			if (len > 0) m_DesiredVelocity /= len;
 		};
 
-		AIMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid = nullptr);
-		~AIMovementComponent() = default;
-		AIMovementComponent(const AIMovementComponent& other) = delete;
-		AIMovementComponent(AIMovementComponent&& other) = delete;
-		AIMovementComponent& operator=(const AIMovementComponent& other) = delete;
-		AIMovementComponent& operator=(AIMovementComponent&& other) = delete;
+		WanderMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid = nullptr);
+		~WanderMovementComponent() = default;
+		WanderMovementComponent(const WanderMovementComponent& other) = delete;
+		WanderMovementComponent(WanderMovementComponent&& other) = delete;
+		WanderMovementComponent& operator=(const WanderMovementComponent& other) = delete;
+		WanderMovementComponent& operator=(WanderMovementComponent&& other) = delete;
+	};
+
+
+	class ChaseMovementComponent final : public MovementComponent 
+	{
+	private:
+		glm::vec3 m_DesiredVelocity{};
+		GridComponent* m_pGrid;
+		GameObject* m_Target{};
+		glm::vec3 FindDirection();
+
+		virtual void Recalculate()
+		{
+			if (m_Target == nullptr) return;
+			SetVelocity(FindDirection());
+
+		}
+
+		float m_RecalculateTimer{};
+		float m_RecalcMaxTime{ 1.f };
+	public:
+
+		void SetTarget(GameObject* target);
+
+
+
+		virtual void Update() override;
+		void SetVelocity(glm::vec3 velocity)
+		{
+			m_DesiredVelocity = velocity;
+			float len = glm::length(m_DesiredVelocity);
+			if (len > 0) m_DesiredVelocity /= len;
+		};
+
+
+
+		ChaseMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid);
+		~ChaseMovementComponent() = default;
+		ChaseMovementComponent(const ChaseMovementComponent& other) = delete;
+		ChaseMovementComponent(ChaseMovementComponent&& other) = delete;
+		ChaseMovementComponent& operator=(const ChaseMovementComponent& other) = delete;
+		ChaseMovementComponent& operator=(ChaseMovementComponent&& other) = delete;
+
+
 	};
 }

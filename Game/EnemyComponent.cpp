@@ -1,6 +1,10 @@
 #include "EnemyComponent.h"
 #include "SceneManager.h"
 #include "CollisionComponent.h"
+#include "EnemyStates.h"
+#include "GridComponent.h"
+#include <memory>
+#include <iostream>
 #include <vector>
 
 
@@ -9,6 +13,84 @@ void dae::EnemyComponent::InitializePlayers()
 	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
 	m_Players.clear();
 	m_Players = scene.GetAllObjectsByComponent<PlayerComponent>();
+}
+
+void dae::EnemyComponent::SetState(std::unique_ptr<EnemyState> state)
+{
+	if (m_State.get() != nullptr) m_State.get()->End(this); //old
+	m_State = std::move(state);
+	if (m_State.get() != nullptr) m_State.get()->Start(this); //new
+}
+
+void dae::EnemyComponent::SearchPlayer()
+{
+	auto grid = GridLocator::GetGrid();
+	auto enemyGridPosition = grid->WorldPosToTile(GetOwner()->GetWorldPosition());
+
+	for (auto player : m_Players) 
+	{
+		auto playerGridPosition = grid->WorldPosToTile(player->GetWorldPosition());
+
+
+		if (playerGridPosition == enemyGridPosition) //On same grid tile
+		{
+			std::cout << "Seen";
+			return; 
+		} 
+
+		bool found = true;
+		//Check Vertical
+		if (playerGridPosition.x == enemyGridPosition.x)
+		{
+			int step = (playerGridPosition.y > enemyGridPosition.y) ? 1 : -1;
+			for (int y = enemyGridPosition.y + step; y != playerGridPosition.y; y += step) 
+			{
+				if (grid->GetGridLayout()[grid->GridToIndex(enemyGridPosition.x, y)] == GridComponent::GridValue::hard ||
+					grid->GetGridLayout()[grid->GridToIndex(enemyGridPosition.x, y)] == GridComponent::GridValue::soft) 
+				{
+					found = false;
+					break;
+				}
+			}
+		}
+		else if (playerGridPosition.y == enemyGridPosition.y)//Check Horizontal
+		{
+			int step = (playerGridPosition.x > enemyGridPosition.x) ? 1 : -1;
+			for (int x = enemyGridPosition.x + step; x != playerGridPosition.x; x += step)
+			{
+				if (grid->GetGridLayout()[grid->GridToIndex(x, enemyGridPosition.y)] == GridComponent::GridValue::hard ||
+					grid->GetGridLayout()[grid->GridToIndex(x, enemyGridPosition.y)] == GridComponent::GridValue::soft) 
+				{
+					found = false;
+					break;
+				}
+			}
+		}
+		else 
+		{
+			found = false;
+		}
+
+		if (found == true) 
+		{
+			std::cout << "Seen";
+			SetState(std::make_unique<ChaseState>(player));
+			return;
+		}
+
+	}
+
+
+
+
+}
+
+dae::EnemyComponent::EnemyComponent(GameObject* pOwner) : ObjectComponent(pOwner)
+{
+	InitializePlayers();
+
+	m_State = std::make_unique<WanderState>();
+	m_State->Start(this);
 }
 
 void dae::EnemyComponent::Update()
@@ -29,5 +111,7 @@ void dae::EnemyComponent::Update()
 		}
 
 	}
+	if (m_State.get() != nullptr) m_State->Update(this);
+	
 	
 }
