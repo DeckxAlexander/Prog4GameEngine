@@ -125,6 +125,21 @@ void dae::InputManager::UnbindMouseCommand(uint8_t button, KeyState state)
 		m_MouseBindings.end());
 }
 
+void dae::InputManager::UnbindGameObject(GameObject* go)
+{
+	if (m_KeyBindings.empty()) return;
+	m_KeyBindings.erase(
+		std::remove_if(m_KeyBindings.begin(), m_KeyBindings.end(),
+			[go](const KeyBinding& b)
+			{
+				auto ptr = dynamic_cast<GameObjectCommand*>(b.command.get());
+				if (ptr == nullptr) return false;
+
+				return ptr->GetGameObject() != nullptr && ptr->GetGameObject() == go;
+			}),
+		m_KeyBindings.end());
+}
+
 void dae::InputManager::AddController(std::unique_ptr<Controller> controller)
 {
 	m_Controllers.push_back(std::move(controller));

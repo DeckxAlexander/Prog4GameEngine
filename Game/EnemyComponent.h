@@ -5,18 +5,19 @@
 
 namespace dae
 {
-	class EnemyState;
+	class State;
 	class EnemyComponent final : public ObjectComponent
 	{
 	private:
 		std::vector<GameObject*> m_Players{};
-		std::unique_ptr<EnemyState> m_State{};
+		std::unique_ptr<State> m_State{};
 	public:
+		virtual void Start() override;
 		virtual void Update() override;
 		virtual void Render() const override {}
 		void InitializePlayers();
 		
-		void SetState(std::unique_ptr<EnemyState> state);
+		void SetState(std::unique_ptr<State> state);
 		void SearchPlayer();
 		bool CanSeePlayer(GameObject* obj);
 

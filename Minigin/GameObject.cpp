@@ -2,6 +2,7 @@
 #include <string>
 #include "GameObject.h"
 #include "ResourceManager.h"
+#include "InputManager.h"
 #include "Renderer.h"
 
 dae::GameObject::GameObject() : m_transform{ std::make_unique<Transform>(this)}, m_Components{}, m_pParent{nullptr}, m_Children{}
@@ -70,7 +71,10 @@ void dae::GameObject::SetParent(GameObject* gameObject, bool keepWorldPosition)
 
 
 
-dae::GameObject::~GameObject() = default;
+dae::GameObject::~GameObject()
+{
+	InputManager::GetInstance().UnbindGameObject(this);
+}
 
 
 

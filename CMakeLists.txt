@@ -65,8 +65,8 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Game/EnemyComponent.cpp
   Game/GameCommands.h
   Game/GameCommands.cpp
-  Game/EnemyStates.h
-  Game/EnemyStates.cpp)
+  Game/States.h
+  Game/States.cpp)
 
 # enable c++20 features
 target_compile_features(MiniginEngine PUBLIC cxx_std_20)

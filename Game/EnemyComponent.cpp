@@ -1,7 +1,7 @@
 #include "EnemyComponent.h"
 #include "SceneManager.h"
 #include "CollisionComponent.h"
-#include "EnemyStates.h"
+#include "States.h"
 #include "GridComponent.h"
 #include <memory>
 #include <iostream>
@@ -15,11 +15,11 @@ void dae::EnemyComponent::InitializePlayers()
 	m_Players = scene.GetAllObjectsByComponent<PlayerComponent>();
 }
 
-void dae::EnemyComponent::SetState(std::unique_ptr<EnemyState> state)
+void dae::EnemyComponent::SetState(std::unique_ptr<State> state)
 {
-	if (m_State.get() != nullptr) m_State.get()->End(this); //old
+	if (m_State.get() != nullptr) m_State.get()->End(); //old
 	m_State = std::move(state);
-	if (m_State.get() != nullptr) m_State.get()->Start(this); //new
+	if (m_State.get() != nullptr) m_State.get()->Start(GetOwner()); //new
 }
 
 
@@ -131,9 +131,12 @@ void dae::EnemyComponent::SearchPlayer()
 dae::EnemyComponent::EnemyComponent(GameObject* pOwner) : ObjectComponent(pOwner)
 {
 	InitializePlayers();
+}
 
+void dae::EnemyComponent::Start()
+{
 	m_State = std::make_unique<WanderState>();
-	m_State->Start(this);
+	m_State->Start(GetOwner());
 }
 
 void dae::EnemyComponent::Update()
@@ -154,7 +157,7 @@ void dae::EnemyComponent::Update()
 		}
 
 	}
-	if (m_State.get() != nullptr) m_State->Update(this);
+	if (m_State.get() != nullptr) m_State->Update();
 	
 	
 }

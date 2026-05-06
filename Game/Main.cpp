@@ -25,7 +25,7 @@
 #include "EnemyComponent.h"
 #include "GameCommands.h"
 #include "SDLSoundSystem.h"
-#include "EnemyStates.h"
+#include "States.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -154,7 +154,7 @@ static void load()
 		int y = chosenIndex / grid->GetColums();
 		enemyGameObject.get()->SetPosition(32 * float(x) + 16, 32 * float(y) + 16);
 		enemyGameObject.get()->SetScale(1.5f, 1.5f);
-		enemyGameObject->GetComponentByType<dae::EnemyComponent>()->SetState(std::make_unique<dae::WanderState>());
+		//enemyGameObject->GetComponentByType<dae::EnemyComponent>()->SetState(std::make_unique<dae::WanderState>());
 		enemyGameObject->GetComponentByType<dae::ChaseMovementComponent>()->SetEnabled(false);
 		scene.Add(std::move(enemyGameObject));
 		EnemiesSpawned++;

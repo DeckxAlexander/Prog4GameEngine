@@ -32,6 +32,7 @@ namespace dae
 		}
 		virtual ~GameObjectCommand() = default;
 		virtual void Execute(CommandValue* value) = 0;
+		GameObject* GetGameObject() const { return m_GameObject; }
 	};
 
 
