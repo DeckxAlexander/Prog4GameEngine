@@ -16,7 +16,7 @@ void dae::MovementComponent::Start()
 
 }
 
-dae::MovementComponent::MovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid) : ObjectComponent(pOwner), m_Speed{speed}, m_pGrid{pGrid}
+dae::MovementComponent::MovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid) : ObjectComponent(pOwner), m_pGrid{ pGrid },m_Speed{speed}
 {
 
 
