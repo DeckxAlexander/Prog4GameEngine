@@ -12,6 +12,8 @@ namespace dae {
 		virtual void Update() = 0;
 		virtual void End() = 0;
 
+		State() = default;
+		virtual ~State() = default;
 	};
 
 
@@ -19,7 +21,7 @@ namespace dae {
 	{
 	public:
 		EnemyState() = default;
-
+		virtual ~EnemyState() = default;
 		virtual void Start([[maybe_unused]] GameObject* ownerObject) override;
 		virtual void Update() override = 0;
 		virtual void End() override = 0;
@@ -32,10 +34,10 @@ namespace dae {
 	};
 
 
-	class WanderState : public EnemyState
+	class WanderState final : public EnemyState
 	{
 	public:
-		WanderState() {}
+		WanderState() = default;
 
 		virtual void Start([[maybe_unused]] GameObject* ownerObject) override;
 		virtual void Update() override;
@@ -44,10 +46,10 @@ namespace dae {
 
 	};
 
-	class IdleState : public EnemyState
+	class IdleState final : public EnemyState
 	{
 	public:
-		IdleState() {}
+		IdleState() = default;
 
 		virtual void Update() override {};
 		virtual void End() override {};
@@ -55,7 +57,7 @@ namespace dae {
 
 	};
 
-	class ChaseState : public EnemyState
+	class ChaseState final : public EnemyState
 	{
 	public:
 		ChaseState(GameObject* target) : m_Target{target} {}
