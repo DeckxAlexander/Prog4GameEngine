@@ -294,8 +294,8 @@ glm::vec3 dae::ChaseMovementComponent::FindDirection()
 
 
     for (auto& dir : dirs) {
-        if (m_pGrid->GetGridLayout()[m_pGrid->GridToIndex(pos + preferred)] != GridComponent::GridValue::soft &&
-            m_pGrid->GetGridLayout()[m_pGrid->GridToIndex(pos + preferred)] != GridComponent::GridValue::hard) {
+        if (m_pGrid->GetGridLayout()[m_pGrid->GridToIndex(pos + dir)] != GridComponent::GridValue::soft &&
+            m_pGrid->GetGridLayout()[m_pGrid->GridToIndex(pos + dir)] != GridComponent::GridValue::hard) {
             return { dir.x, dir.y, 0 };
         }
     }
@@ -315,15 +315,8 @@ void dae::ChaseMovementComponent::SetTarget(GameObject* target)
 
 void dae::ChaseMovementComponent::Update()
 {
-    m_Velocity = m_DesiredVelocity;
+    m_Velocity = m_DesiredVelocity;\
 
-    m_RecalculateTimer += TimeManager::GetInstance().GetDeltaTime();
-    if (m_RecalculateTimer > m_RecalcMaxTime)
-    {
-        m_RecalculateTimer = 0.f;
-        std::cout << "recalc";
-        Recalculate();
-    }
 
     MovementComponent::Update();
 }

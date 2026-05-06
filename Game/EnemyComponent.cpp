@@ -22,6 +22,48 @@ void dae::EnemyComponent::SetState(std::unique_ptr<EnemyState> state)
 	if (m_State.get() != nullptr) m_State.get()->Start(this); //new
 }
 
+
+bool dae::EnemyComponent::CanSeePlayer(GameObject* obj)
+{
+	auto grid = GridLocator::GetGrid();
+
+	auto enemyGridPosition = grid->WorldPosToTile(GetOwner()->GetWorldPosition());
+	auto playerGridPosition = grid->WorldPosToTile(obj->GetWorldPosition());
+	if (playerGridPosition == enemyGridPosition) //On same grid tile
+	{
+		return true;
+	}
+
+	//Check Vertical
+	if (playerGridPosition.x == enemyGridPosition.x)
+	{
+		int step = (playerGridPosition.y > enemyGridPosition.y) ? 1 : -1;
+		for (int y = enemyGridPosition.y + step; y != playerGridPosition.y; y += step)
+		{
+			if (grid->GetGridLayout()[grid->GridToIndex(enemyGridPosition.x, y)] == GridComponent::GridValue::hard ||
+				grid->GetGridLayout()[grid->GridToIndex(enemyGridPosition.x, y)] == GridComponent::GridValue::soft)
+			{
+				return false;
+			}
+		}
+	}
+	else if (playerGridPosition.y == enemyGridPosition.y)//Check Horizontal
+	{
+		int step = (playerGridPosition.x > enemyGridPosition.x) ? 1 : -1;
+		for (int x = enemyGridPosition.x + step; x != playerGridPosition.x; x += step)
+		{
+			if (grid->GetGridLayout()[grid->GridToIndex(x, enemyGridPosition.y)] == GridComponent::GridValue::hard ||
+				grid->GetGridLayout()[grid->GridToIndex(x, enemyGridPosition.y)] == GridComponent::GridValue::soft)
+			{
+				return false;
+			}
+		}
+	}
+	else { return false; }
+	return true;
+
+}
+
 void dae::EnemyComponent::SearchPlayer()
 {
 	auto grid = GridLocator::GetGrid();

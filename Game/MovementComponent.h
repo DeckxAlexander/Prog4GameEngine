@@ -75,22 +75,9 @@ namespace dae
 		GameObject* m_Target{};
 		glm::vec3 FindDirection();
 
-		virtual void Recalculate()
-		{
-			if (m_Target == nullptr) return;
-			SetVelocity(FindDirection());
-
-		}
-
-		float m_RecalculateTimer{};
-		float m_RecalcMaxTime{ 1.f };
 	public:
 
 		void SetTarget(GameObject* target);
-
-
-
-
 		virtual void Update() override;
 		void SetVelocity(glm::vec3 velocity)
 		{

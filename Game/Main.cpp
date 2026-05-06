@@ -65,7 +65,7 @@ static void load()
 	tc->SetColor({ 255, 255, 0, 255 });
 	to.get()->AddComponent(std::move(tc));
 	to.get()->AddComponent(std::move(tor));
-	to->SetPosition(292, 20);
+	to->SetPosition(512, 20);
 	scene.Add(std::move(to));
 
 	auto fpso = std::make_unique<dae::GameObject>();
@@ -75,6 +75,7 @@ static void load()
 	fpso.get()->AddComponent(std::move(fpsc));
 	fpso.get()->AddComponent(std::move(fpst));
 	fpso.get()->AddComponent(std::move(fpsr));
+	fpso->SetPosition(50, 20);
 
 	scene.Add(std::move(fpso));
 

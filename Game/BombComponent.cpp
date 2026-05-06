@@ -6,6 +6,7 @@
 #include "SceneManager.h"
 #include "HealthComponent.h"
 #include "CollisionComponent.h"
+#include "Renderer.h"
 #include "SDLSoundSystem.h"
 #include <iostream>
 
@@ -27,6 +28,7 @@ void dae::BombComponent::Update()
 
 void dae::BombComponent::Render() const 
 {
+
 }
 
 void dae::BombComponent::Explode() 
@@ -56,15 +58,15 @@ void dae::BombComponent::KillSurrounding(dae::GridTransform* gridTransform)
 	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
 	auto KillableObjects = scene.GetAllObjectsByComponent<HealthComponent>();
 	glm::vec4 colliderRectVer{
-		gridTransform->GetPosition().x,
-		gridTransform->GetPosition().y - gridTransform->GetGrid()->GetTileScale().y,
+		gridTransform->GetPosition().x- gridTransform->GetGrid()->GetTileScale().x*0.5f,
+		gridTransform->GetPosition().y - gridTransform->GetGrid()->GetTileScale().y*1.5f,
 		gridTransform->GetGrid()->GetTileScale().x,
 		3 * gridTransform->GetGrid()->GetTileScale().y
 	};
 
 	glm::vec4 colliderRectHor{
-	gridTransform->GetPosition().x - gridTransform->GetGrid()->GetTileScale().x,
-	gridTransform->GetPosition().y,
+	gridTransform->GetPosition().x - gridTransform->GetGrid()->GetTileScale().x*1.5f,
+	gridTransform->GetPosition().y - gridTransform->GetGrid()->GetTileScale().y*0.5f,
 	3 * gridTransform->GetGrid()->GetTileScale().x,
 	 gridTransform->GetGrid()->GetTileScale().y
 	};

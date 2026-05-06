@@ -45,11 +45,13 @@ namespace dae {
 		ChaseState(GameObject* target) : m_Target{target} {}
 
 		virtual void Start([[maybe_unused]] EnemyComponent* ownerObject) override;
-		virtual void Update([[maybe_unused]] EnemyComponent* ownerObject) override {};
+		virtual void Update([[maybe_unused]] EnemyComponent* ownerObject) override;
 		virtual void End([[maybe_unused]] EnemyComponent* ownerObject) override;
 
 	private:
-
 		GameObject* m_Target;
+		bool m_HasSeen{true};
+		float m_LastSeenTimer{};
+		float m_GiveUpTime{ 2.f };
 	};
 }

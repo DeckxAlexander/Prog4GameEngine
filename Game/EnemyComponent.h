@@ -18,6 +18,7 @@ namespace dae
 		
 		void SetState(std::unique_ptr<EnemyState> state);
 		void SearchPlayer();
+		bool CanSeePlayer(GameObject* obj);
 
 
 		EnemyComponent(GameObject* pOwner);
