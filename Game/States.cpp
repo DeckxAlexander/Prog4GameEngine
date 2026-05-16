@@ -5,23 +5,37 @@
 #include "MovementComponent.h"
 
 
-void dae::WanderState::Start(GameObject* ownerObject)
+
+void dae::IdleWanderState::Start(GameObject* ownerObject)
 {
 	EnemyState::Start(ownerObject);
 	auto compptr = ownerObject->GetComponentByType<WanderMovementComponent>();
 	if (compptr != nullptr) compptr->SetEnabled(true);
 }
 
-void dae::WanderState::Update()
+void dae::IdleWanderState::End()
 {
-	m_EnemyComponent->SearchPlayer();
+	auto compptr = m_EnemyComponent->GetOwner()->GetComponentByType<WanderMovementComponent>();
+	if (compptr != nullptr) compptr->SetEnabled(false);
 }
 
 
 
+void dae::SearchWanderState::Start(GameObject* ownerObject)
+{
+	EnemyState::Start(ownerObject);
+	auto compptr = ownerObject->GetComponentByType<WanderMovementComponent>();
+	if (compptr != nullptr) compptr->SetEnabled(true);
+}
+
+std::unique_ptr<dae::State> dae::SearchWanderState::Update()
+{
+	m_EnemyComponent->SearchPlayer();
+	return nullptr;
+}
 
 
-void dae::WanderState::End()
+void dae::SearchWanderState::End()
 {
 	auto compptr = m_EnemyComponent->GetOwner()->GetComponentByType<WanderMovementComponent>();
 	if (compptr != nullptr) compptr->SetEnabled(false);
@@ -38,9 +52,9 @@ void dae::ChaseState::Start(GameObject* ownerObject)
 
 }
 
-void dae::ChaseState::Update()
+std::unique_ptr<dae::State> dae::ChaseState::Update()
 {
-	if (m_Target == nullptr) return;
+	if (m_Target == nullptr) return nullptr;
 	bool CanSee = m_EnemyComponent->CanSeePlayer(m_Target);
 	if (CanSee) 
 	{
@@ -55,13 +69,14 @@ void dae::ChaseState::Update()
 		m_LastSeenTimer += TimeManager::GetInstance().GetDeltaTime();
 		if (m_LastSeenTimer >= m_GiveUpTime)
 		{
-			m_EnemyComponent->SetState(std::make_unique<WanderState>());
+			m_EnemyComponent->GiveUpChase();
 			std::cout << "GiveUp";
-			return;
+			return nullptr;
 		}
 	}
 
 	m_HasSeen = CanSee;
+	return nullptr;
 
 
 }

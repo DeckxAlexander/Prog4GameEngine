@@ -44,6 +44,10 @@ void dae::BombComponent::Explode()
 
 	//Affect Surrounding tiles
 	BreakSoftBlocks(grid, gridPos);
+
+	int gridIndex = grid->GridToIndex(gridPos);
+	grid->GetGridLayout()[gridIndex] = GridComponent::GridValue::empty;
+
 	KillSurrounding(gridTransform);
 	std::cout << "Explode";
 	if (m_Placer) m_Placer->UnlockCanPlace();

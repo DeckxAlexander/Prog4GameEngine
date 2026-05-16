@@ -86,6 +86,7 @@ namespace dae
 			if (len > 0) m_DesiredVelocity /= len;
 		};
 
+		virtual void HitCollider() override;
 
 
 		ChaseMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid);

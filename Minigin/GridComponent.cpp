@@ -5,6 +5,7 @@
 #include "RenderComponent.h"
 #include "CollisionComponent.h"
 #include "SceneManager.h"
+#include <iostream>
 
 dae::GridComponent* dae::GridLocator::m_GridInstance = nullptr;
 
@@ -30,13 +31,17 @@ void dae::GridComponent::SetupGrid()
 	//Create Hard blocks
 
 	m_GridLayout[GridToIndex(1, 1)] = GridValue::spawn;
+	m_GridLayout[GridToIndex(1, 2)] = GridValue::spawn;
+	m_GridLayout[GridToIndex(1, 3)] = GridValue::spawn;
+	m_GridLayout[GridToIndex(2, 1)] = GridValue::spawn;
+	m_GridLayout[GridToIndex(3, 1)] = GridValue::spawn;
 
 
 	for (int indexX{}; indexX < m_Colums; indexX++)
 	{
 		for (int indexY{}; indexY < m_Rows; indexY++)
 		{
-			if ((indexX == 0 || indexX == 31 || indexY == 0 || indexY == 17) || (indexX % 2 == 0 && indexY % 2 == 0))
+			if ((indexX == 0 || indexX == m_Colums-1 || indexY == 0 || indexY == m_Rows-1) || (indexX % 2 == 0 && indexY % 2 == 0))
 			{
 				m_GridLayout[GridToIndex(indexX, indexY)] = GridValue::hard;
 			}

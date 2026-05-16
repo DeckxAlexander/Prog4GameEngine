@@ -65,9 +65,11 @@ bool dae::CollisionComponent::CheckBlockingCollision(CollisionComponent* collisi
     auto colABlockingTags = collisionA->m_BlockingTags;
     auto colBBlockingTags = collisionB->m_BlockingTags;
 
+    if (CheckCollision(a, b)) return ((std::find(colBBlockingTags.begin(), colBBlockingTags.end(), collisionA->GetTag()) != colBBlockingTags.end())
+        || (std::find(colABlockingTags.begin(), colABlockingTags.end(), collisionB->GetTag()) != colABlockingTags.end()));
 
-    if ((std::find(colBBlockingTags.begin(), colBBlockingTags.end(), collisionA->GetTag()) != colBBlockingTags.end()) 
-        || (std::find(colABlockingTags.begin(), colABlockingTags.end(), collisionB->GetTag()) != colABlockingTags.end())) return CheckCollision(a, b);
+    //if ((std::find(colBBlockingTags.begin(), colBBlockingTags.end(), collisionA->GetTag()) != colBBlockingTags.end()) 
+    //    || (std::find(colABlockingTags.begin(), colABlockingTags.end(), collisionB->GetTag()) != colABlockingTags.end())) return CheckCollision(a, b);
 
     return false;
 

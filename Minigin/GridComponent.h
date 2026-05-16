@@ -10,7 +10,7 @@ namespace dae
 	{
 	public:
 		enum class GridValue {
-			empty, hard, soft, spawn
+			empty, hard, soft, spawn, bomb
 		};
 
 		virtual void Update() override;
@@ -59,7 +59,7 @@ namespace dae
 
 		//GridObjects
 
-		int m_SoftBlocksAmount{ 100 };
+		int m_SoftBlocksAmount{ 10 };
 		std::vector<GridValue> m_GridLayout{};
 		std::vector<GameObject*> m_GridPointers{};
 

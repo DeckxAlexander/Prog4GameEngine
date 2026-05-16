@@ -26,8 +26,9 @@
 #include "GameCommands.h"
 #include "SDLSoundSystem.h"
 #include "States.h"
-
 #include <filesystem>
+
+
 namespace fs = std::filesystem;
 
 static void load()
@@ -45,13 +46,14 @@ static void load()
 
 
 	auto GridManager = std::make_unique<dae::GameObject>();
-	auto GridComp = std::make_unique<dae::GridComponent>(GridManager.get(), 32, 18);
+	auto GridComp = std::make_unique<dae::GridComponent>(GridManager.get(), 31, 13);
 	dae::GridComponent* grid = GridComp.get();
 	GridComp->SetTileScale(32.f, 32.f);
 	GridManager.get()->AddComponent(std::move(GridComp));
 	GridManager.get()->SetPosition(-0.3f, -0.3f);
 	scene.Add(std::move(GridManager));
 
+	grid->SetSoftBlocksAmount(60);
 	grid->SetupGrid();
 	grid->SpawnGrid();
 
@@ -103,6 +105,8 @@ static void load()
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_X, dae::KeyState::Pressed, std::make_unique<dae::PlaceBomb>(playerGameObject.get()), nullptr);
 
 	scene.Add(std::move(playerGameObject));
+
+
 	auto gridLayout = grid->GetGridLayout();
 	int EnemiesSpawned = 0;
 	std::vector<int> possibleIndexes{};
@@ -126,7 +130,7 @@ static void load()
 		possibleIndexes.erase(std::remove(possibleIndexes.begin(), possibleIndexes.end(), chosenIndex), possibleIndexes.end());
 
 		auto enemyGameObject = std::make_unique<dae::GameObject>();
-		auto enemyRenderComponent = std::make_unique<dae::RenderComponent>(enemyGameObject.get(), "Bomberman.png");
+		auto enemyRenderComponent = std::make_unique<dae::RenderComponent>(enemyGameObject.get(), "Balloom.png");
 		auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>(enemyGameObject.get(), 50.f, grid);
 		auto enemyChaseMovementComponent = std::make_unique<dae::ChaseMovementComponent>(enemyGameObject.get(), 50.f, grid);
 
@@ -154,7 +158,6 @@ static void load()
 		int y = chosenIndex / grid->GetColums();
 		enemyGameObject.get()->SetPosition(32 * float(x) + 16, 32 * float(y) + 16);
 		enemyGameObject.get()->SetScale(1.5f, 1.5f);
-		//enemyGameObject->GetComponentByType<dae::EnemyComponent>()->SetState(std::make_unique<dae::WanderState>());
 		enemyGameObject->GetComponentByType<dae::ChaseMovementComponent>()->SetEnabled(false);
 		scene.Add(std::move(enemyGameObject));
 		EnemiesSpawned++;

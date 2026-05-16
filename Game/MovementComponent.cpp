@@ -4,6 +4,7 @@
 #include "TimeManager.h"
 #include "CollisionsManager.h"
 #include "GridComponent.h"
+#include "EnemyComponent.h"
 #include <iostream>
 
 
@@ -35,7 +36,8 @@ void dae::MovementComponent::Update()
     m_Velocity = { 0.f, 0.f, 0.f };
 
 
-    if (m_Collider == nullptr) {
+    if (m_Collider == nullptr) 
+    {
         pos.x += velocity.x;
         pos.y += velocity.y;
         m_pOwner->SetPosition(pos.x, pos.y);
@@ -217,6 +219,7 @@ dae::WanderMovementComponent::WanderMovementComponent(GameObject* pOwner, float 
 
 void dae::WanderMovementComponent::Update()
 {
+
     m_Velocity = m_DesiredVelocity;
     MovementComponent::Update();
 }
@@ -315,10 +318,22 @@ void dae::ChaseMovementComponent::SetTarget(GameObject* target)
 
 void dae::ChaseMovementComponent::Update()
 {
-    m_Velocity = m_DesiredVelocity;\
+    m_Velocity = m_DesiredVelocity;
 
 
     MovementComponent::Update();
+}
+
+void dae::ChaseMovementComponent::HitCollider() 
+{
+    int gridForwardIndex = m_pGrid->GridToIndex(m_pGrid->WorldPosToTile(GetOwner()->GetWorldPosition()) + glm::ivec2{ m_DesiredVelocity.x, m_DesiredVelocity.y});
+    if (m_pGrid->GetGridLayout()[gridForwardIndex] != GridComponent::GridValue::bomb) return;
+
+
+    std::cout << "\nBOMB! Giveup\n";
+    GetOwner()->GetComponentByType<EnemyComponent>()->GiveUpChase();
+    GetOwner()->GetComponentByType<WanderMovementComponent>()->SetVelocity(m_DesiredVelocity.x, m_DesiredVelocity.y);
+
 }
 
 dae::ChaseMovementComponent::ChaseMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid) : MovementComponent(pOwner, speed, pGrid)
