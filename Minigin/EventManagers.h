@@ -9,10 +9,10 @@ namespace dae
 
     enum class EventType
     {
-        //Add Events types here
         PlayerDead,
         ScoreChanged,
-        Win
+        Win,
+        OwnerDead
 
 
     };
@@ -24,11 +24,11 @@ namespace dae
 
     };
 
-    class Observer
+    class IObserver
     {
     public:
-        Observer() = default;
-        virtual ~Observer() = default;
+        IObserver() = default;
+        virtual ~IObserver() = default;
         virtual void OnNotify(const Event& event) = 0;
 
     };
@@ -36,14 +36,11 @@ namespace dae
     class Subject 
     {
     public:
-        void AddObserver(Observer* observer) {
-   
-
-
-                m_Observers.push_back(observer);
-            
+        void AddObserver(IObserver* observer) 
+        {
+            m_Observers.push_back(observer);
         }
-        void RemoveObserver(Observer* observer) { m_Observers.erase(std::remove(m_Observers.begin(), m_Observers.end(), observer), m_Observers.end()); }
+        void RemoveObserver(IObserver* observer) { m_Observers.erase(std::remove(m_Observers.begin(), m_Observers.end(), observer), m_Observers.end()); }
 
         void Notify(const Event& event) 
         {
@@ -58,6 +55,6 @@ namespace dae
         }
 
     private:
-        std::vector<Observer*> m_Observers;
+        std::vector<IObserver*> m_Observers;
     };
 }

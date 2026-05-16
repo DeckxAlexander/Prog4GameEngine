@@ -33,7 +33,7 @@ namespace dae
 			static_assert(std::is_base_of<ObjectComponent, T>::value, "Type must derive from ObjectComponent");
 			for (const auto& object : m_objects)
 			{
-				if (object.get()->GetComponentByType<T>() != nullptr)
+				if (object.get()->GetComponentByType<T>() != nullptr && !object->IsMarkedForDelete())
 				{
 					result.push_back(object.get());
 				}

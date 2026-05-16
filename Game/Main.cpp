@@ -26,6 +26,7 @@
 #include "GameCommands.h"
 #include "SDLSoundSystem.h"
 #include "States.h"
+#include "PlayerComponent.h"
 #include <filesystem>
 
 

@@ -1,12 +1,13 @@
 #pragma once
 #include "ObjectComponent.h"
+#include "EventManagers.h"
 
 
 
 namespace dae
 {
 	class State;
-	class EnemyComponent final : public ObjectComponent
+	class EnemyComponent final : public ObjectComponent, public IObserver
 	{
 	private:
 		std::vector<GameObject*> m_Players{};
@@ -29,5 +30,8 @@ namespace dae
 		EnemyComponent(EnemyComponent&& other) = delete;
 		EnemyComponent& operator=(const EnemyComponent& other) = delete;
 		EnemyComponent& operator=(EnemyComponent&& other) = delete;
+
+
+		virtual void OnNotify(const Event& event);
 	};
 }

@@ -66,7 +66,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Game/GameCommands.h
   Game/GameCommands.cpp
   Game/States.h
-  Game/States.cpp)
+  Game/States.cpp "Game/PlayerComponent.h" "Game/PlayerComponent.cpp")
 
 # enable c++20 features
 target_compile_features(MiniginEngine PUBLIC cxx_std_20)
@@ -169,7 +169,7 @@ add_library(imgui STATIC
   ${imgui_SOURCE_DIR}/imgui_widgets.cpp
   ${imgui_SOURCE_DIR}/imgui_demo.cpp
   ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp
-  ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp)
+  ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp )
 
 target_include_directories(imgui PUBLIC ${imgui_SOURCE_DIR} ${sdl3_SOURCE_DIR}/include)
 target_link_libraries(imgui PUBLIC SDL3::SDL3)

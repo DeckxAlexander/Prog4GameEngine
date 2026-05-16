@@ -4,6 +4,7 @@
 #include "States.h"
 #include "GridComponent.h"
 #include "MovementComponent.h"
+#include "PlayerComponent.h"
 #include <memory>
 #include <iostream>
 #include <vector>
@@ -143,4 +144,18 @@ void dae::EnemyComponent::Update()
 	if (m_State.get() != nullptr) m_State->Update();
 	
 	
+}
+
+void dae::EnemyComponent::OnNotify(const Event& event) 
+{
+	if (event.event == EventType::PlayerDead) 
+	{
+		m_Players.erase(std::remove(m_Players.begin(), m_Players.end(), event.sender->GetOwner()), m_Players.end());
+		
+		auto possibleChaseState = dynamic_cast<ChaseState*>(m_State.get());
+		if (possibleChaseState) 
+		{
+			SetState(std::make_unique<SearchWanderState>());
+		}
+	}
 }

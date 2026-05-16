@@ -18,18 +18,7 @@ namespace dae {
         }
 
         Subject* GetSubject() { return m_Subject.get(); }
-
-        void TakeDamage(int damage) {
-            m_Health -= damage;
-
-
-            Event e{ EventType::PlayerDead, this };
-            m_Subject.get()->Notify(e);
-            
-        }
-
         int GetHealth() { return m_Health; }
-
     private:
         int m_Health;
         std::unique_ptr<Subject> m_Subject;
