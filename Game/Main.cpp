@@ -39,7 +39,7 @@ static void load()
 	srand(int(time(nullptr)));
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
 
-	dae::Renderer::GetInstance().GetCamera().SetViewDimensions(640, 288);
+	dae::Renderer::GetInstance().GetCamera().SetViewDimensions(960, 432);
 
 
 	auto tileGameObject = std::make_unique<dae::GameObject>();
