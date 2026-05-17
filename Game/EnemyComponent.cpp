@@ -5,6 +5,7 @@
 #include "GridComponent.h"
 #include "MovementComponent.h"
 #include "PlayerComponent.h"
+#include "HealthComponent.h"
 #include <memory>
 #include <iostream>
 #include <vector>
@@ -119,7 +120,7 @@ dae::EnemyComponent::EnemyComponent(GameObject* pOwner) : ObjectComponent(pOwner
 
 void dae::EnemyComponent::Start()
 {
-	m_State = std::make_unique<SearchWanderState>();
+	m_State = std::make_unique<IdleWanderState>();
 	m_State->Start(GetOwner());
 }
 
@@ -135,8 +136,7 @@ void dae::EnemyComponent::Update()
 		auto b = playerCollider->GetCollisionRect();
 		if (CollisionComponent::CheckCollision(a, b)) 
 		{ 
-			m_Players.erase(std::remove(m_Players.begin(), m_Players.end(), player), m_Players.end());
-			player->MarkForDelete(); 
+			player->GetComponentByType<PlayerComponent>()->PlayerDeath();
 			break;
 		}
 

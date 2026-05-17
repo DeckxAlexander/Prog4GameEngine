@@ -90,7 +90,7 @@ static void load()
 	auto playerGameObject = std::make_unique<dae::GameObject>();
 	auto playerRenderComponent = std::make_unique<dae::RenderComponent>(playerGameObject.get(), "Bomberman.png");
 	auto playerMovementComponent = std::make_unique<dae::MovementComponent>(playerGameObject.get(), 50.f, grid);
-	auto playerHealthComponent = std::make_unique<dae::HealthComponent>(playerGameObject.get(), 5);
+	auto playerHealthComponent = std::make_unique<dae::HealthComponent>(playerGameObject.get());
 	auto playerCollider = std::make_unique<dae::CollisionComponent>(playerGameObject.get(), 18.f, 27.f, 'e');
 	auto playerplacebombcomponent = std::make_unique<dae::PlaceBombComponent>(playerGameObject.get(), grid);
 	auto playerComponent = std::make_unique<dae::PlayerComponent>(playerGameObject.get(), 0);
@@ -148,7 +148,7 @@ static void load()
 		else enemyMovementComponent.get()->SetVelocity(1.f, 0.f);
 
 
-		auto enemyHealthComponent = std::make_unique<dae::HealthComponent>(enemyGameObject.get(), 5);
+		auto enemyHealthComponent = std::make_unique<dae::HealthComponent>(enemyGameObject.get());
 		auto enemyCollider = std::make_unique<dae::CollisionComponent>(enemyGameObject.get(), 18.f, 27.f, 'e');
 		enemyCollider.get()->AddBlockingTag('b');
 		auto enemyComponent = std::make_unique<dae::EnemyComponent>(enemyGameObject.get());

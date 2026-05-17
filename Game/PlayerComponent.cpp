@@ -23,8 +23,12 @@ void dae::PlayerComponent::Start()
 }
 
 
-dae::PlayerComponent::~PlayerComponent() 
+
+
+void dae::PlayerComponent::PlayerDeath()
 {
-	if (m_PlayerIndex == 0) m_Subject->Notify(Event{EventType::PlayerDead, this});
+	if (m_PlayerIndex == 0) m_Subject->Notify(Event{ EventType::PlayerDead, this });
+	GetOwner()->MarkForDelete();
+
 
 }

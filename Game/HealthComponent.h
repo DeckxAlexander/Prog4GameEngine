@@ -13,14 +13,16 @@ namespace dae {
         {
         }
 
-        HealthComponent(GameObject* pOwner, int startHealth) : ObjectComponent(pOwner), m_Health{ startHealth },  m_Subject{std::make_unique<Subject>()}
+        HealthComponent(GameObject* pOwner) : ObjectComponent(pOwner),  m_Subject{std::make_unique<Subject>()}
         {
         }
 
-        Subject* GetSubject() { return m_Subject.get(); }
-        int GetHealth() { return m_Health; }
+        Subject* GetSubject() { return m_Subject.get(); } 
+
+        void ProcessDeath();
+
+
     private:
-        int m_Health;
         std::unique_ptr<Subject> m_Subject;
     };
 }

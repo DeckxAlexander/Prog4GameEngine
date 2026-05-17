@@ -15,16 +15,16 @@ namespace dae
 
 	public:
 		virtual void Start() override;
-		virtual void Update() override {};
-		virtual void Render() const override {};
+		virtual void Update() override {}
+		virtual void Render() const override {}
 		PlayerComponent(GameObject* pOwner, int index);
-		virtual ~PlayerComponent();
+		virtual ~PlayerComponent() = default;
 		PlayerComponent(const PlayerComponent& other) = delete;
 		PlayerComponent(PlayerComponent&& other) = delete;
 		PlayerComponent& operator=(const PlayerComponent& other) = delete;
 		PlayerComponent& operator=(PlayerComponent&& other) = delete;
 
-
+		void PlayerDeath();
 
 
 

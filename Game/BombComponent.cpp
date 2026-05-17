@@ -82,7 +82,7 @@ void dae::BombComponent::KillSurrounding(dae::GridTransform* gridTransform)
 		{
 			auto rect = ColliderComp->GetCollisionRect();
 
-			if (CollisionComponent::CheckCollision(colliderRectHor, rect) || CollisionComponent::CheckCollision(colliderRectVer, rect)) obj->MarkForDelete();
+			if (CollisionComponent::CheckCollision(colliderRectHor, rect) || CollisionComponent::CheckCollision(colliderRectVer, rect)) obj->GetComponentByType<HealthComponent>()->ProcessDeath();
 
 		}
 	}
