@@ -2,6 +2,7 @@
 #include <SDL3/SDL.h>
 #include <vector>
 #include "Singleton.h"
+#include "Camera.h"
 
 namespace dae
 {
@@ -14,13 +15,15 @@ namespace dae
 		SDL_Renderer* m_renderer{};
 		SDL_Window* m_window{};
 		SDL_Color m_clearColor{};
+		Camera m_Camera{1280, 576};
+
 
 
 	public:
 		void Init(SDL_Window* window);
 		void Render() const;
 
-
+		Camera& GetCamera() { return m_Camera; }
 
 		void Destroy();
 
@@ -32,6 +35,7 @@ namespace dae
 
 		const SDL_Color& GetBackgroundColor() const { return m_clearColor; }
 		void SetBackgroundColor(const SDL_Color& color) { m_clearColor = color; }
+
 
 
 	};

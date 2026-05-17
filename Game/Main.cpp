@@ -14,6 +14,7 @@
 #include "TextComponent.h"
 #include "Scene.h"
 #include "FPSCounterComponent.h"
+#include "Renderer.h"
 
 #include "HealthComponent.h"
 #include "InputManager.h"
@@ -37,6 +38,8 @@ static void load()
 
 	srand(int(time(nullptr)));
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
+
+	dae::Renderer::GetInstance().GetCamera().SetViewDimensions(640, 288);
 
 
 	auto tileGameObject = std::make_unique<dae::GameObject>();

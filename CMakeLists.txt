@@ -44,7 +44,7 @@ add_library(MiniginEngine STATIC
   Minigin/SoundSystem.cpp
   Minigin/SoundEventQueue.h
   Minigin/SDLSoundSystem.h
-  Minigin/SDLSoundSystem.cpp)
+  Minigin/SDLSoundSystem.cpp "Minigin/Camera.h")
 
 
 # list source files here

@@ -90,9 +90,12 @@ void dae::Renderer::Destroy()
 void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y) const
 {
 	SDL_FRect dst{};
-	dst.x = x;
-	dst.y = y;
+	dst.x = (x - m_Camera.x) * m_Camera.zoom;
+	dst.y = (y - m_Camera.y) * m_Camera.zoom;
 	SDL_GetTextureSize(texture.GetSDLTexture(), &dst.w, &dst.h);
+
+	dst.w *= m_Camera.zoom;
+	dst.h *= m_Camera.zoom;
 
 	dst.x -= dst.w / 2.f;
 	dst.y -= dst.h / 2.f;
@@ -103,13 +106,13 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height) const
 {
 	SDL_FRect dst{};
-	dst.x = x;
-	dst.y = y;
+	dst.x = (x - m_Camera.x) * m_Camera.zoom;
+	dst.y = (y - m_Camera.y) * m_Camera.zoom;
 	//dst.w = width;
 	//dst.h = height;
 	SDL_GetTextureSize(texture.GetSDLTexture(), &dst.w, &dst.h);
-	dst.w *= width;
-	dst.h *= height;
+	dst.w *= width * m_Camera.zoom;
+	dst.h *= height * m_Camera.zoom;
 
 	dst.x -= dst.w / 2.f;
 	dst.y -= dst.h / 2.f;
@@ -119,7 +122,17 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 void dae::Renderer::RenderLine(float fromX, float fromY, float toX, float toY) const 
 {
 	SDL_SetRenderDrawColor(GetSDLRenderer(), 255, 255, 255, 255);
-	SDL_RenderLine(GetSDLRenderer(), fromX, fromY, toX, toY);
+	//SDL_RenderLine(GetSDLRenderer(), fromX, fromY, toX, toY);
+	SDL_RenderLine(GetSDLRenderer(), 
+		(fromX-m_Camera.x) * m_Camera.zoom, 
+		(fromY - m_Camera.y) * m_Camera.zoom, 
+		(toX - m_Camera.x) * m_Camera.zoom, 
+		(toY - m_Camera.y) * m_Camera.zoom);
+
+
+
+
+
 }
 
 SDL_Renderer* dae::Renderer::GetSDLRenderer() const { return m_renderer; }
