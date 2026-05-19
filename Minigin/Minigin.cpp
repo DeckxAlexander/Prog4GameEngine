@@ -26,6 +26,7 @@
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include "TimeManager.h"
+#include "SoundSystem.h"
 
 SDL_Window* g_window{};
 
@@ -121,6 +122,9 @@ dae::Minigin::~Minigin()
 #if USE_STEAMWORKS
 	SteamAPI_Shutdown();
 #endif
+	SoundSystemLocator::get_sound_system().Destroy();
+
+
 	SDL_Quit();
 }
 

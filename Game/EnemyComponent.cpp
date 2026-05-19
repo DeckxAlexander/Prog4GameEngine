@@ -126,7 +126,7 @@ void dae::EnemyComponent::Start()
 
 void dae::EnemyComponent::Update()
 {
-	auto enemyCollider = GetOwner()->GetComponentByType<CollisionComponent>();
+	auto enemyCollider = GetOwner()->GetComponentByType<CollisionComponent>(); //TODO Should Change
 	for(auto player : m_Players)
 	{
 		auto playerCollider = player->GetComponentByType<CollisionComponent>();

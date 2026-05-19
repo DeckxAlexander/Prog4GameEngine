@@ -33,20 +33,6 @@ namespace dae {
 
         ~Impl()
         {
-            m_Running = false;
-            m_Worker.request_stop();
-            m_Queue.Push({});
-
-            m_Worker.join();
-
-            MIX_StopAllTracks(m_Mixer, 0);
-            m_Sounds.clear();
-
-
-            //SDL_CloseAudioDevice(m_Device);
-            //MIX_DestroyMixer(m_Mixer);
-            //
-            //MIX_Quit();
 
         }
 
@@ -64,6 +50,20 @@ namespace dae {
             std::lock_guard lock(m_Mutex);
             m_Sounds[id] = track;
 
+        }
+
+        void Destroy() 
+        {
+            m_Running = false;
+            m_Worker.request_stop();
+            m_Queue.Push({});
+            m_Worker.join();
+            MIX_StopAllTracks(m_Mixer, 0);
+            m_Sounds.clear();
+            SDL_CloseAudioDevice(m_Device);
+            MIX_DestroyMixer(m_Mixer);
+
+            MIX_Quit();
         }
 
     private:
@@ -113,5 +113,9 @@ namespace dae {
     void SDLSoundSystem::LoadSound(const uint32_t id, const std::string& path)
     {
         m_Impl->LoadSound(id, path);
+    }
+    void SDLSoundSystem::Destroy()
+    {
+        m_Impl->Destroy();
     }
 }

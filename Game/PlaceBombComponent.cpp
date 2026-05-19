@@ -5,6 +5,7 @@
 #include "BombComponent.h"
 #include "CollisionComponent.h"
 #include "GridComponent.h"
+#include "GridTransform.h"
 #include "SDLSoundSystem.h"
 
 void dae::PlaceBombComponent::PlaceBomb() 
@@ -12,11 +13,11 @@ void dae::PlaceBombComponent::PlaceBomb()
 	if (m_pGrid == nullptr || m_CanPlace == false) return;
 	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
 
-	m_CanPlace = false;
+	m_CanPlace--;
 
 
 	//Place Bomb
-	auto bombGameObject = std::make_unique<dae::GameObject>(true, m_pGrid);
+	auto bombGameObject = std::make_unique<dae::GameObject>(std::make_unique<GridTransform>(m_pGrid));
 	auto bombRenderComponent = std::make_unique<dae::RenderComponent>(bombGameObject.get(), "Bomb.png");
 	auto bombBombComponent = std::make_unique<dae::BombComponent>(bombGameObject.get(), 5.f, this);
 	auto bombCollisionComponent = std::make_unique<dae::CollisionComponent>(bombGameObject.get(),32.f,32.f,'b');

@@ -5,6 +5,7 @@
 #include "CollisionsManager.h"
 #include "GridComponent.h"
 #include "EnemyComponent.h"
+#include "GridTransform.h"
 #include <iostream>
 
 

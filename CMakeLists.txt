@@ -34,8 +34,6 @@ add_library(MiniginEngine STATIC
   Minigin/Controller.cpp
   Minigin/EventManagers.h
   Minigin/SteamObserver.h
-  Minigin/GridComponent.h
-  Minigin/GridComponent.cpp
   Minigin/CollisionComponent.h
   Minigin/CollisionComponent.cpp
   Minigin/CollisionsManager.h
@@ -66,7 +64,9 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Game/GameCommands.h
   Game/GameCommands.cpp
   Game/States.h
-  Game/States.cpp "Game/PlayerComponent.h" "Game/PlayerComponent.cpp" "Game/HealthComponent.cpp")
+  Game/States.cpp "Game/PlayerComponent.h" "Game/PlayerComponent.cpp" "Game/HealthComponent.cpp" "Game/PowerUpComponent.h" "Game/GridTransform.h" "Game/GridTransform.cpp"
+  "Game/GridComponent.h"
+  "Game/GridComponent.cpp")
 
 # enable c++20 features
 target_compile_features(MiniginEngine PUBLIC cxx_std_20)

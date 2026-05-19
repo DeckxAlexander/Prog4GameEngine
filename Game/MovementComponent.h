@@ -7,6 +7,7 @@
 namespace dae
 {
 	class CollisionComponent;
+	class GridComponent;
 	class MovementComponent : public ObjectComponent
 	{
 	protected:

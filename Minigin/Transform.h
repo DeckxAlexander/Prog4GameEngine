@@ -4,11 +4,10 @@
 namespace dae
 {
 	class GameObject;
-	class GridComponent;
 	class Transform
 	{
 	public:
-		Transform(GameObject* pOwner) : m_pOwner{ pOwner }, m_scale{ 1.f,1.f,1.f }, m_LocalPosition{ 0.f,0.f,0.f }, m_WorldPosition{ 0.f,0.f,0.f }, m_PositionIsDirty{ true }
+		Transform(GameObject* owner) : m_pOwner{ owner }, m_scale{ 1.f,1.f,1.f }, m_LocalPosition{ 0.f,0.f,0.f }, m_WorldPosition{ 0.f,0.f,0.f }, m_PositionIsDirty{ true }
 		{
 		}
 
@@ -24,7 +23,10 @@ namespace dae
 		virtual void UpdateWorldPosition();
 		void SetPositionDirty();
 
-
+		void SetOwner(GameObject* owner)
+		{
+			m_pOwner = owner;
+		}
 
 	protected:
 		GameObject* m_pOwner;
@@ -36,35 +38,7 @@ namespace dae
 
 	};
 
-	class GridTransform final : public Transform
-	{
-	public:
-		GridTransform(GameObject* pOwner, GridComponent* grid) : Transform{pOwner}, m_pGrid{ grid }
-		{
-		}
 
-		~GridTransform() = default;
-
-		static float SnapToGrid(float value, float tileSize)
-		{
-			return (floorf(value / tileSize) * tileSize) + tileSize*0.5f;
-		}
-
-
-
-		void SetGridTile(int tileX, int tileY);
-
-		glm::ivec2 GetGridTiles();
-
-		virtual void UpdateWorldPosition() override;
-
-		GridComponent* GetGrid() { return m_pGrid; }
-
-	protected:
-		GridComponent* m_pGrid;
-
-
-	};
 
 
 }

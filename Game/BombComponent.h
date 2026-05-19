@@ -4,6 +4,8 @@
 namespace dae
 {
 	class PlaceBombComponent;
+	class GridTransform;
+	class GridComponent;
 	class BombComponent final : public ObjectComponent
 	{
 	private:
@@ -12,8 +14,8 @@ namespace dae
 		bool m_IsDetonating{ false };
 		PlaceBombComponent* m_Placer;
 		void Explode();
-		void BreakSoftBlocks(dae::GridComponent* grid, glm::ivec2 gpos);
-		void KillSurrounding(dae::GridTransform* gridTransform);
+		void BreakSoftBlocks(GridComponent* grid, glm::ivec2 gpos);
+		void KillSurrounding(GridTransform* gridTransform);
 
 	public:
 		virtual void Update() override;

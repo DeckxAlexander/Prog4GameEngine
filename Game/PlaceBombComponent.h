@@ -8,7 +8,10 @@ namespace dae
 	{
 	private:
 			GridComponent* m_pGrid{ nullptr };
-			bool m_CanPlace{ true };
+			int m_CanPlace{ 1 };
+
+
+
 
 	public:
 		virtual void Update() override {}
@@ -16,7 +19,7 @@ namespace dae
 
 
 		void PlaceBomb();
-		void UnlockCanPlace(bool value = true) { m_CanPlace = value; }
+		void AddCanPlace(int value = 1) { m_CanPlace += value; }
 
 
 

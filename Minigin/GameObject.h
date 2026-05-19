@@ -9,7 +9,6 @@
 namespace dae
 {
 	class Texture2D;
-	class GridComponent;
 	class GameObject final
 	{
 	private:
@@ -69,7 +68,7 @@ namespace dae
 
 
 		GameObject();
-		GameObject(bool isGridObject, GridComponent* grid);
+		GameObject(std::unique_ptr<Transform> transform);
 		~GameObject();
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;

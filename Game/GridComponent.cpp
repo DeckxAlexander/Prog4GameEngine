@@ -2,6 +2,7 @@
 #include "GridComponent.h"
 #include "Renderer.h"
 #include "GameObject.h"
+#include "GridTransform.h"
 #include "RenderComponent.h"
 #include "CollisionComponent.h"
 #include "SceneManager.h"
@@ -77,7 +78,7 @@ void dae::GridComponent::SpawnGrid()
 		auto val = m_GridLayout[i];
 		if (val == GridValue::hard) 
 		{
-			auto tileGameObject = std::make_unique<dae::GameObject>(true, this);
+			auto tileGameObject = std::make_unique<dae::GameObject>(std::make_unique<GridTransform>( this));
 			auto tileRenderComponent = std::make_unique<dae::RenderComponent>(tileGameObject.get(), "HardStoneTile.png");
 			auto tilecoll = std::make_unique<dae::CollisionComponent>(tileGameObject.get(), 32.f, 32.f, 'w');
 			tilecoll.get()->AddBlockingTag('e');
@@ -96,7 +97,7 @@ void dae::GridComponent::SpawnGrid()
 
 		if (val == GridValue::soft)
 		{
-			auto tileGameObject = std::make_unique<dae::GameObject>(true, this);
+			auto tileGameObject = std::make_unique<dae::GameObject>(std::make_unique<GridTransform>(this));
 			auto tileRenderComponent = std::make_unique<dae::RenderComponent>(tileGameObject.get(), "SoftStoneTile.png");
 			auto tilecoll = std::make_unique<dae::CollisionComponent>(tileGameObject.get(), 32.f, 32.f, 'w');
 			tilecoll.get()->AddBlockingTag('e');

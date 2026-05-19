@@ -10,16 +10,12 @@ dae::GameObject::GameObject() : m_transform{ std::make_unique<Transform>(this)},
 }
 
 
-dae::GameObject::GameObject(bool isGridObject, GridComponent* grid) : m_transform{}, m_Components{}, m_pParent{nullptr}, m_Children{}
+dae::GameObject::GameObject(std::unique_ptr<Transform> transform) : m_transform{ std::move(transform) }, m_Components{}, m_pParent{ nullptr }, m_Children{}
 {
-	if (isGridObject) 
-	{
-		m_transform = std::make_unique<GridTransform>(this, grid);
-	}
-	else 
-	{
-		m_transform = std::make_unique<Transform>(this);
-	}
+		//m_transform = std::make_unique<GridTransform>(this, grid);
+	m_transform->SetOwner(this);
+	
+
 }
 
 void dae::GameObject::MarkForDelete()
