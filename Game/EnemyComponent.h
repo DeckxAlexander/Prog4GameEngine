@@ -33,5 +33,6 @@ namespace dae
 
 
 		virtual void OnNotify(const Event& event);
+		virtual void OnSubjectDestroyed(Subject* subject);
 	};
 }

@@ -163,11 +163,10 @@ void dae::EnemyComponent::OnNotify(const Event& event)
 		}
 	}
 
-	if (event.event == EventType::OwnerDead)
-	{
-		for (auto player : m_Players)
-		{
-			player->GetComponentByType<PlayerComponent>()->GetSubject()->RemoveObserver(this);
-		}
-	}
 }
+
+void dae::EnemyComponent::OnSubjectDestroyed(Subject* subject)
+{
+	subject->RemoveObserver(this);
+}
+

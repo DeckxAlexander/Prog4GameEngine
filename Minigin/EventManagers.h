@@ -24,12 +24,14 @@ namespace dae
 
     };
 
+    class Subject;
     class IObserver
     {
     public:
         IObserver() = default;
         virtual ~IObserver() = default;
         virtual void OnNotify(const Event& event) = 0;
+        virtual void OnSubjectDestroyed(Subject* subject) = 0;
 
     };
 
@@ -54,6 +56,16 @@ namespace dae
             }
         }
 
+        ~Subject() 
+        {
+            for (auto observer : m_Observers)
+            {
+                if (observer != nullptr) {
+
+                    observer->OnSubjectDestroyed(this);
+                }
+            }
+        }
     private:
         std::vector<IObserver*> m_Observers;
     };
