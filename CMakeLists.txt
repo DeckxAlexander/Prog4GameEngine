@@ -42,7 +42,7 @@ add_library(MiniginEngine STATIC
   Minigin/SoundSystem.cpp
   Minigin/SoundEventQueue.h
   Minigin/SDLSoundSystem.h
-  Minigin/SDLSoundSystem.cpp "Minigin/Camera.h")
+  Minigin/SDLSoundSystem.cpp "Minigin/Camera.h" )
 
 
 # list source files here
@@ -64,9 +64,9 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Game/GameCommands.h
   Game/GameCommands.cpp
   Game/States.h
-  Game/States.cpp "Game/PlayerComponent.h" "Game/PlayerComponent.cpp" "Game/HealthComponent.cpp" "Game/PowerUpComponent.h" "Game/GridTransform.h" "Game/GridTransform.cpp"
+  Game/States.cpp "Game/PlayerComponent.h" "Game/PlayerComponent.cpp" "Game/HealthComponent.cpp" "Game/GridTransform.h" "Game/GridTransform.cpp"
   "Game/GridComponent.h"
-  "Game/GridComponent.cpp")
+  "Game/GridComponent.cpp" "Game/PowerUpComponent.h" "Game/PowerUpComponent.cpp"  "Game/ExtraBombPowerUpComponent.h" "Game/ExtraBombPowerUpComponent.cpp")
 
 # enable c++20 features
 target_compile_features(MiniginEngine PUBLIC cxx_std_20)

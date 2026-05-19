@@ -5,11 +5,12 @@
 namespace dae
 {
 	class CollisionComponent;
-	class PowerUpComponent final : public ObjectComponent, public IObserver
+	class PowerUpComponent : public ObjectComponent, public IObserver
 	{
 	private:
 		std::vector<CollisionComponent*> m_PlayersColliders{};
 		CollisionComponent* m_Collider{ nullptr };
+		bool m_IsActive{ false };
 		void InitializePlayers();
 
 	public:
@@ -17,8 +18,10 @@ namespace dae
 		virtual void Update() override;
 		virtual void Render() const override {}
 
+		virtual void ActivatePowerUp(GameObject* player);
+
 		PowerUpComponent(GameObject* pOwner);
-		~PowerUpComponent() = default;
+		~PowerUpComponent() = default ;
 		PowerUpComponent(const PowerUpComponent& other) = delete;
 		PowerUpComponent(PowerUpComponent&& other) = delete;
 		PowerUpComponent& operator=(const PowerUpComponent& other) = delete;
@@ -26,4 +29,6 @@ namespace dae
 
 		virtual void OnNotify(const Event& event);
 	};
+
+
 }

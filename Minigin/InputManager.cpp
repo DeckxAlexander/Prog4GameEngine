@@ -23,6 +23,19 @@ bool dae::InputManager::ProcessInput()
 			}
 		}
 
+		if (e.type == SDL_EVENT_KEY_UP)
+		{
+			SDL_Scancode key = e.key.scancode;
+
+			for (auto& binding : m_KeyBindings)
+			{
+				if (binding.state == KeyState::Up && binding.key == key)
+				{
+					binding.command->Execute(binding.value.get());
+				}
+			}
+		}
+
 		if (e.type == SDL_EVENT_MOUSE_BUTTON_UP)
 		{
 			auto button = e.button.button;

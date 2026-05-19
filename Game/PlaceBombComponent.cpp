@@ -7,12 +7,17 @@
 #include "GridComponent.h"
 #include "GridTransform.h"
 #include "SDLSoundSystem.h"
+#include <iostream>
 
 void dae::PlaceBombComponent::PlaceBomb() 
 {
-	if (m_pGrid == nullptr || m_CanPlace == false) return;
+	if (m_pGrid == nullptr || m_CanPlace == 0) return;
+	int gridIndex = m_pGrid->GridToIndex(m_pGrid->WorldPosToTile(GetOwner()->GetWorldPosition()));
+	if (m_pGrid->GetGridLayout()[gridIndex] == GridComponent::GridValue::bomb) return;
 	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
 
+
+	std::cout << "Place Bomb";
 	m_CanPlace--;
 
 
@@ -31,7 +36,7 @@ void dae::PlaceBombComponent::PlaceBomb()
 	bombGameObject.get()->SetPosition(pos.x, pos.y);
 	bombGameObject.get()->SetScale(1.5f, 1.5f);
 
-	int gridIndex = m_pGrid->GridToIndex(m_pGrid->WorldPosToTile(GetOwner()->GetWorldPosition()));
+
 	m_pGrid->GetGridLayout()[gridIndex] = GridComponent::GridValue::bomb;
 
 	scene.Add(std::move(bombGameObject));

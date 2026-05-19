@@ -28,6 +28,8 @@
 #include "SDLSoundSystem.h"
 #include "States.h"
 #include "PlayerComponent.h"
+#include "GridTransform.h"
+#include "ExtraBombPowerUpComponent.h"
 #include <filesystem>
 
 
@@ -106,7 +108,7 @@ static void load()
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_A, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_W, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, -1.f }));
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_S, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, 1.f }));
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_X, dae::KeyState::Pressed, std::make_unique<dae::PlaceBomb>(playerGameObject.get()), nullptr);
+	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_X, dae::KeyState::Up, std::make_unique<dae::PlaceBomb>(playerGameObject.get()), nullptr);
 
 	scene.Add(std::move(playerGameObject));
 
@@ -172,7 +174,19 @@ static void load()
 
 
 
+	//auto testPowerup = std::make_unique<dae::GameObject>(std::make_unique<dae::GridTransform>(grid));
+	////auto testPowerupRenderComponent = std::make_unique<dae::RenderComponent>(playerGameObject.get(), "ExtraBombPowerUp.png");
+	////auto testPowerupCollider = std::make_unique<dae::CollisionComponent>(playerGameObject.get(), 32.f, 32.f, 'p');
+	////auto testPowerupComp = std::make_unique<dae::ExtraBombPowerUpComponent>(playerGameObject.get());
 
+	//testPowerup.get()->AddComponent(std::make_unique<dae::RenderComponent>(testPowerup.get(), "ExtraBombPowerUp.png"));
+	//testPowerup.get()->AddComponent(std::make_unique<dae::CollisionComponent>(testPowerup.get(), 32.f, 32.f, 'p'));
+	//testPowerup.get()->AddComponent(std::make_unique<dae::ExtraBombPowerUpComponent>(testPowerup.get()));
+	//testPowerup.get()->SetScale(2.f, 2.f);
+	//testPowerup.get()->SetPosition(80.f, 50.f);
+
+	//scene.Add(std::move(testPowerup));
+	
 	scene.Start();
 
 

@@ -25,7 +25,7 @@ namespace dae
 		PlayerComponent& operator=(PlayerComponent&& other) = delete;
 
 		void PlayerDeath();
-
+		Subject* GetSubject() const { return m_Subject.get(); }
 
 
 	};

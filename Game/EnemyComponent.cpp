@@ -118,10 +118,14 @@ dae::EnemyComponent::EnemyComponent(GameObject* pOwner) : ObjectComponent(pOwner
 	InitializePlayers();
 }
 
+
+
 void dae::EnemyComponent::Start()
 {
 	m_State = std::make_unique<IdleWanderState>();
 	m_State->Start(GetOwner());
+
+	GetOwner()->GetComponentByType<HealthComponent>()->GetSubject()->AddObserver(this);
 }
 
 void dae::EnemyComponent::Update()
@@ -156,6 +160,14 @@ void dae::EnemyComponent::OnNotify(const Event& event)
 		if (possibleChaseState) 
 		{
 			SetState(std::make_unique<SearchWanderState>());
+		}
+	}
+
+	if (event.event == EventType::OwnerDead)
+	{
+		for (auto player : m_Players)
+		{
+			player->GetComponentByType<PlayerComponent>()->GetSubject()->RemoveObserver(this);
 		}
 	}
 }

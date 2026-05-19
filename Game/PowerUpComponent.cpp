@@ -8,10 +8,15 @@ void dae::PowerUpComponent::Start()
 {
 	InitializePlayers();
 	m_Collider = GetOwner()->GetComponentByType<CollisionComponent>();
+
+	
+
 }
 
 void dae::PowerUpComponent::Update()
 {
+	if (m_IsActive) return;
+
 	for (auto player : m_PlayersColliders)
 	{ 
 
@@ -19,16 +24,29 @@ void dae::PowerUpComponent::Update()
 		auto b = player->GetCollisionRect();
 		if (CollisionComponent::CheckCollision(a, b))
 		{
-			std::cout << "Activated!";
+			std::cout << "Activated";
+			ActivatePowerUp(player->GetOwner());
 			break;
 		}
 
 	}
 }
 
+void dae::PowerUpComponent::ActivatePowerUp(GameObject*)
+{
+	m_IsActive = true;
+	GetOwner()->MarkForDelete();
+	//for (auto player : m_PlayersColliders)
+	//{
+	//	player->GetOwner()->GetComponentByType<PlayerComponent>()->GetSubject()->RemoveObserver(this);
+	//}
+}
+
 dae::PowerUpComponent::PowerUpComponent(GameObject* pOwner) : ObjectComponent(pOwner)
 {
 }
+
+
 
 void dae::PowerUpComponent::OnNotify(const Event& event)
 {
@@ -46,6 +64,7 @@ void dae::PowerUpComponent::InitializePlayers()
 	auto players = scene.GetAllObjectsByComponent<PlayerComponent>();
 	for (auto player : players) 
 	{ 
+		//player->GetComponentByType<PlayerComponent>()->GetSubject()->AddObserver(this);
 		auto collider = player->GetComponentByType<CollisionComponent>();
 		if (collider != nullptr) m_PlayersColliders.push_back(collider);
 	}
