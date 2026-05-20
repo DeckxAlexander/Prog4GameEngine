@@ -1,4 +1,4 @@
-#include "ExtraBombPowerUpComponent.h"
+#include "PowerUps.h"
 #include "PlaceBombComponent.h"
 #include "GameObject.h"
 
@@ -14,3 +14,15 @@ dae::ExtraBombPowerUpComponent::ExtraBombPowerUpComponent(GameObject* pOwner) : 
 {
 }
 
+void dae::FlamesPowerUpComponent::ActivatePowerUp(GameObject* player)
+{
+
+	PowerUpComponent::ActivatePowerUp(player);
+	player->GetComponentByType<PlaceBombComponent>()->AddSize(1);
+
+}
+
+dae::FlamesPowerUpComponent::FlamesPowerUpComponent(GameObject* pOwner) : PowerUpComponent(pOwner)
+{
+	
+}

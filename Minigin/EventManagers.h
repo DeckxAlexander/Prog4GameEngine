@@ -66,6 +66,7 @@ namespace dae
                 }
             }
         }
+
     private:
         std::vector<IObserver*> m_Observers;
     };

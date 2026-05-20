@@ -24,7 +24,7 @@ void dae::PlaceBombComponent::PlaceBomb()
 	//Place Bomb
 	auto bombGameObject = std::make_unique<dae::GameObject>(std::make_unique<GridTransform>(m_pGrid));
 	auto bombRenderComponent = std::make_unique<dae::RenderComponent>(bombGameObject.get(), "Bomb.png");
-	auto bombBombComponent = std::make_unique<dae::BombComponent>(bombGameObject.get(), 5.f, this);
+	auto bombBombComponent = std::make_unique<dae::BombComponent>(bombGameObject.get(), 5.f, this, m_Size);
 	auto bombCollisionComponent = std::make_unique<dae::CollisionComponent>(bombGameObject.get(),32.f,32.f,'b');
 	auto bombEx = bombBombComponent.get();
 	bombGameObject.get()->AddComponent(std::move(bombRenderComponent));

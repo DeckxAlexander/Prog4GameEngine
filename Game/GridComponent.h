@@ -18,7 +18,9 @@ namespace dae
 
 		void SetTileScale(float x, float y);
 		void SetupGrid();
+		void SpawnPowerUps();
 		void SpawnGrid();
+
 
 
 		std::vector<GameObject*>& GetGridPtrs() { return m_GridPointers; }

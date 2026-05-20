@@ -44,12 +44,12 @@ void dae::BombComponent::Explode()
 
 
 	//Affect Surrounding tiles
-	BreakSoftBlocks(grid, gridPos);
+	auto sizes = BreakSoftBlocks(grid, gridPos);
 
 	int gridIndex = grid->GridToIndex(gridPos);
 	grid->GetGridLayout()[gridIndex] = GridComponent::GridValue::empty;
 
-	KillSurrounding(gridTransform);
+	KillSurrounding(gridTransform, sizes);
 	std::cout << "Explode";
 	if (m_Placer) m_Placer->AddCanPlace();
 	dae::SoundSystemLocator::get_sound_system().PlaySound(0);
@@ -58,21 +58,22 @@ void dae::BombComponent::Explode()
 
 }
 
-void dae::BombComponent::KillSurrounding(dae::GridTransform* gridTransform) 
+void dae::BombComponent::KillSurrounding(dae::GridTransform* gridTransform, glm::ivec4 dirSizes)
 {
 	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
 	auto KillableObjects = scene.GetAllObjectsByComponent<HealthComponent>();
+
 	glm::vec4 colliderRectVer{
 		gridTransform->GetPosition().x- gridTransform->GetGrid()->GetTileScale().x*0.5f,
-		gridTransform->GetPosition().y - gridTransform->GetGrid()->GetTileScale().y*1.5f,
+		gridTransform->GetPosition().y - (gridTransform->GetGrid()->GetTileScale().y*0.5f) - (gridTransform->GetGrid()->GetTileScale().y * dirSizes.y),
 		gridTransform->GetGrid()->GetTileScale().x,
-		3 * gridTransform->GetGrid()->GetTileScale().y
+		(dirSizes.y+1)* gridTransform->GetGrid()->GetTileScale().y + gridTransform->GetGrid()->GetTileScale().y* dirSizes.w
 	};
 
 	glm::vec4 colliderRectHor{
-	gridTransform->GetPosition().x - gridTransform->GetGrid()->GetTileScale().x*1.5f,
+	gridTransform->GetPosition().x - (gridTransform->GetGrid()->GetTileScale().x * 0.5f) - (gridTransform->GetGrid()->GetTileScale().x * dirSizes.x),
 	gridTransform->GetPosition().y - gridTransform->GetGrid()->GetTileScale().y*0.5f,
-	3 * gridTransform->GetGrid()->GetTileScale().x,
+	(dirSizes.x + 1)* gridTransform->GetGrid()->GetTileScale().x + gridTransform->GetGrid()->GetTileScale().x *dirSizes.z,
 	 gridTransform->GetGrid()->GetTileScale().y
 	};
 
@@ -90,37 +91,76 @@ void dae::BombComponent::KillSurrounding(dae::GridTransform* gridTransform)
 }
 
 
-void dae::BombComponent::BreakSoftBlocks(dae::GridComponent* grid, glm::ivec2 gpos) 
+glm::ivec4 dae::BombComponent::BreakSoftBlocks(dae::GridComponent* grid, glm::ivec2 gpos)
 {
 	auto tileLayout = grid->GetGridLayout();
 
-	//Temporary
-	int gridIndex = grid->GridToIndex(gpos.x, gpos.y - 1);
-	if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
+
+
+
+
+	//Up 
+	int upSize{};
+	for (int index{1}; index <= m_Size; index++) 
 	{
-		grid->GetGridPtrs()[gridIndex]->MarkForDelete();
-		grid->GetGridLayout()[gridIndex] = GridComponent::GridValue::empty;
+		int gridIndex = grid->GridToIndex(gpos.x, gpos.y - index);
+		if (gridIndex >= tileLayout.size() || gridIndex < 0) continue;
+		if (tileLayout[gridIndex] == GridComponent::GridValue::hard) break;
+		upSize++;
+		if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
+		{
+			grid->GetGridPtrs()[gridIndex]->MarkForDelete();
+			grid->GetGridLayout()[gridIndex] = GridComponent::GridValue::empty;
+		}
 	}
 
-	gridIndex = grid->GridToIndex(gpos.x, gpos.y + 1);
-	if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
+	//Down
+	int downSize{};
+	for (int index{ 1 }; index <= m_Size; index++)
 	{
-		grid->GetGridPtrs()[gridIndex]->MarkForDelete();
-		grid->GetGridLayout()[gridIndex] = GridComponent::GridValue::empty;
+		int gridIndex = grid->GridToIndex(gpos.x, gpos.y + index);
+		if (gridIndex >= tileLayout.size() || gridIndex < 0) continue;
+		if (tileLayout[gridIndex] == GridComponent::GridValue::hard) break;
+		downSize++;
+		if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
+		{
+			grid->GetGridPtrs()[gridIndex]->MarkForDelete();
+			grid->GetGridLayout()[gridIndex] = GridComponent::GridValue::empty;
+		}
 	}
 
-	gridIndex = grid->GridToIndex(gpos.x - 1, gpos.y);
-	if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
+	//Right
+	int rightSize{};
+	for (int index{ 1 }; index <= m_Size; index++)
 	{
-		grid->GetGridPtrs()[gridIndex]->MarkForDelete();
-		grid->GetGridLayout()[gridIndex] = GridComponent::GridValue::empty;
+		int gridIndex = grid->GridToIndex(gpos.x+index, gpos.y);
+		if (gridIndex >= tileLayout.size() || gridIndex < 0) continue;
+		if (tileLayout[gridIndex] == GridComponent::GridValue::hard) break;
+		rightSize++;
+		if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
+		{
+			grid->GetGridPtrs()[gridIndex]->MarkForDelete();
+			grid->GetGridLayout()[gridIndex] = GridComponent::GridValue::empty;
+		}
 	}
 
-	gridIndex = grid->GridToIndex(gpos.x + 1, gpos.y);
-	if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
+	//Right
+	int leftSize{};
+	for (int index{ 1 }; index <= m_Size; index++)
 	{
-
-		grid->GetGridPtrs()[gridIndex]->MarkForDelete();
-		grid->GetGridLayout()[gridIndex] = GridComponent::GridValue::empty;
+		int gridIndex = grid->GridToIndex(gpos.x - index, gpos.y);
+		if (gridIndex >= tileLayout.size() || gridIndex < 0) continue;
+		if (tileLayout[gridIndex] == GridComponent::GridValue::hard) break;
+		leftSize++;
+		if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
+		{
+			grid->GetGridPtrs()[gridIndex]->MarkForDelete();
+			grid->GetGridLayout()[gridIndex] = GridComponent::GridValue::empty;
+		}
 	}
+
+
+	//TODO continue on this!
+	return{leftSize,upSize,rightSize,downSize};
+
 }

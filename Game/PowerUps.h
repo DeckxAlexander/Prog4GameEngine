@@ -17,4 +17,20 @@ namespace dae
 		ExtraBombPowerUpComponent& operator=(const ExtraBombPowerUpComponent& other) = delete;
 		ExtraBombPowerUpComponent& operator=(ExtraBombPowerUpComponent&& other) = delete;
 	};
+
+	class FlamesPowerUpComponent final : public PowerUpComponent
+	{
+
+	public:
+
+
+		virtual void ActivatePowerUp(GameObject* player) override;
+
+		FlamesPowerUpComponent(GameObject* pOwner);
+		~FlamesPowerUpComponent() = default;
+		FlamesPowerUpComponent(const FlamesPowerUpComponent& other) = delete;
+		FlamesPowerUpComponent(FlamesPowerUpComponent&& other) = delete;
+		FlamesPowerUpComponent& operator=(const FlamesPowerUpComponent& other) = delete;
+		FlamesPowerUpComponent& operator=(FlamesPowerUpComponent&& other) = delete;
+	};
 }

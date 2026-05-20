@@ -11,11 +11,14 @@ namespace dae
 	private:
 		float m_TimePassed{};
 		float m_DetonationTime;
+		int m_Size;
+		
+
 		bool m_IsDetonating{ false };
 		PlaceBombComponent* m_Placer;
 		void Explode();
-		void BreakSoftBlocks(GridComponent* grid, glm::ivec2 gpos);
-		void KillSurrounding(GridTransform* gridTransform);
+		glm::ivec4 BreakSoftBlocks(GridComponent* grid, glm::ivec2 gpos);
+		void KillSurrounding(GridTransform* gridTransform, glm::ivec4 dirSizes);
 
 	public:
 		virtual void Update() override;
@@ -26,7 +29,7 @@ namespace dae
 
 
 
-		BombComponent(GameObject* pOwner, float detonationTime, PlaceBombComponent* placer) : ObjectComponent(pOwner), m_DetonationTime{detonationTime}, m_Placer{ placer }
+		BombComponent(GameObject* pOwner, float detonationTime, PlaceBombComponent* placer, int size = 1) : ObjectComponent(pOwner), m_DetonationTime{detonationTime}, m_Placer{ placer }, m_Size{size}
 		{
 		}
 		~BombComponent() {}

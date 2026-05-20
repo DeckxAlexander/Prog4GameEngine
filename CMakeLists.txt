@@ -66,7 +66,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Game/States.h
   Game/States.cpp "Game/PlayerComponent.h" "Game/PlayerComponent.cpp" "Game/HealthComponent.cpp" "Game/GridTransform.h" "Game/GridTransform.cpp"
   "Game/GridComponent.h"
-  "Game/GridComponent.cpp" "Game/PowerUpComponent.h" "Game/PowerUpComponent.cpp"  "Game/ExtraBombPowerUpComponent.h" "Game/ExtraBombPowerUpComponent.cpp")
+  "Game/GridComponent.cpp" "Game/PowerUpComponent.h" "Game/PowerUpComponent.cpp"  "Game/PowerUps.h" "Game/PowerUps.cpp")
 
 # enable c++20 features
 target_compile_features(MiniginEngine PUBLIC cxx_std_20)

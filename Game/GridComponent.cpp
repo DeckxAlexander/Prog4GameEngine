@@ -6,6 +6,7 @@
 #include "RenderComponent.h"
 #include "CollisionComponent.h"
 #include "SceneManager.h"
+#include "PowerUps.h"
 #include <iostream>
 
 dae::GridComponent* dae::GridLocator::m_GridInstance = nullptr;
@@ -68,9 +69,69 @@ void dae::GridComponent::SetupGrid()
 
 }
 
+void dae::GridComponent::SpawnPowerUps()
+{
+	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
+	int randSoftwallNumber = rand() % (m_SoftBlocksAmount + 1);
+
+	int softwallIndex{};
+	for (int i{}; i < int(m_GridLayout.size()); i++)
+	{
+		if (m_GridLayout[i] == GridValue::soft)
+		{
+			softwallIndex++;
+			if (softwallIndex == randSoftwallNumber)
+			{
+				auto testPowerup = std::make_unique<dae::GameObject>(std::make_unique<dae::GridTransform>(this));
+				testPowerup.get()->AddComponent(std::make_unique<dae::RenderComponent>(testPowerup.get(), "ExtraBombPowerUp.png"));
+				testPowerup.get()->AddComponent(std::make_unique<dae::CollisionComponent>(testPowerup.get(), 20.f, 20.f, 'p'));
+				testPowerup.get()->AddComponent(std::make_unique<dae::ExtraBombPowerUpComponent>(testPowerup.get()));
+				testPowerup.get()->SetScale(2.f, 2.f);
+
+				int x = i % m_Colums;
+				int y = i / m_Colums;
+				dynamic_cast<dae::GridTransform*>(testPowerup->GetTransform())->SetGridTile(x, y);
+
+				scene.Add(std::move(testPowerup));
+				break;
+			}
+		}
+	}
+
+	do {
+		randSoftwallNumber = rand() % (m_SoftBlocksAmount + 1);
+	} while (randSoftwallNumber == softwallIndex); //Make sure new random index is not same as last
+	
+	softwallIndex = 0;
+	for (int i{}; i < int(m_GridLayout.size()); i++)
+	{
+		if (m_GridLayout[i] == GridValue::soft)
+		{
+			softwallIndex++;
+			if (softwallIndex == randSoftwallNumber)
+			{
+				auto testPowerup = std::make_unique<dae::GameObject>(std::make_unique<dae::GridTransform>(this));
+				testPowerup.get()->AddComponent(std::make_unique<dae::RenderComponent>(testPowerup.get(), "FlamePowerUp.png"));
+				testPowerup.get()->AddComponent(std::make_unique<dae::CollisionComponent>(testPowerup.get(), 20.f, 20.f, 'p'));
+				testPowerup.get()->AddComponent(std::make_unique<dae::FlamesPowerUpComponent>(testPowerup.get()));
+				testPowerup.get()->SetScale(2.f, 2.f);
+
+				int x = i % m_Colums;
+				int y = i / m_Colums;
+				dynamic_cast<dae::GridTransform*>(testPowerup->GetTransform())->SetGridTile(x, y);
+
+				scene.Add(std::move(testPowerup));
+				break;
+			}
+		}
+	}
+
+}
+
 void dae::GridComponent::SpawnGrid() 
 {
 	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
+
 
 
 	for (int i{}; i < int(m_GridLayout.size()); i++)

@@ -21,13 +21,14 @@ namespace dae
 		virtual void ActivatePowerUp(GameObject* player);
 
 		PowerUpComponent(GameObject* pOwner);
-		~PowerUpComponent() = default ;
+		~PowerUpComponent() ;
 		PowerUpComponent(const PowerUpComponent& other) = delete;
 		PowerUpComponent(PowerUpComponent&& other) = delete;
 		PowerUpComponent& operator=(const PowerUpComponent& other) = delete;
 		PowerUpComponent& operator=(PowerUpComponent&& other) = delete;
 
 		virtual void OnNotify(const Event& event);
+		virtual void OnSubjectDestroyed(Subject* subject) ;
 	};
 
 

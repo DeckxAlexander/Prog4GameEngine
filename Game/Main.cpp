@@ -29,7 +29,7 @@
 #include "States.h"
 #include "PlayerComponent.h"
 #include "GridTransform.h"
-#include "ExtraBombPowerUpComponent.h"
+#include "PowerUps.h"
 #include <filesystem>
 
 
@@ -41,7 +41,7 @@ static void load()
 	srand(int(time(nullptr)));
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
 
-	dae::Renderer::GetInstance().GetCamera().SetViewDimensions(960, 432);
+	dae::Renderer::GetInstance().GetCamera().SetViewDimensions(960, 420);
 
 
 	auto tileGameObject = std::make_unique<dae::GameObject>();
@@ -61,6 +61,7 @@ static void load()
 
 	grid->SetSoftBlocksAmount(60);
 	grid->SetupGrid();
+	grid->SpawnPowerUps();
 	grid->SpawnGrid();
 
 	dae::GridLocator::SetGrid(grid);
@@ -171,22 +172,17 @@ static void load()
 
 
 	}
-
-
-
+	
 	//auto testPowerup = std::make_unique<dae::GameObject>(std::make_unique<dae::GridTransform>(grid));
-	////auto testPowerupRenderComponent = std::make_unique<dae::RenderComponent>(playerGameObject.get(), "ExtraBombPowerUp.png");
-	////auto testPowerupCollider = std::make_unique<dae::CollisionComponent>(playerGameObject.get(), 32.f, 32.f, 'p');
-	////auto testPowerupComp = std::make_unique<dae::ExtraBombPowerUpComponent>(playerGameObject.get());
-
-	//testPowerup.get()->AddComponent(std::make_unique<dae::RenderComponent>(testPowerup.get(), "ExtraBombPowerUp.png"));
-	//testPowerup.get()->AddComponent(std::make_unique<dae::CollisionComponent>(testPowerup.get(), 32.f, 32.f, 'p'));
-	//testPowerup.get()->AddComponent(std::make_unique<dae::ExtraBombPowerUpComponent>(testPowerup.get()));
+	//testPowerup.get()->AddComponent(std::make_unique<dae::RenderComponent>(testPowerup.get(), "FlamePowerUp.png"));
+	//testPowerup.get()->AddComponent(std::make_unique<dae::CollisionComponent>(testPowerup.get(), 20.f, 20.f, 'p'));
+	//testPowerup.get()->AddComponent(std::make_unique<dae::FlamesPowerUpComponent>(testPowerup.get()));
 	//testPowerup.get()->SetScale(2.f, 2.f);
 	//testPowerup.get()->SetPosition(80.f, 50.f);
 
 	//scene.Add(std::move(testPowerup));
-	
+
+
 	scene.Start();
 
 
