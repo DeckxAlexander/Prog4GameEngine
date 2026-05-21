@@ -12,6 +12,8 @@ namespace dae
 	private:
 		std::vector<GameObject*> m_Players{};
 		std::unique_ptr<State> m_State{};
+		
+		bool m_IsIntelligent;
 	public:
 		virtual void Start() override;
 		virtual void Update() override;
@@ -24,8 +26,8 @@ namespace dae
 		void GiveUpChase();
 
 
-		EnemyComponent(GameObject* pOwner);
-		~EnemyComponent() = default;
+		EnemyComponent(GameObject* pOwner, bool isIntelligent);
+		~EnemyComponent();
 		EnemyComponent(const EnemyComponent& other) = delete;
 		EnemyComponent(EnemyComponent&& other) = delete;
 		EnemyComponent& operator=(const EnemyComponent& other) = delete;

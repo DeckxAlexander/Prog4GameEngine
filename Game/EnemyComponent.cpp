@@ -113,16 +113,27 @@ void dae::EnemyComponent::SearchPlayer()
 
 }
 
-dae::EnemyComponent::EnemyComponent(GameObject* pOwner) : ObjectComponent(pOwner)
+dae::EnemyComponent::EnemyComponent(GameObject* pOwner, bool isIntelligent) : ObjectComponent(pOwner), m_IsIntelligent{isIntelligent}
 {
 	InitializePlayers();
+}
+
+dae::EnemyComponent::~EnemyComponent()
+{
+	for (auto player : m_Players)
+	{
+
+		player->GetComponentByType<PlayerComponent>()->GetSubject()->RemoveObserver(this);
+
+	}
 }
 
 
 
 void dae::EnemyComponent::Start()
 {
-	m_State = std::make_unique<IdleWanderState>();
+	if (m_IsIntelligent== false) m_State = std::make_unique<IdleWanderState>();
+	if (m_IsIntelligent== true) m_State = std::make_unique<SearchWanderState>();
 	m_State->Start(GetOwner());
 
 	GetOwner()->GetComponentByType<HealthComponent>()->GetSubject()->AddObserver(this);
@@ -145,7 +156,11 @@ void dae::EnemyComponent::Update()
 		}
 
 	}
-	if (m_State.get() != nullptr) m_State->Update();
+	if (m_State.get() != nullptr) 
+	{
+		auto returnstate = m_State->Update(); 
+		if (returnstate != nullptr) SetState(std::move(returnstate));
+	}
 	
 	
 }

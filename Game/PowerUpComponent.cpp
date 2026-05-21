@@ -45,7 +45,10 @@ dae::PowerUpComponent::PowerUpComponent(GameObject* pOwner) : ObjectComponent(pO
 
 dae::PowerUpComponent::~PowerUpComponent()
 {
-
+	for (auto player : m_PlayersColliders) 
+	{
+		player->GetOwner()->GetComponentByType<PlayerComponent>()->GetSubject()->RemoveObserver(this);
+	}
 }
 
 
