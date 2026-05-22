@@ -110,6 +110,7 @@ static void load()
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_W, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, -1.f }));
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_S, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, 1.f }));
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_X, dae::KeyState::Up, std::make_unique<dae::PlaceBomb>(playerGameObject.get()), nullptr);
+	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_C, dae::KeyState::Up, std::make_unique<dae::DetonateBomb>(playerGameObject.get()), nullptr);
 
 	scene.Add(std::move(playerGameObject));
 
@@ -139,7 +140,7 @@ static void load()
 		auto enemyGameObject = std::make_unique<dae::GameObject>();
 		auto enemyRenderComponent = std::make_unique<dae::RenderComponent>(enemyGameObject.get(), "Balloom.png");
 		auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>(enemyGameObject.get(), 40.f, grid);
-		//auto enemyChaseMovementComponent = std::make_unique<dae::ChaseMovementComponent>(enemyGameObject.get(), 25.f, grid);
+		auto enemyChaseMovementComponent = std::make_unique<dae::ChaseMovementComponent>(enemyGameObject.get(), 25.f, grid);
 
 
 
@@ -158,14 +159,14 @@ static void load()
 		enemyGameObject.get()->AddComponent(std::move(enemyRenderComponent));
 		enemyGameObject.get()->AddComponent(std::move(enemyCollider));
 		enemyGameObject.get()->AddComponent(std::move(enemyMovementComponent));
-		//enemyGameObject.get()->AddComponent(std::move(enemyChaseMovementComponent));
+		enemyGameObject.get()->AddComponent(std::move(enemyChaseMovementComponent));
 		enemyGameObject.get()->AddComponent(std::move(enemyHealthComponent));
 		enemyGameObject.get()->AddComponent(std::move(enemyComponent));
 		int x = chosenIndex % grid->GetColums();
 		int y = chosenIndex / grid->GetColums();
 		enemyGameObject.get()->SetPosition(32 * float(x) + 16, 32 * float(y) + 16);
 		enemyGameObject.get()->SetScale(1.5f, 1.5f);
-		//enemyGameObject->GetComponentByType<dae::ChaseMovementComponent>()->SetEnabled(false);
+		enemyGameObject->GetComponentByType<dae::ChaseMovementComponent>()->SetEnabled(false);
 		scene.Add(std::move(enemyGameObject));
 		EnemiesSpawned++;
 		if (EnemiesSpawned >= 10) break;
@@ -219,14 +220,14 @@ static void load()
 
 	}
 
-	//auto testPowerup = std::make_unique<dae::GameObject>(std::make_unique<dae::GridTransform>(grid));
-	//testPowerup.get()->AddComponent(std::make_unique<dae::RenderComponent>(testPowerup.get(), "FlamePowerUp.png"));
-	//testPowerup.get()->AddComponent(std::make_unique<dae::CollisionComponent>(testPowerup.get(), 20.f, 20.f, 'p'));
-	//testPowerup.get()->AddComponent(std::make_unique<dae::FlamesPowerUpComponent>(testPowerup.get()));
-	//testPowerup.get()->SetScale(2.f, 2.f);
-	//testPowerup.get()->SetPosition(80.f, 50.f);
+	auto testPowerup = std::make_unique<dae::GameObject>(std::make_unique<dae::GridTransform>(grid));
+	testPowerup.get()->AddComponent(std::make_unique<dae::RenderComponent>(testPowerup.get(), "DetonatorPowerUp.png"));
+	testPowerup.get()->AddComponent(std::make_unique<dae::CollisionComponent>(testPowerup.get(), 20.f, 20.f, 'p'));
+	testPowerup.get()->AddComponent(std::make_unique<dae::DetonatorPowerUpComponent>(testPowerup.get()));
+	testPowerup.get()->SetScale(2.f, 2.f);
+	testPowerup.get()->SetPosition(80.f, 50.f);
 
-	//scene.Add(std::move(testPowerup));
+	scene.Add(std::move(testPowerup));
 
 
 	scene.Start();

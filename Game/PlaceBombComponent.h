@@ -4,14 +4,17 @@
 namespace dae
 {
 	class GridComponent;
+	class BombComponent;
 	class PlaceBombComponent final : public ObjectComponent
 	{
 	private:
 			GridComponent* m_pGrid{ nullptr };
 			int m_CanPlace{ 1 };
+			int m_CanPlaceMax{ 1 };
 			int m_Size{ 1 };
+			bool m_UsingDetonator{ false };
 
-
+			BombComponent* m_OldestBomb{};
 
 
 	public:
@@ -20,9 +23,11 @@ namespace dae
 
 		void AddSize(int size) { m_Size += size; }
 		void PlaceBomb();
-		void AddCanPlace(int value = 1) { m_CanPlace += value; }
+		void AddCanPlace(int value = 1) {m_CanPlace += value; }
+		void AddMaxCanPlace(int value = 1) { m_CanPlaceMax += value; }
+		void SetUsingDetonator(bool value) { m_UsingDetonator = value; }
 
-
+		void ForceDetonate();
 
 		PlaceBombComponent(GameObject* pOwner, GridComponent* pGrid) : ObjectComponent(pOwner), m_pGrid{pGrid}
 		{}

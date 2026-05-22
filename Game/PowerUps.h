@@ -33,4 +33,20 @@ namespace dae
 		FlamesPowerUpComponent& operator=(const FlamesPowerUpComponent& other) = delete;
 		FlamesPowerUpComponent& operator=(FlamesPowerUpComponent&& other) = delete;
 	};
+
+	class DetonatorPowerUpComponent final : public PowerUpComponent
+	{
+
+	public:
+
+
+		virtual void ActivatePowerUp(GameObject* player) override;
+
+		DetonatorPowerUpComponent(GameObject* pOwner);
+		~DetonatorPowerUpComponent() = default;
+		DetonatorPowerUpComponent(const DetonatorPowerUpComponent& other) = delete;
+		DetonatorPowerUpComponent(DetonatorPowerUpComponent&& other) = delete;
+		DetonatorPowerUpComponent& operator=(const DetonatorPowerUpComponent& other) = delete;
+		DetonatorPowerUpComponent& operator=(DetonatorPowerUpComponent&& other) = delete;
+	};
 }

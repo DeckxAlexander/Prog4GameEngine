@@ -41,4 +41,17 @@ namespace dae
 			if (auto comp = m_GameObject->GetComponentByType<PlaceBombComponent>()) comp->PlaceBomb();
 		}
 	};
+
+	class DetonateBomb final : public GameObjectCommand
+	{
+	public:
+		DetonateBomb(GameObject* gameobject) : GameObjectCommand(gameobject)
+		{
+		}
+
+		void Execute([[maybe_unused]] CommandValue* value)
+		{
+			if (auto comp = m_GameObject->GetComponentByType<PlaceBombComponent>()) comp->ForceDetonate();
+		}
+	};
 }

@@ -19,7 +19,7 @@ void dae::PlaceBombComponent::PlaceBomb()
 
 	std::cout << "Place Bomb";
 	m_CanPlace--;
-
+	bool willDetonate{ true };
 
 	//Place Bomb
 	auto bombGameObject = std::make_unique<dae::GameObject>(std::make_unique<GridTransform>(m_pGrid));
@@ -27,6 +27,17 @@ void dae::PlaceBombComponent::PlaceBomb()
 	auto bombBombComponent = std::make_unique<dae::BombComponent>(bombGameObject.get(), 5.f, this, m_Size);
 	auto bombCollisionComponent = std::make_unique<dae::CollisionComponent>(bombGameObject.get(),32.f,32.f,'b');
 	auto bombEx = bombBombComponent.get();
+
+	if (m_UsingDetonator)
+	{
+		if (m_CanPlace + 1 == m_CanPlaceMax)
+		{
+			m_OldestBomb = bombEx;
+			willDetonate = false;
+		}
+
+	}
+
 	bombGameObject.get()->AddComponent(std::move(bombRenderComponent));
 	bombGameObject.get()->AddComponent(std::move(bombBombComponent));
 	bombGameObject.get()->AddComponent(std::move(bombCollisionComponent));
@@ -40,7 +51,17 @@ void dae::PlaceBombComponent::PlaceBomb()
 	m_pGrid->GetGridLayout()[gridIndex] = GridComponent::GridValue::bomb;
 
 	scene.Add(std::move(bombGameObject));
-	bombEx->StartDetonate();
 
 
+	if (willDetonate) bombEx->StartDetonate();
+
+
+
+}
+
+void dae::PlaceBombComponent::ForceDetonate()
+{
+	if (m_OldestBomb == nullptr) return;
+	m_OldestBomb->Explode();
+	m_OldestBomb = nullptr;
 }

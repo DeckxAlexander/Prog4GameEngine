@@ -7,6 +7,7 @@ void dae::ExtraBombPowerUpComponent::ActivatePowerUp(GameObject* player)
 {
 	PowerUpComponent::ActivatePowerUp(player);
 	player->GetComponentByType<PlaceBombComponent>()->AddCanPlace();
+	player->GetComponentByType<PlaceBombComponent>()->AddMaxCanPlace();
 
 }
 
@@ -25,4 +26,14 @@ void dae::FlamesPowerUpComponent::ActivatePowerUp(GameObject* player)
 dae::FlamesPowerUpComponent::FlamesPowerUpComponent(GameObject* pOwner) : PowerUpComponent(pOwner)
 {
 	
+}
+
+void dae::DetonatorPowerUpComponent::ActivatePowerUp(GameObject* player)
+{
+	PowerUpComponent::ActivatePowerUp(player);
+	player->GetComponentByType<PlaceBombComponent>()->SetUsingDetonator(true);
+}
+
+dae::DetonatorPowerUpComponent::DetonatorPowerUpComponent(GameObject* pOwner) : PowerUpComponent(pOwner)
+{
 }
