@@ -47,7 +47,8 @@ dae::PowerUpComponent::~PowerUpComponent()
 {
 	for (auto player : m_PlayersColliders) 
 	{
-		player->GetOwner()->GetComponentByType<PlayerComponent>()->GetSubject()->RemoveObserver(this);
+		auto playerComp = player->GetOwner()->GetComponentByType<PlayerComponent>();
+		if (playerComp != nullptr) playerComp->GetSubject()->RemoveObserver(this);
 	}
 }
 

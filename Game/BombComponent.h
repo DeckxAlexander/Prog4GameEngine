@@ -19,6 +19,7 @@ namespace dae
 
 		glm::ivec4 BreakSoftBlocks(GridComponent* grid, glm::ivec2 gpos);
 		void KillSurrounding(GridTransform* gridTransform, glm::ivec4 dirSizes);
+		void ExitRevealed();
 
 	public:
 		virtual void Update() override;
@@ -26,6 +27,10 @@ namespace dae
 		void StartDetonate(bool value = true) {
 			m_IsDetonating = value;
 		}
+
+
+		
+
 
 		void Explode();
 

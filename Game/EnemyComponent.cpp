@@ -123,7 +123,11 @@ dae::EnemyComponent::~EnemyComponent()
 	for (auto player : m_Players)
 	{
 
-		player->GetComponentByType<PlayerComponent>()->GetSubject()->RemoveObserver(this);
+		auto playerComp = player->GetComponentByType<PlayerComponent>();
+		if (playerComp != nullptr) 
+		{
+			playerComp->GetSubject()->RemoveObserver(this);
+		}
 
 	}
 }

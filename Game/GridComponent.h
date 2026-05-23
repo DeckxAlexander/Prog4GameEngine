@@ -41,8 +41,12 @@ namespace dae
 		glm::ivec2 WorldPosToTile(const glm::vec3& worldPos) const;
 
 		void SetSoftBlocksAmount(int amount) { m_SoftBlocksAmount = amount; }
-
 		int GetColums() { return m_Colums; }
+
+		bool IsExit(int index)
+		{
+			return index == m_ExitIndex;
+		}
 
 		GridComponent(GameObject* pOwner, int colums, int rows);
 		~GridComponent() {  };
@@ -64,6 +68,10 @@ namespace dae
 		int m_SoftBlocksAmount{ 10 };
 		std::vector<GridValue> m_GridLayout{};
 		std::vector<GameObject*> m_GridPointers{};
+
+
+		void SetExit();
+		int m_ExitIndex{};
 
 	};
 

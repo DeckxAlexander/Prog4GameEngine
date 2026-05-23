@@ -65,14 +65,48 @@ void dae::GridComponent::SetupGrid()
 	}
 
 
-	//Create softblocks
+
+	SetExit();
 
 }
 
-void dae::GridComponent::SpawnPowerUps()
+void dae::GridComponent::SetExit() 
 {
 	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
-	int randSoftwallNumber = rand() % (m_SoftBlocksAmount + 1);
+	bool exitSet{ false };
+	while (exitSet == false) 
+	{
+		int index = rand() % (m_Colums * m_Rows);
+		if (m_GridLayout[index] == GridValue::empty)
+		{
+			m_ExitIndex = index;
+			exitSet = true;
+			m_GridLayout[index] = GridValue::soft;
+
+			auto testPowerup = std::make_unique<dae::GameObject>(std::make_unique<dae::GridTransform>(this));
+			testPowerup.get()->AddComponent(std::make_unique<dae::RenderComponent>(testPowerup.get(), "Exit.png"));
+			testPowerup.get()->SetScale(2.f, 2.f);
+
+			int x = index % m_Colums;
+			int y = index / m_Colums;
+			dynamic_cast<dae::GridTransform*>(testPowerup->GetTransform())->SetGridTile(x, y);
+
+			scene.Add(std::move(testPowerup));
+
+
+		}
+	}
+
+
+}
+
+
+void dae::GridComponent::SpawnPowerUps()
+{
+	if (m_SoftBlocksAmount < 3) return;
+
+	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
+	int randSoftwallNumber = rand() % (m_SoftBlocksAmount ) + 1;
 
 	int softwallIndex{};
 	for (int i{}; i < int(m_GridLayout.size()); i++)
@@ -93,22 +127,23 @@ void dae::GridComponent::SpawnPowerUps()
 				dynamic_cast<dae::GridTransform*>(testPowerup->GetTransform())->SetGridTile(x, y);
 
 				scene.Add(std::move(testPowerup));
+				std::cout << "Spawn ExtraBomb" << randSoftwallNumber;
 				break;
 			}
 		}
 	}
 
 	do {
-		randSoftwallNumber = rand() % (m_SoftBlocksAmount + 1);
+		randSoftwallNumber = rand() % (m_SoftBlocksAmount ) + 1;
 	} while (randSoftwallNumber == softwallIndex); //Make sure new random index is not same as last
 	
-	softwallIndex = 0;
+	int softwallIndex2{0};
 	for (int i{}; i < int(m_GridLayout.size()); i++)
 	{
 		if (m_GridLayout[i] == GridValue::soft)
 		{
-			softwallIndex++;
-			if (softwallIndex == randSoftwallNumber)
+			softwallIndex2++;
+			if (softwallIndex2 == randSoftwallNumber)
 			{
 				auto testPowerup = std::make_unique<dae::GameObject>(std::make_unique<dae::GridTransform>(this));
 				testPowerup.get()->AddComponent(std::make_unique<dae::RenderComponent>(testPowerup.get(), "FlamePowerUp.png"));
@@ -121,6 +156,36 @@ void dae::GridComponent::SpawnPowerUps()
 				dynamic_cast<dae::GridTransform*>(testPowerup->GetTransform())->SetGridTile(x, y);
 
 				scene.Add(std::move(testPowerup));
+				std::cout << "Spawn Flames" << randSoftwallNumber;
+				break;
+			}
+		}
+	}
+
+	do {
+		randSoftwallNumber = rand() % (m_SoftBlocksAmount ) + 1;
+	} while (randSoftwallNumber == softwallIndex || randSoftwallNumber == softwallIndex2); //Make sure new random index is not same as last
+
+	int softwallIndex3{ 0 };
+	for (int i{}; i < int(m_GridLayout.size()); i++)
+	{
+		if (m_GridLayout[i] == GridValue::soft)
+		{
+			softwallIndex3++;
+			if (softwallIndex3 == randSoftwallNumber)
+			{
+				auto testPowerup = std::make_unique<dae::GameObject>(std::make_unique<dae::GridTransform>(this));
+				testPowerup.get()->AddComponent(std::make_unique<dae::RenderComponent>(testPowerup.get(), "DetonatorPowerUp.png"));
+				testPowerup.get()->AddComponent(std::make_unique<dae::CollisionComponent>(testPowerup.get(), 20.f, 20.f, 'p'));
+				testPowerup.get()->AddComponent(std::make_unique<dae::DetonatorPowerUpComponent>(testPowerup.get()));
+				testPowerup.get()->SetScale(2.f, 2.f);
+
+				int x = i % m_Colums;
+				int y = i / m_Colums;
+				dynamic_cast<dae::GridTransform*>(testPowerup->GetTransform())->SetGridTile(x, y);
+
+				scene.Add(std::move(testPowerup));
+				std::cout << "Spawn Detonator" << randSoftwallNumber;
 				break;
 			}
 		}

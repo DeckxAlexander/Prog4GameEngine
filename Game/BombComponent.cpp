@@ -8,6 +8,7 @@
 #include "CollisionComponent.h"
 #include "Renderer.h"
 #include "SDLSoundSystem.h"
+#include "PlayerComponent.h"
 #include "GridTransform.h"
 #include <iostream>
 
@@ -91,13 +92,21 @@ void dae::BombComponent::KillSurrounding(dae::GridTransform* gridTransform, glm:
 }
 
 
+void dae::BombComponent::ExitRevealed() 
+{
+	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
+	auto players = scene.GetAllObjectsByComponent<PlayerComponent>();
+
+	for (auto player : players) 
+	{
+		player->GetComponentByType<PlayerComponent>()->SetExitFound(true);
+	}
+
+}
+
 glm::ivec4 dae::BombComponent::BreakSoftBlocks(dae::GridComponent* grid, glm::ivec2 gpos)
 {
 	auto tileLayout = grid->GetGridLayout();
-
-
-
-
 
 	//Up 
 	int upSize{};
@@ -111,6 +120,8 @@ glm::ivec4 dae::BombComponent::BreakSoftBlocks(dae::GridComponent* grid, glm::iv
 		{
 			grid->GetGridPtrs()[gridIndex]->MarkForDelete();
 			grid->GetGridLayout()[gridIndex] = GridComponent::GridValue::empty;
+			if (grid->IsExit(gridIndex)) ExitRevealed();
+
 		}
 	}
 
@@ -126,6 +137,7 @@ glm::ivec4 dae::BombComponent::BreakSoftBlocks(dae::GridComponent* grid, glm::iv
 		{
 			grid->GetGridPtrs()[gridIndex]->MarkForDelete();
 			grid->GetGridLayout()[gridIndex] = GridComponent::GridValue::empty;
+			if (grid->IsExit(gridIndex)) ExitRevealed();
 		}
 	}
 
@@ -141,6 +153,7 @@ glm::ivec4 dae::BombComponent::BreakSoftBlocks(dae::GridComponent* grid, glm::iv
 		{
 			grid->GetGridPtrs()[gridIndex]->MarkForDelete();
 			grid->GetGridLayout()[gridIndex] = GridComponent::GridValue::empty;
+			if (grid->IsExit(gridIndex)) ExitRevealed();
 		}
 	}
 
@@ -156,11 +169,10 @@ glm::ivec4 dae::BombComponent::BreakSoftBlocks(dae::GridComponent* grid, glm::iv
 		{
 			grid->GetGridPtrs()[gridIndex]->MarkForDelete();
 			grid->GetGridLayout()[gridIndex] = GridComponent::GridValue::empty;
+			if (grid->IsExit(gridIndex)) ExitRevealed();
 		}
 	}
 
-
-	//TODO continue on this!
 	return{leftSize,upSize,rightSize,downSize};
 
 }

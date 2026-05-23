@@ -11,6 +11,7 @@ namespace dae
 	private:
 		[[maybe_unused]] int m_PlayerIndex;
 		std::unique_ptr<Subject> m_Subject;
+		bool m_ExitFound{ false };
 
 
 	public:
@@ -26,6 +27,8 @@ namespace dae
 
 		void PlayerDeath();
 		Subject* GetSubject() const { return m_Subject.get(); }
+
+		void SetExitFound(bool value) { m_ExitFound = value; }
 
 
 	};
