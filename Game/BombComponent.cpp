@@ -10,6 +10,7 @@
 #include "SDLSoundSystem.h"
 #include "PlayerComponent.h"
 #include "GridTransform.h"
+#include "GameManager.h"
 #include <iostream>
 
 void dae::BombComponent::Update()
@@ -94,13 +95,7 @@ void dae::BombComponent::KillSurrounding(dae::GridTransform* gridTransform, glm:
 
 void dae::BombComponent::ExitRevealed() 
 {
-	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
-	auto players = scene.GetAllObjectsByComponent<PlayerComponent>();
-
-	for (auto player : players) 
-	{
-		player->GetComponentByType<PlayerComponent>()->SetExitFound(true);
-	}
+	GameManager::GetInstance().ProcessExitFound();
 
 }
 

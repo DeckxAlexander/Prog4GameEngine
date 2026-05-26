@@ -5,6 +5,7 @@
 #include "GridComponent.h"
 #include "MovementComponent.h"
 #include "PlayerComponent.h"
+#include "GameManager.h"
 #include "HealthComponent.h"
 #include <memory>
 #include <iostream>
@@ -16,6 +17,11 @@ void dae::EnemyComponent::InitializePlayers()
 	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
 	m_Players.clear();
 	m_Players = scene.GetAllObjectsByComponent<PlayerComponent>();
+}
+
+void dae::EnemyComponent::EnemyDeath()
+{
+	GameManager::GetInstance().CheckGameState();
 }
 
 void dae::EnemyComponent::SetState(std::unique_ptr<State> state)
@@ -141,6 +147,7 @@ void dae::EnemyComponent::Start()
 	m_State->Start(GetOwner());
 
 	GetOwner()->GetComponentByType<HealthComponent>()->GetSubject()->AddObserver(this);
+
 }
 
 void dae::EnemyComponent::Update()
@@ -180,6 +187,10 @@ void dae::EnemyComponent::OnNotify(const Event& event)
 		{
 			SetState(std::make_unique<SearchWanderState>());
 		}
+	}
+	if (event.event == EventType::OwnerDead)
+	{
+		EnemyDeath();
 	}
 
 }

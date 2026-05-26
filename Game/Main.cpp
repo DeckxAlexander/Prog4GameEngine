@@ -59,7 +59,7 @@ static void load()
 	GridManager.get()->SetPosition(-0.3f, -0.3f);
 	scene.Add(std::move(GridManager));
 
-	grid->SetSoftBlocksAmount(60);
+	grid->SetSoftBlocksAmount(10);
 	grid->SetupGrid();
 	grid->SpawnPowerUps();
 	grid->SpawnGrid();
@@ -131,7 +131,7 @@ static void load()
 
 
 
-	while (EnemiesSpawned < 10)
+	while (EnemiesSpawned < 1)
 	{
 		//Choose Index
 
