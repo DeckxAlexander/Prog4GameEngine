@@ -14,7 +14,9 @@ void dae::RenderComponent::Render() const
 	if (m_texture == nullptr) return;
 	const auto& pos = m_pOwner->GetWorldPosition();
 	const auto& scale = m_pOwner->GetScale();
-	Renderer::GetInstance().RenderTexture(*m_texture, pos.x, pos.y, scale.x, scale.y );
+
+	if (m_RenderOnScreen) Renderer::GetInstance().RenderTextureOnScreen(*m_texture, pos.x, pos.y, scale.x, scale.y);
+	else Renderer::GetInstance().RenderTexture(*m_texture, pos.x, pos.y, scale.x, scale.y );
 }
 
 void dae::RenderComponent::SetTexture(const std::string& filename)

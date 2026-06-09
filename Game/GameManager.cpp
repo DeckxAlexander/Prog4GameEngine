@@ -5,7 +5,7 @@
 
 void dae::GameManager::CheckGameState()
 {
-	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
+	auto& scene = dae::SceneManager::GetInstance().GetActiveScene();
 	auto enemies = scene.GetAllObjectsByComponent<EnemyComponent>();
 
 	bool enemiesAlive{ false };

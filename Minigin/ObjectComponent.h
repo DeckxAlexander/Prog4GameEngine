@@ -10,10 +10,7 @@ namespace dae
 
 	class ObjectComponent //Abstract class
 	{
-
-
 	protected:
-		//These variables are kept incase object has Render capabilities
 		bool m_IsEnabled{ true };
 		GameObject* m_pOwner;
 	public:

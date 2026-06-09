@@ -72,7 +72,7 @@ void dae::GridComponent::SetupGrid()
 
 void dae::GridComponent::SetExit() 
 {
-	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
+	auto& scene = dae::SceneManager::GetInstance().GetActiveScene();
 	bool exitSet{ false };
 	while (exitSet == false) 
 	{
@@ -105,7 +105,7 @@ void dae::GridComponent::SpawnPowerUps()
 {
 	if (m_SoftBlocksAmount < 3) return;
 
-	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
+	auto& scene = dae::SceneManager::GetInstance().GetActiveScene();
 	int randSoftwallNumber = rand() % (m_SoftBlocksAmount ) + 1;
 
 	int softwallIndex{};
@@ -195,7 +195,7 @@ void dae::GridComponent::SpawnPowerUps()
 
 void dae::GridComponent::SpawnGrid() 
 {
-	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
+	auto& scene = dae::SceneManager::GetInstance().GetActiveScene();
 
 
 

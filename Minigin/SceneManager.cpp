@@ -1,20 +1,17 @@
 #include "SceneManager.h"
+#include "SceneManager.h"
 #include "Scene.h"
 
 void dae::SceneManager::Update()
 {
-	for(auto& scene : m_scenes)
-	{
-		scene->Update();
-	}
+	m_scenes[m_ActiveSceneIndex]->Update();
+	
 }
 
 void dae::SceneManager::Render()
 {
-	for (const auto& scene : m_scenes)
-	{
-		scene->Render();
-	}
+	m_scenes[m_ActiveSceneIndex]->Render();
+	
 }
 
 dae::Scene& dae::SceneManager::CreateScene()
@@ -23,8 +20,13 @@ dae::Scene& dae::SceneManager::CreateScene()
 	return *m_scenes.back();
 }
 
-dae::Scene& dae::SceneManager::GetScene(int index)
+dae::Scene& dae::SceneManager::GetActiveScene()
 {
 
-	return *m_scenes[index];
+	return *m_scenes[m_ActiveSceneIndex];
+}
+
+void dae::SceneManager::SetActiveScene(size_t index)
+{
+	m_ActiveSceneIndex = index;
 }

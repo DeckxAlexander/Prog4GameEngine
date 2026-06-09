@@ -1,4 +1,6 @@
-﻿#include <stdexcept>
+﻿#include "Renderer.h"
+#include "Renderer.h"
+#include <stdexcept>
 #include <imgui.h>
 #include <imgui_plot.h>
 #include <backends/imgui_impl_sdl3.h>
@@ -90,6 +92,7 @@ void dae::Renderer::Destroy()
 void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y) const
 {
 	SDL_FRect dst{};
+
 	dst.x = (x - m_Camera.x) * m_Camera.zoom;
 	dst.y = (y - m_Camera.y) * m_Camera.zoom;
 	SDL_GetTextureSize(texture.GetSDLTexture(), &dst.w, &dst.h);
@@ -113,6 +116,37 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 	SDL_GetTextureSize(texture.GetSDLTexture(), &dst.w, &dst.h);
 	dst.w *= width * m_Camera.zoom;
 	dst.h *= height * m_Camera.zoom;
+
+	dst.x -= dst.w / 2.f;
+	dst.y -= dst.h / 2.f;
+	SDL_RenderTexture(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
+}
+
+void dae::Renderer::RenderTextureOnScreen(const Texture2D& texture, float x, float y) const
+{
+	SDL_FRect dst{};
+
+	dst.x = x;
+	dst.y = y;
+	SDL_GetTextureSize(texture.GetSDLTexture(), &dst.w, &dst.h);
+
+	dst.x -= dst.w / 2.f;
+	dst.y -= dst.h / 2.f;
+
+	SDL_RenderTexture(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
+
+}
+
+void dae::Renderer::RenderTextureOnScreen(const Texture2D& texture, float x, float y, float width, float height) const
+{
+	SDL_FRect dst{};
+	dst.x = x;
+	dst.y = y;
+	//dst.w = width;
+	//dst.h = height;
+	SDL_GetTextureSize(texture.GetSDLTexture(), &dst.w, &dst.h);
+	dst.w *= width;
+	dst.h *= height;
 
 	dst.x -= dst.w / 2.f;
 	dst.y -= dst.h / 2.f;

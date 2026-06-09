@@ -14,7 +14,7 @@ void dae::PlaceBombComponent::PlaceBomb()
 	if (m_pGrid == nullptr || m_CanPlace == 0) return;
 	int gridIndex = m_pGrid->GridToIndex(m_pGrid->WorldPosToTile(GetOwner()->GetWorldPosition()));
 	if (m_pGrid->GetGridLayout()[gridIndex] == GridComponent::GridValue::bomb) return;
-	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
+	auto& scene = dae::SceneManager::GetInstance().GetActiveScene();
 
 
 	std::cout << "Place Bomb";

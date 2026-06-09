@@ -12,7 +12,7 @@ dae::PlayerComponent::PlayerComponent(GameObject* pOwner, int index) : ObjectCom
 
 void dae::PlayerComponent::Start() 
 {
-	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
+	auto& scene = dae::SceneManager::GetInstance().GetActiveScene();
 	auto enemies = scene.GetAllObjectsByComponent<EnemyComponent>();
 
 	for(auto enemy : enemies) 

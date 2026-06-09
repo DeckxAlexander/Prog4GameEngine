@@ -62,7 +62,7 @@ void dae::BombComponent::Explode()
 
 void dae::BombComponent::KillSurrounding(dae::GridTransform* gridTransform, glm::ivec4 dirSizes)
 {
-	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
+	auto& scene = dae::SceneManager::GetInstance().GetActiveScene();
 	auto KillableObjects = scene.GetAllObjectsByComponent<HealthComponent>();
 
 	glm::vec4 colliderRectVer{

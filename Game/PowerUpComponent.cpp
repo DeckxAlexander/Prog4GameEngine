@@ -73,7 +73,7 @@ void dae::PowerUpComponent::OnSubjectDestroyed(Subject* subject)
 
 void dae::PowerUpComponent::InitializePlayers()
 {
-	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
+	auto& scene = dae::SceneManager::GetInstance().GetActiveScene();
 	m_PlayersColliders.clear();
 	auto players = scene.GetAllObjectsByComponent<PlayerComponent>();
 	for (auto player : players) 

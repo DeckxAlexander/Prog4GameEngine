@@ -1,3 +1,4 @@
+#include "InputManager.h"
 #include <backends/imgui_impl_sdl3.h>
 #include "InputManager.h"
 #include <iostream>
@@ -151,6 +152,23 @@ void dae::InputManager::UnbindGameObject(GameObject* go)
 				return ptr->GetGameObject() != nullptr && ptr->GetGameObject() == go;
 			}),
 		m_KeyBindings.end());
+
+	m_MouseBindings.erase(
+		std::remove_if(m_MouseBindings.begin(), m_MouseBindings.end(),
+			[go](const MouseBinding& b)
+			{
+				auto ptr = dynamic_cast<GameObjectCommand*>(b.command.get());
+				if (ptr == nullptr) return false;
+
+				return ptr->GetGameObject() != nullptr && ptr->GetGameObject() == go;
+			}),
+		m_MouseBindings.end());
+}
+
+void dae::InputManager::UnbindAll()
+{
+	m_KeyBindings.clear();
+	m_MouseBindings.clear();
 }
 
 void dae::InputManager::AddController(std::unique_ptr<Controller> controller)

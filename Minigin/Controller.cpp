@@ -58,7 +58,7 @@ void dae::Controller::ProcessInput()
 		if (abs(leftX) < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) leftX = 0;
 		if (abs(leftY) < XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) leftY = 0;
 
-		if (abs(rightX) < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) rightX = 0;
+		if (abs(rightX) < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) rightX = 0; 
 		if (abs(rightY) < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) rightY = 0;
 
 		float normLX = leftX / 32767.0f;

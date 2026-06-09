@@ -42,6 +42,7 @@ namespace dae
 		void UnbindMouseCommand(uint8_t button, KeyState state);
 
 		void UnbindGameObject(GameObject* go);
+		void UnbindAll();
 
 		void AddController(std::unique_ptr<Controller> controller);
 		const std::vector<std::unique_ptr<Controller>>& GetControllers() 

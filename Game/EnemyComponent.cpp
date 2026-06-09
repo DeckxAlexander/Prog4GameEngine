@@ -14,7 +14,7 @@
 
 void dae::EnemyComponent::InitializePlayers() 
 {
-	auto& scene = dae::SceneManager::GetInstance().GetScene(0);
+	auto& scene = dae::SceneManager::GetInstance().GetActiveScene();
 	m_Players.clear();
 	m_Players = scene.GetAllObjectsByComponent<PlayerComponent>();
 }
