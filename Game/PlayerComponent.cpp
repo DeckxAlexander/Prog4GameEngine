@@ -2,6 +2,7 @@
 #include "EventManagers.h"
 #include "SceneManager.h"
 #include "EnemyComponent.h"
+#include "GameManager.h"
 #include <memory>
 
 
@@ -10,7 +11,12 @@ dae::PlayerComponent::PlayerComponent(GameObject* pOwner, int index) : ObjectCom
 	
 }
 
-void dae::PlayerComponent::Start() 
+void dae::PlayerComponent::Respawn()
+{
+	GetOwner()->SetPosition(50.f, 50.f);
+}
+
+void dae::PlayerComponent::Start()
 {
 	auto& scene = dae::SceneManager::GetInstance().GetActiveScene();
 	auto enemies = scene.GetAllObjectsByComponent<EnemyComponent>();
@@ -27,8 +33,19 @@ void dae::PlayerComponent::Start()
 
 void dae::PlayerComponent::PlayerDeath()
 {
-	if (m_PlayerIndex == 0) m_Subject->Notify(Event{ EventType::PlayerDead, this });
-	GetOwner()->MarkForDelete();
+	m_PlayerLives--;
+
+	if (m_PlayerLives <= 0) 
+	{ 
+		m_Subject->Notify(Event{ EventType::PlayerDead, this }); 
+		GameManager::GetInstance().CheckPlayerDeath();
+		GetOwner()->MarkForDelete();
+	}
+	else 
+	{
+		Respawn();
+	}
+	
 
 
 }

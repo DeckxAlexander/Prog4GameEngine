@@ -1,0 +1,5 @@
+seed=500
+width=31
+height=13
+bcount=0
+blockscount=1

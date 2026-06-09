@@ -1,6 +1,9 @@
 #include "GameManager.h"
 #include "EnemyComponent.h"
 #include "SceneManager.h"
+#include "PlayerComponent.h"
+#include "GameSceneLoaderComponent.h"
+#include "GameObject.h"
 #include <iostream>
 
 void dae::GameManager::CheckGameState()
@@ -18,17 +21,53 @@ void dae::GameManager::CheckGameState()
 		}
 	}
 
-	if (!enemiesAlive && m_ExitFound) ProcessWin();
+	if (!enemiesAlive) ProcessWin();
 
 }
 
 void dae::GameManager::ProcessWin()
 {
-	std::cout << "WON";
+	m_CurrentLevel++;
+	auto players = SceneManager::GetInstance().GetActiveScene().GetAllObjectsByComponent<PlayerComponent>();
+	std::vector<int> savedLives(m_PlayerAmount);
+	for (auto player : players) 
+	{
+		auto playerComp = player->GetComponentByType<PlayerComponent>();
+		savedLives[playerComp->m_PlayerIndex] = playerComp->m_PlayerLives;
+	}
+	std::string filename = "Levels/Level" + std::to_string(m_CurrentLevel) + ".txt";
+
+	GameSceneLoader::GetInstance().LoadLevelFromFile(filename, m_PlayerAmount, false);
+
+	players = SceneManager::GetInstance().GetActiveScene().GetAllObjectsByComponent<PlayerComponent>();
+	for (auto player : players)
+	{
+		auto playerComp = player->GetComponentByType<PlayerComponent>();
+		int lives = savedLives[playerComp->m_PlayerIndex];
+		playerComp->m_PlayerLives = savedLives[playerComp->m_PlayerIndex];
+		if (lives <= 0) playerComp->PlayerDeath();
+
+	}
+
 }
 
-void dae::GameManager::ProcessExitFound()
+void dae::GameManager::ResetGame()
 {
-	m_ExitFound = true;
-	CheckGameState();
+	m_CurrentLevel = 1;
 }
+
+void dae::GameManager::SetPlayerAmount(int amount)
+{
+	m_PlayerAmount = amount;
+}
+
+void dae::GameManager::CheckPlayerDeath()
+{
+
+	auto players = SceneManager::GetInstance().GetActiveScene().GetAllObjectsByComponent<PlayerComponent>();
+	if (players.size() < 2) std::cout << "GameOver";
+
+}
+
+
+

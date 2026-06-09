@@ -9,15 +9,18 @@ namespace dae
 	public:
 		void CheckGameState();
 		void ProcessWin();
-		void ProcessExitFound();
+		void ResetGame();
+		void SetPlayerAmount(int amount);
+
+		void CheckPlayerDeath();
 		//void ProcessLose();
 
 	private:
 		friend class Singleton<GameManager>;
 		GameManager() = default;
 		bool m_ExitFound{false};
-
-
+		int m_CurrentLevel{ 1 };
+		int m_PlayerAmount{};
 
 	};
 }

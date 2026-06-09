@@ -7,14 +7,17 @@ namespace dae {
 	{
 	private:
 		GameObject* m_Player{};
+		float m_MapX;
+		float m_MapY;
 		
+
 		void InitializePlayer();
 	public:
 		virtual void Start() override;
 		virtual void Update() override;
 		virtual void Render() const override {}
 
-		CameraFollowerComponent(GameObject* pOwner);
+		CameraFollowerComponent(float mapWidth, float mapHeight);
 		~CameraFollowerComponent();
 		CameraFollowerComponent(const CameraFollowerComponent& other) = delete;
 		CameraFollowerComponent(CameraFollowerComponent&& other) = delete;

@@ -15,6 +15,7 @@ namespace dae
 		Scene& GetActiveScene();
 
 		void SetActiveScene(size_t index);
+		void SetActiveScene(const Scene& scene);
 
 		void Update();
 		void Render();

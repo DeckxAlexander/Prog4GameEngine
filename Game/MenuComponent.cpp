@@ -2,8 +2,11 @@
 #include "TextComponent.h"
 #include "SceneManager.h"
 #include "GameSceneLoaderComponent.h"
+#include "GameManager.h"
 #include <iostream>
 #include <stdexcept>
+
+
 
 void dae::MenuComponent::AddButton(TextComponent* text, MenuEvent event)
 {
@@ -30,12 +33,12 @@ void dae::MenuComponent::ExecuteSelected()
 {
 	std::cout << "Execute";
 
-	auto sceneloader = GetOwner()->GetComponentByType<GameSceneLoaderComponent>();
-	if (sceneloader == nullptr) return;
+
 	if (m_Buttons[m_SelectedIndex].event == MenuEvent::Solo) 
 	{
-		const GameSceneLoaderComponent::SceneDetails details{ 64 , 10 , 1 , false };
-		sceneloader->LoadScene(details);
+		GameManager::GetInstance().ResetGame();
+		GameManager::GetInstance().SetPlayerAmount(1);
+		GameSceneLoader::GetInstance().LoadLevelFromFile("Levels/Level1.txt",1);
 	}
 	if (m_Buttons[m_SelectedIndex].event == MenuEvent::Coop)
 	{

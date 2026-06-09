@@ -19,7 +19,6 @@ namespace dae
 		virtual void Update() override;
 		virtual void Render() const override {}
 		void InitializePlayers();
-		void EnemyDeath();
 
 		void SetState(std::unique_ptr<State> state);
 		void SearchPlayer();

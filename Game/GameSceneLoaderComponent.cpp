@@ -8,7 +8,6 @@
 #include "Scene.h"
 #include "FPSCounterComponent.h"
 #include "Renderer.h"
-
 #include "HealthComponent.h"
 #include "InputManager.h"
 #include "SteamObserver.h"
@@ -26,23 +25,18 @@
 #include "CameraFollower.h"
 #include "MenuComponent.h"
 #include "MenuCommands.h"
+#include <fstream>
 
-void dae::GameSceneLoaderComponent::Start()
+void dae::GameSceneLoader::SetupScene(SceneDetails details)
 {
-	dae::SceneManager::GetInstance().CreateScene(); //Solo
-	dae::SceneManager::GetInstance().CreateScene(); //Coop
-	dae::SceneManager::GetInstance().CreateScene(); //Versus
-}
-
-void dae::GameSceneLoaderComponent::LoadScene(SceneDetails details)
-{
-	dae::InputManager::GetInstance().UnbindAll();
-	
 	srand(details.randomSeed);
-	dae::SceneManager::GetInstance().SetActiveScene(1);
-	auto& scene = dae::SceneManager::GetInstance().GetActiveScene();
+	auto& scene = dae::SceneManager::GetInstance().CreateScene();
+	dae::SceneManager::GetInstance().SetActiveScene(scene);
 
-	dae::Renderer::GetInstance().GetCamera().SetViewDimensions(640, 280); //960 420
+	auto& camera = dae::Renderer::GetInstance().GetCamera();
+	camera.SetViewDimensions(640, 280); //960 420
+	camera.x = 0;
+	camera.y = 0;
 	auto tileGameObject = std::make_unique<dae::GameObject>();
 	auto tileRenderComponent = std::make_unique<dae::RenderComponent>(tileGameObject.get(), "background2.png");
 	tileGameObject.get()->AddComponent(std::move(tileRenderComponent));
@@ -50,20 +44,17 @@ void dae::GameSceneLoaderComponent::LoadScene(SceneDetails details)
 	scene.Add(std::move(tileGameObject));
 
 	auto GridManager = std::make_unique<dae::GameObject>();
-	auto GridComp = std::make_unique<dae::GridComponent>(GridManager.get(), 31, 13);
+	auto GridComp = std::make_unique<dae::GridComponent>(GridManager.get(), details.width, details.height); //31 13
 	dae::GridComponent* grid = GridComp.get();
 	GridComp->SetTileScale(32.f, 32.f);
 	GridManager.get()->AddComponent(std::move(GridComp));
 	GridManager.get()->SetPosition(-0.3f, -0.3f);
 	scene.Add(std::move(GridManager));
-
-	grid->SetSoftBlocksAmount(40);
+	grid->SetSoftBlocksAmount(details.blocksCount);
 	grid->SetupGrid();
 	grid->SpawnPowerUps();
 	grid->SpawnGrid();
-
 	dae::GridLocator::SetGrid(grid);
-
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 
 	auto fpso = std::make_unique<dae::GameObject>();
@@ -78,45 +69,52 @@ void dae::GameSceneLoaderComponent::LoadScene(SceneDetails details)
 
 	scene.Add(std::move(fpso));
 
+	//Players
+	if (details.playersAmount > 0) dae::InputManager::GetInstance().UnbindAll();
 
 	if (details.playersAmount == 1) 
 	{
 		auto CameraFollowerGameObject = std::make_unique<dae::GameObject>();
-		auto CameraFollowerComponent = std::make_unique<dae::CameraFollowerComponent>(CameraFollowerGameObject.get());
+		auto CameraFollowerComponent = std::make_unique<dae::CameraFollowerComponent>(float(details.width)*32.f, float(details.height) * 32.f);
 		CameraFollowerGameObject.get()->AddComponent(std::move(CameraFollowerComponent));
 		scene.Add(std::move(CameraFollowerGameObject));
 	}
-	//Player
-	auto playerGameObject = std::make_unique<dae::GameObject>();
-	auto playerRenderComponent = std::make_unique<dae::RenderComponent>(playerGameObject.get(), "Bomberman.png");
-	auto playerMovementComponent = std::make_unique<dae::MovementComponent>(playerGameObject.get(), 50.f, grid);
-	auto playerHealthComponent = std::make_unique<dae::HealthComponent>(playerGameObject.get());
-	auto playerCollider = std::make_unique<dae::CollisionComponent>(playerGameObject.get(), 18.f, 27.f, 'e');
-	auto playerplacebombcomponent = std::make_unique<dae::PlaceBombComponent>(playerGameObject.get(), grid);
-	auto playerComponent = std::make_unique<dae::PlayerComponent>(playerGameObject.get(), 0);
-	playerGameObject.get()->AddComponent(std::move(playerRenderComponent));
-	playerGameObject.get()->AddComponent(std::move(playerMovementComponent));
-	playerGameObject.get()->AddComponent(std::move(playerCollider));
-	playerGameObject.get()->AddComponent(std::move(playerplacebombcomponent));
-	playerGameObject.get()->AddComponent(std::move(playerHealthComponent));
-	playerGameObject.get()->AddComponent(std::move(playerComponent));
-	playerGameObject.get()->SetPosition(50, 50);
-	playerGameObject.get()->SetScale(1.5f, 1.5f);
 
-	//Bindings
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_D, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_A, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_W, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, -1.f }));
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_S, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, 1.f }));
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_X, dae::KeyState::Up, std::make_unique<dae::PlaceBomb>(playerGameObject.get()), nullptr);
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_C, dae::KeyState::Up, std::make_unique<dae::DetonateBomb>(playerGameObject.get()), nullptr);
+	for (int index{}; index < details.playersAmount; index++)
+	{
+	
+		auto playerGameObject = std::make_unique<dae::GameObject>();
+		auto playerRenderComponent = std::make_unique<dae::RenderComponent>(playerGameObject.get(), "Bomberman.png");
+		auto playerMovementComponent = std::make_unique<dae::MovementComponent>(playerGameObject.get(), 50.f, grid);
+		auto playerHealthComponent = std::make_unique<dae::HealthComponent>(playerGameObject.get());
+		auto playerCollider = std::make_unique<dae::CollisionComponent>(playerGameObject.get(), 18.f, 27.f, 'e');
+		auto playerplacebombcomponent = std::make_unique<dae::PlaceBombComponent>(playerGameObject.get(), grid);
+		auto playerComponent = std::make_unique<dae::PlayerComponent>(playerGameObject.get(), index);
+		playerGameObject.get()->AddComponent(std::move(playerRenderComponent));
+		playerGameObject.get()->AddComponent(std::move(playerMovementComponent));
+		playerGameObject.get()->AddComponent(std::move(playerCollider));
+		playerGameObject.get()->AddComponent(std::move(playerplacebombcomponent));
+		playerGameObject.get()->AddComponent(std::move(playerHealthComponent));
+		playerGameObject.get()->AddComponent(std::move(playerComponent));
+		playerGameObject.get()->SetPosition(50, 50);
+		playerGameObject.get()->SetScale(1.5f, 1.5f);
 
-	auto controller1 = std::make_unique<Controller>(0);
-	controller1->BindAxis(std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 1.f }), true);
-	dae::InputManager::GetInstance().AddController(std::move(controller1));
+		//Bindings
+		if (index == 0) 
+		{
+			dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_D, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
+			dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_A, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
+			dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_W, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, -1.f }));
+			dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_S, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, 1.f }));
+			dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_X, dae::KeyState::Up, std::make_unique<dae::PlaceBomb>(playerGameObject.get()), nullptr);
+			dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_C, dae::KeyState::Up, std::make_unique<dae::DetonateBomb>(playerGameObject.get()), nullptr);
+		}
+		auto controller1 = std::make_unique<Controller>(index);
+		controller1->BindAxis(std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 1.f }), true);
+		dae::InputManager::GetInstance().AddController(std::move(controller1));
 
-	scene.Add(std::move(playerGameObject));
-
+		scene.Add(std::move(playerGameObject));
+	}
 
 	auto gridLayout = grid->GetGridLayout();
 	int EnemiesSpawned = 0;
@@ -131,7 +129,7 @@ void dae::GameSceneLoaderComponent::LoadScene(SceneDetails details)
 		possibleIndexes.push_back(int(i));
 	}
 
-	while (EnemiesSpawned < details.enemyCount)
+	while (EnemiesSpawned < details.balloomCount)
 	{
 		//Choose Index
 
@@ -223,27 +221,60 @@ void dae::GameSceneLoaderComponent::LoadScene(SceneDetails details)
 	//}
 
 
-
 	scene.Start();
 
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-dae::GameSceneLoaderComponent::GameSceneLoaderComponent() : ObjectComponent(nullptr)
+void dae::GameSceneLoader::LoadLevelFromFile(std::string filename, int playersAmount, bool isVersus)
 {
+	const auto fullPath = m_dataPath / filename;
+	std::ifstream file(fullPath);
+	if (!file)
+	{
+		throw std::runtime_error("Failed to open level file: " + filename);
+	}
+
+	SceneDetails sceneDetails{};
+	std::string line;
+	while (std::getline(file, line))
+	{
+		if (line.empty())
+			break;
+
+		size_t pos = line.find('=');
+
+		if (pos == std::string::npos)
+			continue;
+
+		std::string key = line.substr(0, pos);
+		std::string value = line.substr(pos + 1);
+
+		if (key == "seed")
+			sceneDetails.randomSeed = std::stoi(value);
+		else if (key == "width")
+			sceneDetails.width = std::stoi(value);
+		else if (key == "height")
+			sceneDetails.height = std::stoi(value);
+		else if (key == "blockscount")
+			sceneDetails.blocksCount = std::stoi(value);
+		else if (key == "bcount")
+			sceneDetails.balloomCount = std::stoi(value);
+		else if (key == "ocount")
+			sceneDetails.onealCount = std::stoi(value);
+		else if (key == "dcount")
+			sceneDetails.dollCount = std::stoi(value);
+		else if (key == "mcount")
+			sceneDetails.minvoCount = std::stoi(value);
+	}
+	sceneDetails.playersAmount = playersAmount;
+	sceneDetails.isVersus = isVersus;
+	file.close();
+	SetupScene(sceneDetails);
 }
+
+
+
+
+
+

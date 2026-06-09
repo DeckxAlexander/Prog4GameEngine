@@ -38,7 +38,10 @@ void dae::Scene::Cleanup()
 
 void Scene::RemoveAll()
 {
-	m_objects.clear();
+	for (const auto& object : m_objects)
+	{
+		object->MarkForDelete();
+	}
 }
 
 void Scene::Update()

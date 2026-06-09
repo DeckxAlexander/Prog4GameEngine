@@ -1,5 +1,6 @@
 #include "SceneManager.h"
 #include "SceneManager.h"
+#include "SceneManager.h"
 #include "Scene.h"
 
 void dae::SceneManager::Update()
@@ -29,4 +30,18 @@ dae::Scene& dae::SceneManager::GetActiveScene()
 void dae::SceneManager::SetActiveScene(size_t index)
 {
 	m_ActiveSceneIndex = index;
+}
+
+void dae::SceneManager::SetActiveScene(const Scene& scene)
+{
+	auto it = std::find_if(m_scenes.begin(), m_scenes.end(),
+		[&scene](const std::unique_ptr<Scene>& s)
+		{
+			return s.get() == &scene;
+		});
+
+	if (it != m_scenes.end())
+	{
+		m_ActiveSceneIndex = std::distance(m_scenes.begin(), it);
+	}
 }

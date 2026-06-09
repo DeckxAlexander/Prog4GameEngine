@@ -1,38 +1,45 @@
 #pragma once
 #include "ObjectComponent.h"
+#include "Singleton.h"
+#include <filesystem>
 namespace dae
 {
-
-	class TextComponent;
-	class GameSceneLoaderComponent : public ObjectComponent
+	class GameSceneLoader : public Singleton<GameSceneLoader>
 	{
 	public:
 		struct SceneDetails
 		{
 			int randomSeed;
-			int enemyCount;
+			int width;
+			int height;
 			int playersAmount;
 			bool isVersus;
+
+			int blocksCount;
+			int balloomCount;
+			int onealCount;
+			int dollCount;
+			int minvoCount;
+			
 		};
 
+		void LoadLevelFromFile(std::string filename, int playersAmount, bool isVersus = false);
+		void SetDataPath(const std::filesystem::path& filePath) 
+		{
+			m_dataPath = filePath;
+		}
 
-
-		virtual void Start() override;
-		virtual void Update() override {}
-		virtual void Render() const override {}
-
-		void LoadScene(SceneDetails details);
-
-
-		GameSceneLoaderComponent();
-		~GameSceneLoaderComponent() = default;
-		GameSceneLoaderComponent(const GameSceneLoaderComponent& other) = delete;
-		GameSceneLoaderComponent(GameSceneLoaderComponent&& other) = delete;
-		GameSceneLoaderComponent& operator=(const GameSceneLoaderComponent& other) = delete;
-		GameSceneLoaderComponent& operator=(GameSceneLoaderComponent&& other) = delete;
+		GameSceneLoader() = default;
+		~GameSceneLoader() = default;
+		GameSceneLoader(const GameSceneLoader& other) = delete;
+		GameSceneLoader(GameSceneLoader&& other) = delete;
+		GameSceneLoader& operator=(const GameSceneLoader& other) = delete;
+		GameSceneLoader& operator=(GameSceneLoader&& other) = delete;
 
 	private:
-
+		void SetupScene(SceneDetails details);
+		std::filesystem::path m_dataPath{};
+		friend class Singleton<GameSceneLoader>;
 	};
 
 

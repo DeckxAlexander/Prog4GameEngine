@@ -93,11 +93,7 @@ void dae::BombComponent::KillSurrounding(dae::GridTransform* gridTransform, glm:
 }
 
 
-void dae::BombComponent::ExitRevealed() 
-{
-	GameManager::GetInstance().ProcessExitFound();
 
-}
 
 glm::ivec4 dae::BombComponent::BreakSoftBlocks(dae::GridComponent* grid, glm::ivec2 gpos)
 {
@@ -115,7 +111,6 @@ glm::ivec4 dae::BombComponent::BreakSoftBlocks(dae::GridComponent* grid, glm::iv
 		{
 			grid->GetGridPtrs()[gridIndex]->MarkForDelete();
 			grid->GetGridLayout()[gridIndex] = GridComponent::GridValue::empty;
-			if (grid->IsExit(gridIndex)) ExitRevealed();
 
 		}
 	}
@@ -132,7 +127,6 @@ glm::ivec4 dae::BombComponent::BreakSoftBlocks(dae::GridComponent* grid, glm::iv
 		{
 			grid->GetGridPtrs()[gridIndex]->MarkForDelete();
 			grid->GetGridLayout()[gridIndex] = GridComponent::GridValue::empty;
-			if (grid->IsExit(gridIndex)) ExitRevealed();
 		}
 	}
 
@@ -148,7 +142,6 @@ glm::ivec4 dae::BombComponent::BreakSoftBlocks(dae::GridComponent* grid, glm::iv
 		{
 			grid->GetGridPtrs()[gridIndex]->MarkForDelete();
 			grid->GetGridLayout()[gridIndex] = GridComponent::GridValue::empty;
-			if (grid->IsExit(gridIndex)) ExitRevealed();
 		}
 	}
 
@@ -164,7 +157,6 @@ glm::ivec4 dae::BombComponent::BreakSoftBlocks(dae::GridComponent* grid, glm::iv
 		{
 			grid->GetGridPtrs()[gridIndex]->MarkForDelete();
 			grid->GetGridLayout()[gridIndex] = GridComponent::GridValue::empty;
-			if (grid->IsExit(gridIndex)) ExitRevealed();
 		}
 	}
 

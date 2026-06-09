@@ -41,12 +41,17 @@ namespace fs = std::filesystem;
 
 static void load()
 {
+	fs::path data_location = "./Data/";
+	if (!fs::exists(data_location))
+		data_location = "../Data/";
+
+	dae::GameSceneLoader::GetInstance().SetDataPath(data_location);
+
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
 	dae::SceneManager::GetInstance().SetActiveScene(0);
 	auto menuGameObject = std::make_unique<dae::GameObject>();
 	menuGameObject->AddComponent(std::make_unique<dae::MenuComponent>());
-	menuGameObject->AddComponent(std::make_unique<dae::GameSceneLoaderComponent>());
 	auto menucomponent = menuGameObject->GetComponentByType<dae::MenuComponent>();
 
 	//SOLO BUTTON
@@ -116,9 +121,6 @@ static void load()
 	scene.Start();
 	//SOUND
 
-	fs::path data_location = "./Data/";
-	if (!fs::exists(data_location))
-		data_location = "../Data/";
 
 
 	const auto fullPath = data_location / "BombExplodes.wav";
