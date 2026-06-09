@@ -59,7 +59,7 @@ static void load()
 	GridManager.get()->SetPosition(-0.3f, -0.3f);
 	scene.Add(std::move(GridManager));
 
-	grid->SetSoftBlocksAmount(10);
+	grid->SetSoftBlocksAmount(40);
 	grid->SetupGrid();
 	grid->SpawnPowerUps();
 	grid->SpawnGrid();

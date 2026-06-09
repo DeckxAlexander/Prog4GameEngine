@@ -15,6 +15,14 @@ namespace dae
 
 	};
 
+	class NullSoundSystem : public ISoundSystem
+	{
+	public:
+		virtual void PlaySound(const uint32_t ) {}
+		virtual void LoadSound(const uint32_t , const std::string& )  {}
+		virtual void Destroy() {}
+
+	};
 
 
 	class SoundSystemLocator final
