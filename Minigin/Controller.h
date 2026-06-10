@@ -64,6 +64,8 @@ public:
 	void BindCommand(uint16_t button, KeyState state,std::unique_ptr<Command> command,std::unique_ptr<CommandValue> value);
 	void BindAxis(std::unique_ptr<Command> command,std::unique_ptr<CommandValue> value,bool isLeft);
 	void UnbindCommand(uint16_t key, KeyState state);
+	void UnbindAxis(bool isLeft);
+	void UnbindGameObject(GameObject* gameObject);
 
 private:
 	int m_ControllerIndex;

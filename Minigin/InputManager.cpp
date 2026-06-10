@@ -163,12 +163,17 @@ void dae::InputManager::UnbindGameObject(GameObject* go)
 				return ptr->GetGameObject() != nullptr && ptr->GetGameObject() == go;
 			}),
 		m_MouseBindings.end());
+	for (auto& controller : m_Controllers)
+	{
+		controller->UnbindGameObject(go);
+	}
 }
 
 void dae::InputManager::UnbindAll()
 {
 	m_KeyBindings.clear();
 	m_MouseBindings.clear();
+	m_Controllers.clear();
 }
 
 void dae::InputManager::AddController(std::unique_ptr<Controller> controller)

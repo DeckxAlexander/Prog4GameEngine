@@ -1,4 +1,6 @@
 #include "Controller.h"
+#include "Controller.h"
+#include "Controller.h"
 #ifdef WIN32
 #include <Windows.h>
 #include <Xinput.h>
@@ -224,4 +226,41 @@ void dae::Controller::UnbindCommand(uint16_t key, KeyState state)
 		m_ControllerBindings.end());
 
 
+}
+
+void dae::Controller::UnbindAxis(bool isLeft)
+{
+	m_ControllerAxisBindings.erase(
+		std::remove_if(m_ControllerAxisBindings.begin(), m_ControllerAxisBindings.end(),
+			[isLeft](const ControllerAxisBinding& b)
+			{
+				return b.isLeft == isLeft;
+			}),
+		m_ControllerAxisBindings.end());
+}
+
+void dae::Controller::UnbindGameObject(GameObject* gameObject)
+{
+
+	m_ControllerBindings.erase(
+		std::remove_if(m_ControllerBindings.begin(), m_ControllerBindings.end(),
+			[gameObject](const ControllerBinding& b)
+			{
+				auto ptr = dynamic_cast<GameObjectCommand*>(b.command.get());
+				if (ptr == nullptr) return false;
+
+				return ptr->GetGameObject() != nullptr && ptr->GetGameObject() == gameObject;
+			}),
+		m_ControllerBindings.end());
+
+	m_ControllerAxisBindings.erase(
+		std::remove_if(m_ControllerAxisBindings.begin(), m_ControllerAxisBindings.end(),
+			[gameObject](const ControllerAxisBinding& b)
+			{
+				auto ptr = dynamic_cast<GameObjectCommand*>(b.command.get());
+				if (ptr == nullptr) return false;
+
+				return ptr->GetGameObject() != nullptr && ptr->GetGameObject() == gameObject;
+			}),
+		m_ControllerAxisBindings.end());
 }
