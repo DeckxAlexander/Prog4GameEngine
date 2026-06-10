@@ -5,13 +5,12 @@
 #include "PlaceBombComponent.h"
 namespace dae
 {
-	class TestCommand final : public Command
+	class ToggleMuteCommand final : public Command
 	{
 	public:
-		void Execute([[maybe_unused]] CommandValue* value) override
-		{
-			if (value == nullptr) std::cout << "Test";
-		}
+		void Execute(CommandValue* value) override;
+	private:
+		bool m_Toggle{ false };
 	};
 
 	class MoveAround final : public GameObjectCommand

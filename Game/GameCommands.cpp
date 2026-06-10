@@ -1,3 +1,5 @@
+#include "GameCommands.h"
+#include "SoundSystem.h"
 //#include "GameCommands.h"
 //#include "GameObject.h"
 //#include "MovementComponent.h"
@@ -16,3 +18,10 @@
 //{
 //	if (auto comp = m_GameObject->GetComponentByType<PlaceBombComponent>()) comp->PlaceBomb();
 //}
+
+void dae::ToggleMuteCommand::Execute(CommandValue*)
+{
+	m_Toggle = !m_Toggle;
+	SoundSystemLocator::get_sound_system().Mute(m_Toggle);
+
+}

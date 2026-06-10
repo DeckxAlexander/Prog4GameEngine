@@ -11,6 +11,7 @@ namespace dae
 		virtual ~ISoundSystem() = default;
 		virtual void PlaySound(const uint32_t id) = 0;
 		virtual void LoadSound(const uint32_t id, const std::string& path) = 0;
+		virtual void Mute(bool enabled) = 0;
 		virtual void Destroy() = 0;
 
 	};
@@ -20,6 +21,7 @@ namespace dae
 	public:
 		virtual void PlaySound(const uint32_t ) {}
 		virtual void LoadSound(const uint32_t , const std::string& )  {}
+		virtual void Mute(bool) {}
 		virtual void Destroy() {}
 
 	};

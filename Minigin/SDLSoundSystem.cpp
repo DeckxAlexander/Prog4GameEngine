@@ -1,4 +1,5 @@
 #include "SDLSoundSystem.h"
+#include "SDLSoundSystem.h"
 #include "SoundEventQueue.h"
 #include <thread>
 #include <atomic>
@@ -40,6 +41,11 @@ namespace dae {
         {
             std::lock_guard<std::mutex> lock(m_Mutex);
             m_Queue.Push({ soundId });
+        }
+
+        void SetVolume(float value) 
+        {
+            MIX_SetMixerGain(m_Mixer, value);
         }
 
         void LoadSound(const uint32_t id, const std::string& path)
@@ -122,6 +128,11 @@ namespace dae {
     void SDLSoundSystem::LoadSound(const uint32_t id, const std::string& path)
     {
         m_Impl->LoadSound(id, path);
+    }
+    void SDLSoundSystem::Mute(bool enabled)
+    {
+        if (enabled) m_Impl->SetVolume(0.f);
+        else m_Impl->SetVolume(1.f);
     }
     void SDLSoundSystem::Destroy()
     {
