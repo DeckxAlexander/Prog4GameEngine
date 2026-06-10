@@ -34,11 +34,22 @@ void dae::GameSceneLoader::SetupScene(SceneDetails details)
 	dae::SceneManager::GetInstance().SetActiveScene(scene);
 
 	auto& camera = dae::Renderer::GetInstance().GetCamera();
-	camera.SetViewDimensions(640, 280); //960 420
-	camera.x = 0;
-	camera.y = 0;
+	if (details.playersAmount == 1)
+	{ 
+		camera.SetViewDimensions(640, 280); //960 420
+		camera.x = 0;
+		camera.y = 0;
+	}
+	else 
+	{ 
+		camera.SetViewDimensions(1235, 560); 
+		camera.x = 0;
+		camera.y = -70;
+	}
+
 	auto tileGameObject = std::make_unique<dae::GameObject>();
 	auto tileRenderComponent = std::make_unique<dae::RenderComponent>(tileGameObject.get(), "background2.png");
+	tileRenderComponent->SetRenderOnScreen(true);
 	tileGameObject.get()->AddComponent(std::move(tileRenderComponent));
 	tileGameObject->SetPosition(512.f, 288.f);
 	scene.Add(std::move(tileGameObject));
@@ -98,7 +109,7 @@ void dae::GameSceneLoader::SpawnPlayers(int amount)
 	{
 		auto playerGameObject = std::make_unique<dae::GameObject>();
 		auto playerRenderComponent = std::make_unique<dae::RenderComponent>(playerGameObject.get(), "Bomberman.png");
-		auto playerMovementComponent = std::make_unique<dae::MovementComponent>(playerGameObject.get(), 50.f, grid);
+		auto playerMovementComponent = std::make_unique<dae::MovementComponent>(playerGameObject.get(), 60.f, grid);
 		auto playerHealthComponent = std::make_unique<dae::HealthComponent>(playerGameObject.get());
 		auto playerCollider = std::make_unique<dae::CollisionComponent>(playerGameObject.get(), 18.f, 27.f, 'e');
 		auto playerplacebombcomponent = std::make_unique<dae::PlaceBombComponent>(playerGameObject.get(), grid);
@@ -109,7 +120,7 @@ void dae::GameSceneLoader::SpawnPlayers(int amount)
 		playerGameObject.get()->AddComponent(std::move(playerplacebombcomponent));
 		playerGameObject.get()->AddComponent(std::move(playerHealthComponent));
 		playerGameObject.get()->AddComponent(std::move(playerComponent));
-		playerGameObject.get()->SetPosition(50, 50);
+		playerGameObject.get()->SetPosition(50.f, 50.f*(index+1));
 		playerGameObject.get()->SetScale(1.5f, 1.5f);
 
 		//Bindings
@@ -122,10 +133,11 @@ void dae::GameSceneLoader::SpawnPlayers(int amount)
 			dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_X, dae::KeyState::Up, std::make_unique<dae::PlaceBomb>(playerGameObject.get()), nullptr);
 			dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_C, dae::KeyState::Up, std::make_unique<dae::DetonateBomb>(playerGameObject.get()), nullptr);
 		}
-		auto controller1 = std::make_unique<Controller>(index);
-		controller1->BindAxis(std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 1.f }), true);
-		dae::InputManager::GetInstance().AddController(std::move(controller1));
-
+		else {
+			auto controller1 = std::make_unique<Controller>(index-1);
+			controller1->BindAxis(std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 1.f }), true);
+			dae::InputManager::GetInstance().AddController(std::move(controller1));
+		}
 		scene.Add(std::move(playerGameObject));
 	}
 }
@@ -171,6 +183,32 @@ void dae::GameSceneLoader::SpawnEnemies(SceneDetails details)
 
 		EnemiesSpawned++;
 	}
+
+	EnemiesSpawned = 0;
+	while (EnemiesSpawned < details.dollCount)
+	{
+		int chosenIndex = possibleIndexes[rand() % possibleIndexes.size()];
+		possibleIndexes.erase(std::remove(possibleIndexes.begin(), possibleIndexes.end(), chosenIndex), possibleIndexes.end());
+		int x = chosenIndex % grid->GetColums();
+		int y = chosenIndex / grid->GetColums();
+
+		SpawnDoll(x, y, grid, scene);
+
+		EnemiesSpawned++;
+	}
+
+	EnemiesSpawned = 0;
+	while (EnemiesSpawned < details.minvoCount)
+	{
+		int chosenIndex = possibleIndexes[rand() % possibleIndexes.size()];
+		possibleIndexes.erase(std::remove(possibleIndexes.begin(), possibleIndexes.end(), chosenIndex), possibleIndexes.end());
+		int x = chosenIndex % grid->GetColums();
+		int y = chosenIndex / grid->GetColums();
+
+		SpawnMinvo(x, y, grid, scene);
+
+		EnemiesSpawned++;
+	}
 }
 
 void dae::GameSceneLoader::SpawnBalloom(int x, int y, GridComponent* grid, Scene& scene)
@@ -210,6 +248,69 @@ void dae::GameSceneLoader::SpawnOneal(int x, int y, GridComponent* grid, Scene& 
 	auto enemyRenderComponent = std::make_unique<dae::RenderComponent>(enemyGameObject.get(), "Oneal.png");
 	auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>(enemyGameObject.get(), 60.f, grid);
 	auto enemyChaseMovementComponent = std::make_unique<dae::ChaseMovementComponent>(enemyGameObject.get(), 60.f, grid);
+
+	if (rand() % 2 == 1)
+	{
+		enemyMovementComponent.get()->SetVelocity(0.f, 1.f);
+	}
+	else enemyMovementComponent.get()->SetVelocity(1.f, 0.f);
+
+	auto enemyHealthComponent = std::make_unique<dae::HealthComponent>(enemyGameObject.get());
+	auto enemyCollider = std::make_unique<dae::CollisionComponent>(enemyGameObject.get(), 18.f, 27.f, 'e');
+	enemyCollider.get()->AddBlockingTag('b');
+	auto enemyComponent = std::make_unique<dae::EnemyComponent>(enemyGameObject.get(), true);
+	enemyGameObject.get()->AddComponent(std::move(enemyRenderComponent));
+	enemyGameObject.get()->AddComponent(std::move(enemyCollider));
+	enemyGameObject.get()->AddComponent(std::move(enemyMovementComponent));
+	enemyGameObject.get()->AddComponent(std::move(enemyChaseMovementComponent));
+	enemyGameObject.get()->AddComponent(std::move(enemyHealthComponent));
+	enemyGameObject.get()->AddComponent(std::move(enemyComponent));
+
+	float tilescaleX = grid->GetTileScale().x;
+	float tilescaleY = grid->GetTileScale().y;
+	enemyGameObject.get()->SetPosition(tilescaleX * float(x) + tilescaleX * 0.5f, tilescaleY * float(y) + tilescaleY * 0.5f);
+	enemyGameObject.get()->SetScale(1.5f, 1.5f);
+	enemyGameObject->GetComponentByType<dae::ChaseMovementComponent>()->SetEnabled(false);
+	scene.Add(std::move(enemyGameObject));
+}
+
+void dae::GameSceneLoader::SpawnDoll(int x, int y, GridComponent* grid, Scene& scene)
+{
+	auto enemyGameObject = std::make_unique<dae::GameObject>();
+	auto enemyRenderComponent = std::make_unique<dae::RenderComponent>(enemyGameObject.get(), "Doll.png");
+	auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>(enemyGameObject.get(), 60.f, grid);
+
+	if (rand() % 2 == 1)
+	{
+		enemyMovementComponent.get()->SetVelocity(0.f, 1.f);
+	}
+	else enemyMovementComponent.get()->SetVelocity(1.f, 0.f);
+
+	auto enemyHealthComponent = std::make_unique<dae::HealthComponent>(enemyGameObject.get());
+	auto enemyCollider = std::make_unique<dae::CollisionComponent>(enemyGameObject.get(), 18.f, 27.f, 'e');
+	enemyCollider.get()->AddBlockingTag('b');
+	auto enemyComponent = std::make_unique<dae::EnemyComponent>(enemyGameObject.get(), false);
+	enemyGameObject.get()->AddComponent(std::move(enemyRenderComponent));
+	enemyGameObject.get()->AddComponent(std::move(enemyCollider));
+	enemyGameObject.get()->AddComponent(std::move(enemyMovementComponent));
+	
+	enemyGameObject.get()->AddComponent(std::move(enemyHealthComponent));
+	enemyGameObject.get()->AddComponent(std::move(enemyComponent));
+
+	float tilescaleX = grid->GetTileScale().x;
+	float tilescaleY = grid->GetTileScale().y;
+	enemyGameObject.get()->SetPosition(tilescaleX * float(x) + tilescaleX * 0.5f, tilescaleY * float(y) + tilescaleY * 0.5f);
+	enemyGameObject.get()->SetScale(1.5f, 1.5f);
+
+	scene.Add(std::move(enemyGameObject));
+}
+
+void dae::GameSceneLoader::SpawnMinvo(int x, int y, GridComponent* grid, Scene& scene)
+{
+	auto enemyGameObject = std::make_unique<dae::GameObject>();
+	auto enemyRenderComponent = std::make_unique<dae::RenderComponent>(enemyGameObject.get(), "Minvo.png");
+	auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>(enemyGameObject.get(), 80.f, grid);
+	auto enemyChaseMovementComponent = std::make_unique<dae::ChaseMovementComponent>(enemyGameObject.get(), 80.f, grid);
 
 	if (rand() % 2 == 1)
 	{

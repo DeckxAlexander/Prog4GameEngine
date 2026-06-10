@@ -6,10 +6,14 @@ void dae::HealthComponent::ProcessDeath()
 {
 	auto playerComp = GetOwner()->GetComponentByType<PlayerComponent>();
 	if (playerComp) playerComp->PlayerDeath();
+	else 
+	{
+		GetOwner()->MarkForDelete();
+	}
 
 
 	
-	//m_Subject->Notify(Event{ EventType::OwnerDead, this });
+	
 
 
 

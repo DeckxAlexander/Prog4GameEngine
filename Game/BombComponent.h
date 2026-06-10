@@ -15,6 +15,7 @@ namespace dae
 		
 
 		bool m_IsDetonating{ false };
+		bool m_IsExploding{ false };
 		PlaceBombComponent* m_Placer;
 
 		glm::ivec4 BreakSoftBlocks(GridComponent* grid, glm::ivec2 gpos);

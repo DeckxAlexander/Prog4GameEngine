@@ -47,7 +47,7 @@ static void load()
 
 	dae::GameSceneLoader::GetInstance().SetDataPath(data_location);
 
-	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
+	auto font = dae::ResourceManager::GetInstance().LoadFont("Pixel.otf", 36);
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
 	dae::SceneManager::GetInstance().SetActiveScene(0);
 	auto menuGameObject = std::make_unique<dae::GameObject>();

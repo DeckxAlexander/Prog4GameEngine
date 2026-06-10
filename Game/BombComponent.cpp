@@ -36,6 +36,8 @@ void dae::BombComponent::Render() const
 
 void dae::BombComponent::Explode() 
 {
+	if (m_IsExploding) return;
+	m_IsExploding = true;
 	m_IsDetonating = false;
 
 	auto gridTransform = dynamic_cast<dae::GridTransform*>(GetOwner()->GetTransform());
@@ -64,6 +66,7 @@ void dae::BombComponent::KillSurrounding(dae::GridTransform* gridTransform, glm:
 {
 	auto& scene = dae::SceneManager::GetInstance().GetActiveScene();
 	auto KillableObjects = scene.GetAllObjectsByComponent<HealthComponent>();
+	auto OtherBombs = scene.GetAllObjectsByComponent<BombComponent>();
 
 	glm::vec4 colliderRectVer{
 		gridTransform->GetPosition().x- gridTransform->GetGrid()->GetTileScale().x*0.5f,
@@ -86,10 +89,33 @@ void dae::BombComponent::KillSurrounding(dae::GridTransform* gridTransform, glm:
 		{
 			auto rect = ColliderComp->GetCollisionRect();
 
-			if (CollisionComponent::CheckCollision(colliderRectHor, rect) || CollisionComponent::CheckCollision(colliderRectVer, rect)) obj->GetComponentByType<HealthComponent>()->ProcessDeath();
+			if (CollisionComponent::CheckCollision(colliderRectHor, rect) || CollisionComponent::CheckCollision(colliderRectVer, rect)) 
+			{ 
+				obj->GetComponentByType<HealthComponent>()->ProcessDeath(); 
+			}
 
 		}
 	}
+
+	if (OtherBombs.size() > 1) 
+	{
+		for (auto obj : OtherBombs)
+		{
+			if (obj == GetOwner()) continue;
+			auto ColliderComp = obj->GetComponentByType<CollisionComponent>();
+			if (ColliderComp != nullptr)
+			{
+				auto rect = ColliderComp->GetCollisionRect();
+
+				if (CollisionComponent::CheckCollision(colliderRectHor, rect) || CollisionComponent::CheckCollision(colliderRectVer, rect))
+				{
+					obj->GetComponentByType<BombComponent>()->Explode();
+				}
+
+			}
+		}
+	}
+
 }
 
 

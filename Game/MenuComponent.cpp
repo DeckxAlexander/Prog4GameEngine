@@ -42,7 +42,9 @@ void dae::MenuComponent::ExecuteSelected()
 	}
 	if (m_Buttons[m_SelectedIndex].event == MenuEvent::Coop)
 	{
-
+		GameManager::GetInstance().ResetGame();
+		GameManager::GetInstance().SetPlayerAmount(2);
+		GameSceneLoader::GetInstance().LoadLevelFromFile("Levels/Level1.txt", 2);
 	}
 
 }

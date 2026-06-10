@@ -47,6 +47,8 @@ namespace dae
 
 		void SpawnBalloom(int x, int y, GridComponent* grid, Scene& scene);
 		void SpawnOneal(int x, int y, GridComponent* grid, Scene& scene);
+		void SpawnDoll(int x, int y, GridComponent* grid, Scene& scene);
+		void SpawnMinvo(int x, int y, GridComponent* grid, Scene& scene);
 
 		std::filesystem::path m_dataPath{};
 		friend class Singleton<GameSceneLoader>;

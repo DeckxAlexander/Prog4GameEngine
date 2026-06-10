@@ -47,6 +47,9 @@ namespace dae {
             auto* audio = MIX_LoadAudio(m_Mixer, path.c_str(), false);
             auto* track = MIX_CreateTrack(m_Mixer);
             MIX_SetTrackAudio(track, audio);
+            MIX_DestroyAudio(audio);
+
+          
             std::lock_guard lock(m_Mutex);
             m_Sounds[id] = track;
 
@@ -59,10 +62,16 @@ namespace dae {
             m_Queue.Push({});
             m_Worker.join();
             MIX_StopAllTracks(m_Mixer, 0);
+           
+            for (auto& [id, track] : m_Sounds)
+            {
+                MIX_DestroyTrack(track);
+            }
             m_Sounds.clear();
+
+            
             SDL_CloseAudioDevice(m_Device);
             MIX_DestroyMixer(m_Mixer);
-
             MIX_Quit();
         }
 
