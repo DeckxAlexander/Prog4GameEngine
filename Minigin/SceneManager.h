@@ -14,6 +14,7 @@ namespace dae
 		Scene& CreateScene();
 		Scene& GetActiveScene();
 
+		void RemoveScene(Scene& scene);
 		void SetActiveScene(size_t index);
 		void SetActiveScene(const Scene& scene);
 
@@ -24,5 +25,7 @@ namespace dae
 		SceneManager() = default;
 		std::vector<std::unique_ptr<Scene>> m_scenes{};
 		size_t m_ActiveSceneIndex{};
+		void Cleanup();
+		
 	};
 }

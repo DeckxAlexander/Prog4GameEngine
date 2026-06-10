@@ -28,8 +28,6 @@ namespace dae
 		virtual void HitCollider() {}
 		void Start() override;
 
-
-
 		MovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid);
 		~MovementComponent() = default;
 		MovementComponent(const MovementComponent& other) = delete;
@@ -58,6 +56,11 @@ namespace dae
 			m_DesiredVelocity = glm::vec3{ x,y,0 };
 			float len = glm::length(m_DesiredVelocity);
 			if (len > 0) m_DesiredVelocity /= len;
+
+			if (len < 0.1) 
+			{
+				return;
+			}
 		};
 
 		WanderMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid);

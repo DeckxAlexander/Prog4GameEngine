@@ -70,19 +70,32 @@ void dae::GameSceneLoader::SetupScene(SceneDetails details)
 	scene.Add(std::move(fpso));
 
 	//Players
-	if (details.playersAmount > 0) dae::InputManager::GetInstance().UnbindAll();
-
-	if (details.playersAmount == 1) 
+	if (details.playersAmount > 0)
 	{
-		auto CameraFollowerGameObject = std::make_unique<dae::GameObject>();
-		auto CameraFollowerComponent = std::make_unique<dae::CameraFollowerComponent>(float(details.width)*32.f, float(details.height) * 32.f);
-		CameraFollowerGameObject.get()->AddComponent(std::move(CameraFollowerComponent));
-		scene.Add(std::move(CameraFollowerGameObject));
+		if (details.playersAmount == 1)
+		{
+			auto CameraFollowerGameObject = std::make_unique<dae::GameObject>();
+			auto CameraFollowerComponent = std::make_unique<dae::CameraFollowerComponent>(float(details.width) * 32.f, float(details.height) * 32.f);
+			CameraFollowerGameObject.get()->AddComponent(std::move(CameraFollowerComponent));
+			scene.Add(std::move(CameraFollowerGameObject));
+		}
+
+		SpawnPlayers(details.playersAmount);
 	}
 
-	for (int index{}; index < details.playersAmount; index++)
+	SpawnEnemies(details);
+	scene.Start();
+
+}
+
+void dae::GameSceneLoader::SpawnPlayers(int amount)
+{
+	InputManager::GetInstance().UnbindAll();
+	auto grid = GridLocator::GetGrid();
+	auto& scene = SceneManager::GetInstance().GetActiveScene();
+
+	for (int index{}; index < amount; index++)
 	{
-	
 		auto playerGameObject = std::make_unique<dae::GameObject>();
 		auto playerRenderComponent = std::make_unique<dae::RenderComponent>(playerGameObject.get(), "Bomberman.png");
 		auto playerMovementComponent = std::make_unique<dae::MovementComponent>(playerGameObject.get(), 50.f, grid);
@@ -100,7 +113,7 @@ void dae::GameSceneLoader::SetupScene(SceneDetails details)
 		playerGameObject.get()->SetScale(1.5f, 1.5f);
 
 		//Bindings
-		if (index == 0) 
+		if (index == 0)
 		{
 			dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_D, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
 			dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_A, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
@@ -115,7 +128,12 @@ void dae::GameSceneLoader::SetupScene(SceneDetails details)
 
 		scene.Add(std::move(playerGameObject));
 	}
+}
 
+void dae::GameSceneLoader::SpawnEnemies(SceneDetails details)
+{
+	auto grid = GridLocator::GetGrid();
+	auto& scene = SceneManager::GetInstance().GetActiveScene();
 	auto gridLayout = grid->GetGridLayout();
 	int EnemiesSpawned = 0;
 	std::vector<int> possibleIndexes{};
@@ -131,99 +149,95 @@ void dae::GameSceneLoader::SetupScene(SceneDetails details)
 
 	while (EnemiesSpawned < details.balloomCount)
 	{
-		//Choose Index
-
 		int chosenIndex = possibleIndexes[rand() % possibleIndexes.size()];
 		possibleIndexes.erase(std::remove(possibleIndexes.begin(), possibleIndexes.end(), chosenIndex), possibleIndexes.end());
-
-		auto enemyGameObject = std::make_unique<dae::GameObject>();
-		auto enemyRenderComponent = std::make_unique<dae::RenderComponent>(enemyGameObject.get(), "Balloom.png");
-		auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>(enemyGameObject.get(), 40.f, grid);
-		auto enemyChaseMovementComponent = std::make_unique<dae::ChaseMovementComponent>(enemyGameObject.get(), 25.f, grid);
-		if (rand() % 2 == 1)
-		{
-			enemyMovementComponent.get()->SetVelocity(0.f, 1.f);
-		}
-		else enemyMovementComponent.get()->SetVelocity(1.f, 0.f);
-
-
-		auto enemyHealthComponent = std::make_unique<dae::HealthComponent>(enemyGameObject.get());
-		auto enemyCollider = std::make_unique<dae::CollisionComponent>(enemyGameObject.get(), 18.f, 27.f, 'e');
-		enemyCollider.get()->AddBlockingTag('b');
-		auto enemyComponent = std::make_unique<dae::EnemyComponent>(enemyGameObject.get(), false);
-		enemyGameObject.get()->AddComponent(std::move(enemyRenderComponent));
-		enemyGameObject.get()->AddComponent(std::move(enemyCollider));
-		enemyGameObject.get()->AddComponent(std::move(enemyMovementComponent));
-		enemyGameObject.get()->AddComponent(std::move(enemyChaseMovementComponent));
-		enemyGameObject.get()->AddComponent(std::move(enemyHealthComponent));
-		enemyGameObject.get()->AddComponent(std::move(enemyComponent));
 		int x = chosenIndex % grid->GetColums();
 		int y = chosenIndex / grid->GetColums();
-		enemyGameObject.get()->SetPosition(32 * float(x) + 16, 32 * float(y) + 16);
-		enemyGameObject.get()->SetScale(1.5f, 1.5f);
-		enemyGameObject->GetComponentByType<dae::ChaseMovementComponent>()->SetEnabled(false);
-		scene.Add(std::move(enemyGameObject));
+
+		SpawnBalloom(x, y, grid, scene);
+
 		EnemiesSpawned++;
-		if (EnemiesSpawned >= 10) break;
-
-
 	}
 
+	EnemiesSpawned = 0;
+	while (EnemiesSpawned < details.onealCount)
+	{
+		int chosenIndex = possibleIndexes[rand() % possibleIndexes.size()];
+		possibleIndexes.erase(std::remove(possibleIndexes.begin(), possibleIndexes.end(), chosenIndex), possibleIndexes.end());
+		int x = chosenIndex % grid->GetColums();
+		int y = chosenIndex / grid->GetColums();
 
+		SpawnOneal(x, y, grid, scene);
 
-
-
-
-	//EnemiesSpawned = 0;
-	//
-	//while (EnemiesSpawned < 5)
-	//{
-	//	//Choose Index
-
-	//	int chosenIndex = possibleIndexes[rand() % possibleIndexes.size()];
-	//	possibleIndexes.erase(std::remove(possibleIndexes.begin(), possibleIndexes.end(), chosenIndex), possibleIndexes.end());
-
-	//	auto enemyGameObject = std::make_unique<dae::GameObject>();
-	//	auto enemyRenderComponent = std::make_unique<dae::RenderComponent>(enemyGameObject.get(), "Oneal.png");
-	//	auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>(enemyGameObject.get(), 60.f, grid);
-	//	auto enemyChaseMovementComponent = std::make_unique<dae::ChaseMovementComponent>(enemyGameObject.get(), 60.f, grid);
-
-
-
-
-	//	if (rand() % 2 == 1)
-	//	{
-	//		enemyMovementComponent.get()->SetVelocity(0.f, 1.f);
-	//	}
-	//	else enemyMovementComponent.get()->SetVelocity(1.f, 0.f);
-
-
-	//	auto enemyHealthComponent = std::make_unique<dae::HealthComponent>(enemyGameObject.get());
-	//	auto enemyCollider = std::make_unique<dae::CollisionComponent>(enemyGameObject.get(), 18.f, 27.f, 'e');
-	//	enemyCollider.get()->AddBlockingTag('b');
-	//	auto enemyComponent = std::make_unique<dae::EnemyComponent>(enemyGameObject.get(), true);
-	//	enemyGameObject.get()->AddComponent(std::move(enemyRenderComponent));
-	//	enemyGameObject.get()->AddComponent(std::move(enemyCollider));
-	//	enemyGameObject.get()->AddComponent(std::move(enemyMovementComponent));
-	//	enemyGameObject.get()->AddComponent(std::move(enemyChaseMovementComponent));
-	//	enemyGameObject.get()->AddComponent(std::move(enemyHealthComponent));
-	//	enemyGameObject.get()->AddComponent(std::move(enemyComponent));
-	//	int x = chosenIndex % grid->GetColums();
-	//	int y = chosenIndex / grid->GetColums();
-	//	enemyGameObject.get()->SetPosition(32 * float(x) + 16, 32 * float(y) + 16);
-	//	enemyGameObject.get()->SetScale(1.5f, 1.5f);
-	//	enemyGameObject->GetComponentByType<dae::ChaseMovementComponent>()->SetEnabled(false);
-	//	scene.Add(std::move(enemyGameObject));
-	//	EnemiesSpawned++;
-	//	if (EnemiesSpawned >= 5) break;
-
-
-	//}
-
-
-	scene.Start();
-
+		EnemiesSpawned++;
+	}
 }
+
+void dae::GameSceneLoader::SpawnBalloom(int x, int y, GridComponent* grid, Scene& scene)
+{
+	auto enemyGameObject = std::make_unique<dae::GameObject>();
+	auto enemyRenderComponent = std::make_unique<dae::RenderComponent>(enemyGameObject.get(), "Balloom.png");
+	auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>(enemyGameObject.get(), 40.f, grid);
+	//auto enemyChaseMovementComponent = std::make_unique<dae::ChaseMovementComponent>(enemyGameObject.get(), 25.f, grid);
+	if (rand() % 2 == 1)
+	{
+		enemyMovementComponent.get()->SetVelocity(0.f, 1.f);
+	}
+	else enemyMovementComponent.get()->SetVelocity(1.f, 0.f);
+
+	auto enemyHealthComponent = std::make_unique<dae::HealthComponent>(enemyGameObject.get());
+	auto enemyCollider = std::make_unique<dae::CollisionComponent>(enemyGameObject.get(), 18.f, 27.f, 'e');
+	enemyCollider.get()->AddBlockingTag('b');
+	auto enemyComponent = std::make_unique<dae::EnemyComponent>(enemyGameObject.get(), false);
+	enemyGameObject.get()->AddComponent(std::move(enemyRenderComponent));
+	enemyGameObject.get()->AddComponent(std::move(enemyCollider));
+	enemyGameObject.get()->AddComponent(std::move(enemyMovementComponent));
+	//enemyGameObject.get()->AddComponent(std::move(enemyChaseMovementComponent));
+	enemyGameObject.get()->AddComponent(std::move(enemyHealthComponent));
+	enemyGameObject.get()->AddComponent(std::move(enemyComponent));
+
+	float tilescaleX = grid->GetTileScale().x;
+	float tilescaleY = grid->GetTileScale().y;
+	enemyGameObject.get()->SetPosition(tilescaleX * float(x) + tilescaleX*0.5f, tilescaleY * float(y) + tilescaleY * 0.5f);
+	enemyGameObject.get()->SetScale(1.5f, 1.5f);
+	//enemyGameObject->GetComponentByType<dae::ChaseMovementComponent>()->SetEnabled(false);
+	scene.Add(std::move(enemyGameObject));
+}
+
+void dae::GameSceneLoader::SpawnOneal(int x, int y, GridComponent* grid, Scene& scene)
+{
+	auto enemyGameObject = std::make_unique<dae::GameObject>();
+	auto enemyRenderComponent = std::make_unique<dae::RenderComponent>(enemyGameObject.get(), "Oneal.png");
+	auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>(enemyGameObject.get(), 60.f, grid);
+	auto enemyChaseMovementComponent = std::make_unique<dae::ChaseMovementComponent>(enemyGameObject.get(), 60.f, grid);
+
+	if (rand() % 2 == 1)
+	{
+		enemyMovementComponent.get()->SetVelocity(0.f, 1.f);
+	}
+	else enemyMovementComponent.get()->SetVelocity(1.f, 0.f);
+
+	auto enemyHealthComponent = std::make_unique<dae::HealthComponent>(enemyGameObject.get());
+	auto enemyCollider = std::make_unique<dae::CollisionComponent>(enemyGameObject.get(), 18.f, 27.f, 'e');
+	enemyCollider.get()->AddBlockingTag('b');
+	auto enemyComponent = std::make_unique<dae::EnemyComponent>(enemyGameObject.get(), true);
+	enemyGameObject.get()->AddComponent(std::move(enemyRenderComponent));
+	enemyGameObject.get()->AddComponent(std::move(enemyCollider));
+	enemyGameObject.get()->AddComponent(std::move(enemyMovementComponent));
+	enemyGameObject.get()->AddComponent(std::move(enemyChaseMovementComponent));
+	enemyGameObject.get()->AddComponent(std::move(enemyHealthComponent));
+	enemyGameObject.get()->AddComponent(std::move(enemyComponent));
+
+	float tilescaleX = grid->GetTileScale().x;
+	float tilescaleY = grid->GetTileScale().y;
+	enemyGameObject.get()->SetPosition(tilescaleX * float(x) + tilescaleX * 0.5f, tilescaleY * float(y) + tilescaleY * 0.5f);
+	enemyGameObject.get()->SetScale(1.5f, 1.5f);
+	enemyGameObject->GetComponentByType<dae::ChaseMovementComponent>()->SetEnabled(false);
+	scene.Add(std::move(enemyGameObject));
+}
+
+
+
 
 
 void dae::GameSceneLoader::LoadLevelFromFile(std::string filename, int playersAmount, bool isVersus)
@@ -271,6 +285,16 @@ void dae::GameSceneLoader::LoadLevelFromFile(std::string filename, int playersAm
 	sceneDetails.isVersus = isVersus;
 	file.close();
 	SetupScene(sceneDetails);
+}
+
+void dae::GameSceneLoader::OpenMainMenu()
+{
+	InputManager::GetInstance().UnbindAll();
+	SceneManager::GetInstance().SetActiveScene(0);
+	auto menuComponent = SceneManager::GetInstance().GetActiveScene().GetAllObjectsByComponent<MenuComponent>().front()->GetComponentByType<MenuComponent>();
+	InputManager::GetInstance().BindCommand(SDL_SCANCODE_W, dae::KeyState::Up, std::make_unique<dae::MoveMenuCommand>(menuComponent), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
+	InputManager::GetInstance().BindCommand(SDL_SCANCODE_S, dae::KeyState::Up, std::make_unique<dae::MoveMenuCommand>(menuComponent), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
+	InputManager::GetInstance().BindCommand(SDL_SCANCODE_SPACE, dae::KeyState::Up, std::make_unique<dae::ExecuteMenuCommand>(menuComponent), nullptr);
 }
 
 

@@ -17,7 +17,7 @@ namespace dae {
         {
         }
 
-        Subject* GetSubject() { return m_Subject.get(); } 
+        //Subject* GetSubject() { return m_Subject.get(); } 
 
         void ProcessDeath();
 

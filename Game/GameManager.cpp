@@ -28,7 +28,8 @@ void dae::GameManager::CheckGameState()
 void dae::GameManager::ProcessWin()
 {
 	m_CurrentLevel++;
-	auto players = SceneManager::GetInstance().GetActiveScene().GetAllObjectsByComponent<PlayerComponent>();
+	auto& oldScene = SceneManager::GetInstance().GetActiveScene();
+	auto players = oldScene.GetAllObjectsByComponent<PlayerComponent>();
 	std::vector<int> savedLives(m_PlayerAmount);
 	for (auto player : players) 
 	{
@@ -48,7 +49,17 @@ void dae::GameManager::ProcessWin()
 		if (lives <= 0) playerComp->PlayerDeath();
 
 	}
+	SceneManager::GetInstance().RemoveScene(oldScene);
 
+
+}
+
+void dae::GameManager::ProcessGameOver()
+{
+
+	auto& oldScene = SceneManager::GetInstance().GetActiveScene();
+	GameSceneLoader::GetInstance().OpenMainMenu();
+	SceneManager::GetInstance().RemoveScene(oldScene);
 }
 
 void dae::GameManager::ResetGame()
@@ -65,7 +76,7 @@ void dae::GameManager::CheckPlayerDeath()
 {
 
 	auto players = SceneManager::GetInstance().GetActiveScene().GetAllObjectsByComponent<PlayerComponent>();
-	if (players.size() < 2) std::cout << "GameOver";
+	if (players.size() < 2) ProcessGameOver();
 
 }
 

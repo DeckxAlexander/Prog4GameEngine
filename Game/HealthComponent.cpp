@@ -8,8 +8,8 @@ void dae::HealthComponent::ProcessDeath()
 	if (playerComp) playerComp->PlayerDeath();
 
 
-	GetOwner()->MarkForDelete();
-	m_Subject->Notify(Event{ EventType::OwnerDead, this });
+	
+	//m_Subject->Notify(Event{ EventType::OwnerDead, this });
 
 
 
