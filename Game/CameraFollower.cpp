@@ -30,17 +30,17 @@ void dae::CameraFollowerComponent::Update()
 	float visibleWidth = 1280.f / camera.zoom;
 	float visibleHeight = 576.f / camera.zoom;
 
-	if (pos.x < camera.x + marginX && camera.x > 0)
-		camera.x = pos.x - marginX;
+	if (pos.x < camera.x + marginX)
+		camera.x = std::max(pos.x - marginX, 0.f);
 
-	if (pos.x > camera.x + visibleWidth - (marginX*2.f) && pos.x < (m_MapX- marginX))
-		camera.x = pos.x - (visibleWidth - (marginX * 2.f));
+	if (pos.x > camera.x + visibleWidth - (marginX*2.f))
+		camera.x = std::min(pos.x, m_MapX - marginX) - (visibleWidth - (marginX * 2.f));
 
-	if (pos.y < camera.y + marginY && camera.y > 0)
-		camera.y = pos.y - marginY;
+	if (pos.y < camera.y + marginY)
+		camera.y = std::max(pos.y - marginY, 0.f);
 
-	if (pos.y > camera.y + visibleHeight - marginY && pos.y < (m_MapY - marginY))
-		camera.y = pos.y - (visibleHeight - marginY);
+	if (pos.y > camera.y + visibleHeight - marginY)
+		camera.y = std::min(pos.y, m_MapY - marginY) - (visibleHeight - marginY);
 }
 
 

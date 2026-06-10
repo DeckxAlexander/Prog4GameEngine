@@ -26,8 +26,10 @@ namespace dae
 		bool CanSeePlayer(GameObject* obj);
 		void GiveUpChase();
 
+		void EnemyDeath();
 
-		EnemyComponent(GameObject* pOwner, IntelligenceType intelligenceType);
+
+		EnemyComponent(GameObject* pOwner, IntelligenceType intelligenceType, int scoreAmount = 100);
 		~EnemyComponent();
 		EnemyComponent(const EnemyComponent& other) = delete;
 		EnemyComponent(EnemyComponent&& other) = delete;
@@ -40,6 +42,7 @@ namespace dae
 	private:
 		std::vector<GameObject*> m_Players{};
 		std::unique_ptr<State> m_State{};
+		int m_ScoreAmount;
 
 		IntelligenceType m_IntelligenceType;
 	};

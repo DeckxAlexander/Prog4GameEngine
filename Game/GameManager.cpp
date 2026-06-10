@@ -65,6 +65,7 @@ void dae::GameManager::ProcessGameOver()
 void dae::GameManager::ResetGame()
 {
 	m_CurrentLevel = 1;
+	m_Score = 0;
 }
 
 void dae::GameManager::SetPlayerAmount(int amount)
@@ -77,6 +78,12 @@ void dae::GameManager::SetVersus(bool value)
 	m_IsVersus = value;
 }
 
+void dae::GameManager::AddScore(int amount)
+{
+	m_Score += amount;
+	m_Subject.get()->Notify({EventType::ScoreChanged, nullptr });
+}
+
 void dae::GameManager::CheckPlayerDeath()
 {
 
@@ -84,6 +91,10 @@ void dae::GameManager::CheckPlayerDeath()
 	if (players.size() < 2) ProcessGameOver();
 
 }
+
+dae::GameManager::GameManager() : m_Subject{std::make_unique<Subject>()}
+{}
+
 
 
 

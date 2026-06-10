@@ -20,7 +20,7 @@ namespace dae
 
 		glm::ivec4 BreakSoftBlocks(GridComponent* grid, glm::ivec2 gpos);
 		void KillSurrounding(GridTransform* gridTransform, glm::ivec4 dirSizes);
-
+		void SpawnParticles(glm::ivec4 positions, glm::vec2 size);
 
 	public:
 		virtual void Update() override;

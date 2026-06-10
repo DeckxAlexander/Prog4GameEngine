@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include "GameObject.h"
 #include <string>
 #include "GameObject.h"
 #include "ResourceManager.h"
@@ -107,6 +108,11 @@ void dae::GameObject::SetPosition(float x, float y)
 	m_transform.get()->SetPosition({ x, y, 0.0f });
 
 
+}
+
+void dae::GameObject::SetPosition(const glm::vec3& position)
+{
+	m_transform.get()->SetPosition(position);
 }
 
 void dae::GameObject::SetScale(float x, float y)

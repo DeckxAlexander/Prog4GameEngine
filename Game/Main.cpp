@@ -51,8 +51,14 @@ static void load()
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
 	dae::SceneManager::GetInstance().SetActiveScene(0);
 	auto menuGameObject = std::make_unique<dae::GameObject>();
+	auto menuRenderComponentLogo = std::make_unique<dae::RenderComponent>(menuGameObject.get(), "BombermanLogo.png");
+	menuRenderComponentLogo.get()->SetRenderOnScreen(true);
 	menuGameObject->AddComponent(std::make_unique<dae::MenuComponent>());
+	menuGameObject->AddComponent(std::move(menuRenderComponentLogo));
 	auto menucomponent = menuGameObject->GetComponentByType<dae::MenuComponent>();
+	menuGameObject->SetPosition(512, 150);
+	menuGameObject->SetScale(1.5f, 1.5f);
+
 
 	//SOLO BUTTON
 	auto textSolobutton = std::make_unique<dae::GameObject>();
@@ -64,7 +70,7 @@ static void load()
 	textSolobuttonRendercomponent.get()->SetRenderOnScreen(true);
 	textSolobutton.get()->AddComponent(std::move(textSolobuttoncomponent));
 	textSolobutton.get()->AddComponent(std::move(textSolobuttonRendercomponent));
-	textSolobutton->SetPosition(512, 200);
+	textSolobutton->SetPosition(512, 300);
 
 	//COOP BUTTON
 	auto textCoopbutton = std::make_unique<dae::GameObject>();
@@ -76,7 +82,7 @@ static void load()
 	textCoopbuttonRendercomponent.get()->SetRenderOnScreen(true);
 	textCoopbutton.get()->AddComponent(std::move(textCoopbuttoncomponent));
 	textCoopbutton.get()->AddComponent(std::move(textCoopbuttonRendercomponent));
-	textCoopbutton->SetPosition(512, 250);
+	textCoopbutton->SetPosition(512, 350);
 
 	//Versus BUTTON
 	auto textVersusbutton = std::make_unique<dae::GameObject>();
@@ -88,7 +94,7 @@ static void load()
 	textVersusbuttonRendercomponent.get()->SetRenderOnScreen(true);
 	textVersusbutton.get()->AddComponent(std::move(textVersusbuttoncomponent));
 	textVersusbutton.get()->AddComponent(std::move(textVersusbuttonRendercomponent));
-	textVersusbutton->SetPosition(512, 300);
+	textVersusbutton->SetPosition(512, 400);
 
 	//QUIT BUTTON
 	auto textQuitbutton = std::make_unique<dae::GameObject>();
@@ -100,7 +106,7 @@ static void load()
 	textQuitbuttonRendercomponent.get()->SetRenderOnScreen(true);
 	textQuitbutton.get()->AddComponent(std::move(textQuitbuttoncomponent));
 	textQuitbutton.get()->AddComponent(std::move(textQuitbuttonRendercomponent));
-	textQuitbutton->SetPosition(512, 350);
+	textQuitbutton->SetPosition(512, 450);
 
 
 
@@ -124,10 +130,30 @@ static void load()
 
 
 
-	const auto fullPath = data_location / "BombExplodes.wav";
-	const auto filename = fs::path(fullPath).string();
+	auto fullPath = data_location / "BombExplodes.wav";
+	auto filename = fs::path(fullPath).string();
 	dae::SoundSystemLocator::register_sound_system(std::make_unique<dae::SDLSoundSystem>());
 	dae::SoundSystemLocator::get_sound_system().LoadSound(0, filename);
+	fullPath = data_location / "Music.mp3";
+	filename = fs::path(fullPath).string();
+	dae::SoundSystemLocator::get_sound_system().LoadSound(1, filename);
+	fullPath = data_location / "StepX.wav";
+	filename = fs::path(fullPath).string();
+	dae::SoundSystemLocator::get_sound_system().LoadSound(2, filename);
+	fullPath = data_location / "StepY.wav";
+	filename = fs::path(fullPath).string();
+	dae::SoundSystemLocator::get_sound_system().LoadSound(3, filename);
+	fullPath = data_location / "Powerup.wav";
+	filename = fs::path(fullPath).string();
+	dae::SoundSystemLocator::get_sound_system().LoadSound(4, filename);
+	fullPath = data_location / "BombLay.wav";
+	filename = fs::path(fullPath).string();
+	dae::SoundSystemLocator::get_sound_system().LoadSound(5, filename);
+	fullPath = data_location / "BombermanKilled.wav";
+	filename = fs::path(fullPath).string();
+	dae::SoundSystemLocator::get_sound_system().LoadSound(6, filename);
+	dae::SoundSystemLocator::get_sound_system().PlaySound(1);
+
 
 }
 

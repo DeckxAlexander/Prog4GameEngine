@@ -11,6 +11,7 @@ namespace dae
     {
         PlayerDead,
         ScoreChanged,
+        LivesChanged,
         Win,
         OwnerDead
 

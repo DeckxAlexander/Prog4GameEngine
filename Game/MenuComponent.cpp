@@ -3,6 +3,7 @@
 #include "SceneManager.h"
 #include "GameSceneLoaderComponent.h"
 #include "GameManager.h"
+#include "SoundSystem.h"
 #include <iostream>
 #include <stdexcept>
 
@@ -36,25 +37,31 @@ void dae::MenuComponent::ExecuteSelected()
 
 	if (m_Buttons[m_SelectedIndex].event == MenuEvent::Solo) 
 	{
+		SoundSystemLocator::get_sound_system().StopAllSounds();
 		GameManager::GetInstance().ResetGame();
 		GameManager::GetInstance().SetPlayerAmount(1);
 		GameManager::GetInstance().SetVersus(false);
 		GameSceneLoader::GetInstance().LoadLevelFromFile("Levels/Level1.txt",1);
+		SoundSystemLocator::get_sound_system().PlaySound(1);
 	}
 	if (m_Buttons[m_SelectedIndex].event == MenuEvent::Coop)
 	{
+		SoundSystemLocator::get_sound_system().StopAllSounds();
 		GameManager::GetInstance().ResetGame();
 		GameManager::GetInstance().SetPlayerAmount(2);
 		GameManager::GetInstance().SetVersus(false);
 		GameSceneLoader::GetInstance().LoadLevelFromFile("Levels/Level1.txt", 2);
+		SoundSystemLocator::get_sound_system().PlaySound(1);
 	}
 
 	if (m_Buttons[m_SelectedIndex].event == MenuEvent::Versus)
 	{
+		SoundSystemLocator::get_sound_system().StopAllSounds();
 		GameManager::GetInstance().ResetGame();
 		GameManager::GetInstance().SetPlayerAmount(1);
 		GameManager::GetInstance().SetVersus(true);
 		GameSceneLoader::GetInstance().LoadLevelFromFile("Levels/Level1.txt", 1, true);
+		SoundSystemLocator::get_sound_system().PlaySound(1);
 	}
 
 }

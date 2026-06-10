@@ -29,6 +29,7 @@ namespace dae
 		PlayerComponent& operator=(PlayerComponent&& other) = delete;
 
 		int GetIndex() { return m_PlayerIndex; }
+		int GetLives() { return m_PlayerLives; }
 		
 
 		void PlayerDeath();

@@ -24,8 +24,9 @@ namespace dae
 		void Start();
 		void Update();
 		void Render() const;
-		void SetPosition(float x, float y); //MARK FOR CHANGE
-		void SetScale(float x, float y); //MARK FOR CHANGE
+		void SetPosition(float x, float y);
+		void SetPosition(const glm::vec3& position);
+		void SetScale(float x, float y); 
 
 		const glm::vec3& GetWorldPosition() { return m_transform.get()->GetWorldPosition(); }
 		const glm::vec3& GetScale() { return m_transform.get()->GetScale(); }

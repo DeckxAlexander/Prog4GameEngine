@@ -17,7 +17,7 @@ namespace dae
 		CollisionComponent* m_Collider{};
 	public:
 		virtual void Update() override;
-		virtual void Render() const override;
+		virtual void Render() const override {}
 		void AddVelocity(float x, float y) 
 		{
 			m_Velocity += glm::vec3{ x,y,0 };
@@ -35,6 +35,24 @@ namespace dae
 		MovementComponent& operator=(const MovementComponent& other) = delete;
 		MovementComponent& operator=(MovementComponent&& other) = delete;
 	};
+
+	class PlayerMovementComponent final : public MovementComponent 
+	{
+	public:
+		virtual void Update() override;
+
+		PlayerMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid) : MovementComponent(pOwner, speed, pGrid) {}
+		~PlayerMovementComponent() = default;
+		PlayerMovementComponent(const MovementComponent& other) = delete;
+		PlayerMovementComponent(MovementComponent&& other) = delete;
+		PlayerMovementComponent& operator=(const MovementComponent& other) = delete;
+		PlayerMovementComponent& operator=(MovementComponent&& other) = delete;
+	private:
+		float m_AccumulatedTime{};
+		float m_SoundInterval{ 0.25f };
+
+	};
+
 
 	class WanderMovementComponent final : public MovementComponent
 	{
@@ -91,8 +109,6 @@ namespace dae
 		};
 
 		virtual void HitCollider() override;
-
-
 		ChaseMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid);
 		~ChaseMovementComponent() = default;
 		ChaseMovementComponent(const ChaseMovementComponent& other) = delete;

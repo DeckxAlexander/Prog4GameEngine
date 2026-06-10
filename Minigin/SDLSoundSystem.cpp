@@ -61,6 +61,11 @@ namespace dae {
 
         }
 
+        void StopAllSounds() 
+        {
+            MIX_StopAllTracks(m_Mixer, 2);
+        }
+
         void Destroy() 
         {
             m_Running = false;
@@ -90,7 +95,6 @@ namespace dae {
                 m_Queue.Pop(event);
                 if (st.stop_requested()) break;
                 Play(event.SoundId);
-                std::cout << "Play";
             }
         }
 
@@ -128,6 +132,10 @@ namespace dae {
     void SDLSoundSystem::LoadSound(const uint32_t id, const std::string& path)
     {
         m_Impl->LoadSound(id, path);
+    }
+    void SDLSoundSystem::StopAllSounds()
+    {
+        m_Impl->StopAllSounds();
     }
     void SDLSoundSystem::Mute(bool enabled)
     {

@@ -6,6 +6,7 @@
 #include "GridComponent.h"
 #include "EnemyComponent.h"
 #include "GridTransform.h"
+#include "SoundSystem.h"
 #include <iostream>
 
 
@@ -26,7 +27,7 @@ dae::MovementComponent::MovementComponent(GameObject* pOwner, float speed, GridC
 
 void dae::MovementComponent::Update()
 {
-    if (m_Velocity.length() == 0) return;
+    if (glm::length(m_Velocity) == 0) return;
 
     float deltaT{ TimeManager::GetInstance().GetDeltaTime() };
     glm::vec3 pos = GetOwner()->GetTransform()->GetPosition();
@@ -206,10 +207,7 @@ void dae::MovementComponent::Update()
 
 }
 
-void dae::MovementComponent::Render() const
-{
-	//Empty
-}
+
 
 dae::WanderMovementComponent::WanderMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid) : MovementComponent(pOwner, speed, pGrid)
 {
@@ -336,4 +334,24 @@ void dae::ChaseMovementComponent::HitCollider()
 
 dae::ChaseMovementComponent::ChaseMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid) : MovementComponent(pOwner, speed, pGrid)
 {
+}
+
+void dae::PlayerMovementComponent::Update()
+{
+    if (glm::length(m_Velocity) == 0) return;
+
+    float deltaT{ TimeManager::GetInstance().GetDeltaTime() };
+    m_AccumulatedTime += deltaT;
+    if (m_AccumulatedTime >= m_SoundInterval)
+    {
+        m_AccumulatedTime = 0;
+        if (abs(m_Velocity.x) > abs(m_Velocity.y)) SoundSystemLocator::get_sound_system().PlaySound(2);
+        else SoundSystemLocator::get_sound_system().PlaySound(3);
+    }
+
+    MovementComponent::Update();
+    
+
+
+
 }

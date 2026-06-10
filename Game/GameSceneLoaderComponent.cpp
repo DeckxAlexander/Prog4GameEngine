@@ -17,7 +17,6 @@
 #include "PlaceBombComponent.h"
 #include "EnemyComponent.h"
 #include "GameCommands.h"
-#include "SDLSoundSystem.h"
 #include "States.h"
 #include "PlayerComponent.h"
 #include "GridTransform.h"
@@ -25,11 +24,14 @@
 #include "CameraFollower.h"
 #include "MenuComponent.h"
 #include "MenuCommands.h"
+#include "ScoreDisplayComponent.h"
+#include "LivesDisplayComponent.h"
 #include <fstream>
 
 void dae::GameSceneLoader::SetupScene(SceneDetails details)
 {
 	srand(details.randomSeed);
+	
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
 	dae::SceneManager::GetInstance().SetActiveScene(scene);
 
@@ -46,6 +48,8 @@ void dae::GameSceneLoader::SetupScene(SceneDetails details)
 		camera.x = 0;
 		camera.y = -70;
 	}
+
+
 
 	auto tileGameObject = std::make_unique<dae::GameObject>();
 	auto tileRenderComponent = std::make_unique<dae::RenderComponent>(tileGameObject.get(), "background2.png");
@@ -66,11 +70,14 @@ void dae::GameSceneLoader::SetupScene(SceneDetails details)
 	grid->SpawnPowerUps();
 	grid->SpawnGrid();
 	dae::GridLocator::SetGrid(grid);
-	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
+
+	auto normalfont = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 48);
+	auto pixelfont = dae::ResourceManager::GetInstance().LoadFont("Pixel.otf", 48);
 
 	auto fpso = std::make_unique<dae::GameObject>();
 	auto fpsc = std::make_unique<dae::FPSCounterComponent>(fpso.get());
-	auto fpst = std::make_unique<dae::TextComponent>(fpso.get(), "FPS", font);
+	auto fpst = std::make_unique<dae::TextComponent>(fpso.get(), "FPS", normalfont);
+	fpst.get()->SetColor({ 0,0,0,255 });
 	auto fpsr = std::make_unique<dae::RenderComponent>(fpso.get());
 	fpsr.get()->SetRenderOnScreen(true);
 	fpso.get()->AddComponent(std::move(fpsc));
@@ -79,6 +86,31 @@ void dae::GameSceneLoader::SetupScene(SceneDetails details)
 	fpso->SetPosition(50, 20);
 
 	scene.Add(std::move(fpso));
+
+	auto livesGameObject = std::make_unique<dae::GameObject>();
+	auto livesRenderComponent = std::make_unique<dae::RenderComponent>(livesGameObject.get());
+	auto livesTextComponent = std::make_unique<dae::TextComponent>(livesGameObject.get(), "0", pixelfont);
+	livesTextComponent.get()->SetColor({ 0,0,0,255 });
+	livesRenderComponent->SetRenderOnScreen(true);
+	livesGameObject.get()->AddComponent(std::move(livesTextComponent));
+	livesGameObject.get()->AddComponent(std::make_unique<dae::LivesDisplayComponent>());
+	livesGameObject.get()->AddComponent(std::move(livesRenderComponent));
+	livesGameObject->SetPosition(1050 - float(100* details.playersAmount), 20.f);
+	scene.Add(std::move(livesGameObject));
+
+
+	auto scoreGameObject = std::make_unique<dae::GameObject>();
+	auto scoreRenderComponent = std::make_unique<dae::RenderComponent>(scoreGameObject.get());
+	auto scoreTextComponent = std::make_unique<dae::TextComponent>(scoreGameObject.get(), "0", pixelfont);
+	scoreTextComponent.get()->SetColor({ 0,0,0,255 });
+	scoreRenderComponent->SetRenderOnScreen(true);
+	scoreGameObject.get()->AddComponent(std::move(scoreTextComponent));
+	scoreGameObject.get()->AddComponent(std::make_unique<dae::ScoreDisplayComponent>());
+	scoreGameObject.get()->AddComponent(std::move(scoreRenderComponent));
+	scoreGameObject->SetPosition(512.f, 20.f);
+	scene.Add(std::move(scoreGameObject));
+
+
 
 	//Players
 	if (details.playersAmount > 0)
@@ -97,6 +129,8 @@ void dae::GameSceneLoader::SetupScene(SceneDetails details)
 	SpawnEnemies(details);
 
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_F1, dae::KeyState::Up, std::make_unique<dae::ToggleMuteCommand>(), nullptr);
+
+	
 	scene.Start();
 
 }
@@ -111,7 +145,7 @@ void dae::GameSceneLoader::SpawnPlayers(int amount)
 	{
 		auto playerGameObject = std::make_unique<dae::GameObject>();
 		auto playerRenderComponent = std::make_unique<dae::RenderComponent>(playerGameObject.get(), "Bomberman.png");
-		auto playerMovementComponent = std::make_unique<dae::MovementComponent>(playerGameObject.get(), 60.f, grid);
+		auto playerMovementComponent = std::make_unique<dae::PlayerMovementComponent>(playerGameObject.get(), 60.f, grid);
 		auto playerHealthComponent = std::make_unique<dae::HealthComponent>(playerGameObject.get());
 		auto playerCollider = std::make_unique<dae::CollisionComponent>(playerGameObject.get(), 18.f, 27.f, 'e');
 		auto playerplacebombcomponent = std::make_unique<dae::PlaceBombComponent>(playerGameObject.get(), grid);

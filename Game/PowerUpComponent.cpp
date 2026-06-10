@@ -2,6 +2,7 @@
 #include "SceneManager.h"
 #include "CollisionComponent.h"
 #include "PlayerComponent.h"
+#include "SoundSystem.h"
 #include <iostream>
 
 void dae::PowerUpComponent::Start()
@@ -35,6 +36,7 @@ void dae::PowerUpComponent::Update()
 void dae::PowerUpComponent::ActivatePowerUp(GameObject*)
 {
 	m_IsActive = true;
+	SoundSystemLocator::get_sound_system().PlaySound(4);
 	GetOwner()->MarkForDelete();
 
 }

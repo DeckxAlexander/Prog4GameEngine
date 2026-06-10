@@ -91,6 +91,12 @@ void dae::EnemyComponent::GiveUpChase()
 
 }
 
+void dae::EnemyComponent::EnemyDeath()
+{
+	GameManager::GetInstance().AddScore(m_ScoreAmount);
+	GetOwner()->MarkForDelete();
+}
+
 
 void dae::EnemyComponent::SearchPlayer()
 {
@@ -116,7 +122,7 @@ void dae::EnemyComponent::SearchPlayer()
 
 }
 
-dae::EnemyComponent::EnemyComponent(GameObject* pOwner, IntelligenceType intelligenceType) : ObjectComponent(pOwner), m_IntelligenceType{ intelligenceType }
+dae::EnemyComponent::EnemyComponent(GameObject* pOwner, IntelligenceType intelligenceType, int scoreAmount) : ObjectComponent(pOwner), m_IntelligenceType{ intelligenceType }, m_ScoreAmount{ scoreAmount }
 {
 	InitializePlayers();
 }

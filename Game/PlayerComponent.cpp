@@ -3,6 +3,7 @@
 #include "SceneManager.h"
 #include "EnemyComponent.h"
 #include "GameManager.h"
+#include "SoundSystem.h"
 #include <memory>
 
 
@@ -33,7 +34,9 @@ void dae::PlayerComponent::Start()
 
 void dae::PlayerComponent::PlayerDeath()
 {
+	SoundSystemLocator::get_sound_system().PlaySound(6);
 	m_PlayerLives--;
+	m_Subject->Notify(Event{ EventType::LivesChanged, this });
 
 	if (m_PlayerLives <= 0) 
 	{ 
@@ -43,6 +46,7 @@ void dae::PlayerComponent::PlayerDeath()
 	}
 	else 
 	{
+
 		Respawn();
 	}
 	

@@ -6,7 +6,7 @@
 #include "CollisionComponent.h"
 #include "GridComponent.h"
 #include "GridTransform.h"
-#include "SDLSoundSystem.h"
+#include "SoundSystem.h"
 #include <iostream>
 
 void dae::PlaceBombComponent::PlaceBomb() 
@@ -54,6 +54,8 @@ void dae::PlaceBombComponent::PlaceBomb()
 
 
 	if (willDetonate) bombEx->StartDetonate();
+
+	SoundSystemLocator::get_sound_system().PlaySound(5);
 
 
 

@@ -12,6 +12,7 @@ namespace dae
 		virtual void PlaySound(const uint32_t id) = 0;
 		virtual void LoadSound(const uint32_t id, const std::string& path) = 0;
 		virtual void Mute(bool enabled) = 0;
+		virtual void StopAllSounds() = 0;
 		virtual void Destroy() = 0;
 
 	};
@@ -22,6 +23,7 @@ namespace dae
 		virtual void PlaySound(const uint32_t ) {}
 		virtual void LoadSound(const uint32_t , const std::string& )  {}
 		virtual void Mute(bool) {}
+		virtual void StopAllSounds() {}
 		virtual void Destroy() {}
 
 	};
