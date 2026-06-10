@@ -9,12 +9,13 @@ namespace dae
 	class State;
 	class EnemyComponent final : public ObjectComponent, public IObserver
 	{
-	private:
-		std::vector<GameObject*> m_Players{};
-		std::unique_ptr<State> m_State{};
-		
-		bool m_IsIntelligent;
 	public:
+
+		enum class IntelligenceType 
+		{
+			normal, smart, player
+		};
+
 		virtual void Start() override;
 		virtual void Update() override;
 		virtual void Render() const override {}
@@ -26,7 +27,7 @@ namespace dae
 		void GiveUpChase();
 
 
-		EnemyComponent(GameObject* pOwner, bool isIntelligent);
+		EnemyComponent(GameObject* pOwner, IntelligenceType intelligenceType);
 		~EnemyComponent();
 		EnemyComponent(const EnemyComponent& other) = delete;
 		EnemyComponent(EnemyComponent&& other) = delete;
@@ -36,5 +37,10 @@ namespace dae
 
 		virtual void OnNotify(const Event& event);
 		virtual void OnSubjectDestroyed(Subject* subject);
+	private:
+		std::vector<GameObject*> m_Players{};
+		std::unique_ptr<State> m_State{};
+
+		IntelligenceType m_IntelligenceType;
 	};
 }

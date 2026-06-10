@@ -38,13 +38,23 @@ void dae::MenuComponent::ExecuteSelected()
 	{
 		GameManager::GetInstance().ResetGame();
 		GameManager::GetInstance().SetPlayerAmount(1);
+		GameManager::GetInstance().SetVersus(false);
 		GameSceneLoader::GetInstance().LoadLevelFromFile("Levels/Level1.txt",1);
 	}
 	if (m_Buttons[m_SelectedIndex].event == MenuEvent::Coop)
 	{
 		GameManager::GetInstance().ResetGame();
 		GameManager::GetInstance().SetPlayerAmount(2);
+		GameManager::GetInstance().SetVersus(false);
 		GameSceneLoader::GetInstance().LoadLevelFromFile("Levels/Level1.txt", 2);
+	}
+
+	if (m_Buttons[m_SelectedIndex].event == MenuEvent::Versus)
+	{
+		GameManager::GetInstance().ResetGame();
+		GameManager::GetInstance().SetPlayerAmount(1);
+		GameManager::GetInstance().SetVersus(true);
+		GameSceneLoader::GetInstance().LoadLevelFromFile("Levels/Level1.txt", 1, true);
 	}
 
 }

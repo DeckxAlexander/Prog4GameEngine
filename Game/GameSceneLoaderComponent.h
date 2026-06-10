@@ -42,6 +42,9 @@ namespace dae
 	private:
 		void SetupScene(SceneDetails details);
 		void SpawnPlayers(int amount);
+
+		void SpawnVersusPlayer(int x, int y, GridComponent* grid, Scene& scene);
+
 		void SpawnEnemies(SceneDetails details);
 
 

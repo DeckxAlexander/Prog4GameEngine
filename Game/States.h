@@ -59,6 +59,17 @@ namespace dae {
 
 	};
 
+	class PlayerControlledState final : public EnemyState
+	{
+	public:
+		PlayerControlledState() = default;
+
+		virtual void Start(GameObject* ownerObject) override;
+		virtual std::unique_ptr<State> Update() override { return nullptr; }
+		virtual void End() override;
+
+
+	};
 
 	class IdleState final : public EnemyState
 	{

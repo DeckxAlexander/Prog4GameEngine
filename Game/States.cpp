@@ -91,3 +91,17 @@ void dae::EnemyState::Start(GameObject* ownerObject)
 {
 	m_EnemyComponent = ownerObject->GetComponentByType<EnemyComponent>();
 }
+
+void dae::PlayerControlledState::Start(GameObject* ownerObject)
+{
+	EnemyState::Start(ownerObject);
+	auto compptr = ownerObject->GetComponentByType<MovementComponent>();
+	if (compptr != nullptr) compptr->SetEnabled(true);
+}
+
+void dae::PlayerControlledState::End()
+{
+	//EnemyState::End();
+	auto compptr = m_EnemyComponent->GetOwner()->GetComponentByType<MovementComponent>();
+	if (compptr != nullptr) compptr->SetEnabled(false);
+}

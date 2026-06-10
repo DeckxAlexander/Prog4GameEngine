@@ -116,7 +116,7 @@ void dae::EnemyComponent::SearchPlayer()
 
 }
 
-dae::EnemyComponent::EnemyComponent(GameObject* pOwner, bool isIntelligent) : ObjectComponent(pOwner), m_IsIntelligent{isIntelligent}
+dae::EnemyComponent::EnemyComponent(GameObject* pOwner, IntelligenceType intelligenceType) : ObjectComponent(pOwner), m_IntelligenceType{ intelligenceType }
 {
 	InitializePlayers();
 }
@@ -139,8 +139,9 @@ dae::EnemyComponent::~EnemyComponent()
 
 void dae::EnemyComponent::Start()
 {
-	if (m_IsIntelligent== false) m_State = std::make_unique<IdleWanderState>();
-	if (m_IsIntelligent== true) m_State = std::make_unique<SearchWanderState>();
+	if (m_IntelligenceType == IntelligenceType::normal) m_State = std::make_unique<IdleWanderState>();
+	if (m_IntelligenceType== IntelligenceType::smart) m_State = std::make_unique<SearchWanderState>();
+	if (m_IntelligenceType== IntelligenceType::player) m_State = std::make_unique<PlayerControlledState>();
 	m_State->Start(GetOwner());
 
 

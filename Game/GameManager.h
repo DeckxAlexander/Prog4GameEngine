@@ -12,6 +12,7 @@ namespace dae
 		void ProcessGameOver();
 		void ResetGame();
 		void SetPlayerAmount(int amount);
+		void SetVersus(bool value);
 
 		void CheckPlayerDeath();
 		//void ProcessLose();
@@ -21,6 +22,7 @@ namespace dae
 		GameManager() = default;
 		bool m_ExitFound{false};
 		int m_CurrentLevel{ 1 };
+		int m_IsVersus{ false };
 		int m_PlayerAmount{};
 
 	};

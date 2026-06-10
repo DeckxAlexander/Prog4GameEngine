@@ -38,7 +38,7 @@ void dae::GameManager::ProcessWin()
 	}
 	std::string filename = "Levels/Level" + std::to_string(m_CurrentLevel) + ".txt";
 
-	GameSceneLoader::GetInstance().LoadLevelFromFile(filename, m_PlayerAmount, false);
+	GameSceneLoader::GetInstance().LoadLevelFromFile(filename, m_PlayerAmount, m_IsVersus);
 
 	players = SceneManager::GetInstance().GetActiveScene().GetAllObjectsByComponent<PlayerComponent>();
 	for (auto player : players)
@@ -70,6 +70,11 @@ void dae::GameManager::ResetGame()
 void dae::GameManager::SetPlayerAmount(int amount)
 {
 	m_PlayerAmount = amount;
+}
+
+void dae::GameManager::SetVersus(bool value)
+{
+	m_IsVersus = value;
 }
 
 void dae::GameManager::CheckPlayerDeath()
