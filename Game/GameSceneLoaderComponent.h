@@ -25,7 +25,8 @@ namespace dae
 			
 		};
 
-		void LoadLevelFromFile(std::string filename, int playersAmount, bool isVersus = false);
+		void LoadLevelFromFile(const std::string& filename, int playersAmount, bool isVersus = false);
+		void LoadScoreBoard();
 		void OpenMainMenu();
 		void SetDataPath(const std::filesystem::path& filePath) 
 		{

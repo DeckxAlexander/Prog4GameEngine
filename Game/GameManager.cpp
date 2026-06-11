@@ -58,7 +58,7 @@ void dae::GameManager::ProcessGameOver()
 {
 
 	auto& oldScene = SceneManager::GetInstance().GetActiveScene();
-	GameSceneLoader::GetInstance().OpenMainMenu();
+	GameSceneLoader::GetInstance().LoadScoreBoard();
 	SceneManager::GetInstance().RemoveScene(oldScene);
 }
 

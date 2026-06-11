@@ -15,6 +15,7 @@ void dae::MenuComponent::AddButton(TextComponent* text, MenuEvent event)
 	m_Buttons.push_back({ text, event });
 }
 
+
 void dae::MenuComponent::RemoveButton(size_t index)
 {
 	m_Buttons.erase(m_Buttons.begin() + index);

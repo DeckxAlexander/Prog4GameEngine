@@ -26,6 +26,7 @@
 #include "MenuCommands.h"
 #include "ScoreDisplayComponent.h"
 #include "LivesDisplayComponent.h"
+#include "ScoreBoardComponent.h"
 #include <fstream>
 
 void dae::GameSceneLoader::SetupScene(SceneDetails details)
@@ -436,7 +437,7 @@ void dae::GameSceneLoader::SpawnMinvo(int x, int y, GridComponent* grid, Scene& 
 
 
 
-void dae::GameSceneLoader::LoadLevelFromFile(std::string filename, int playersAmount, bool isVersus)
+void dae::GameSceneLoader::LoadLevelFromFile(const std::string& filename, int playersAmount, bool isVersus)
 {
 	const auto fullPath = m_dataPath / filename;
 	std::ifstream file(fullPath);
@@ -481,6 +482,90 @@ void dae::GameSceneLoader::LoadLevelFromFile(std::string filename, int playersAm
 	sceneDetails.isVersus = isVersus;
 	file.close();
 	SetupScene(sceneDetails);
+}
+
+void dae::GameSceneLoader::LoadScoreBoard()
+{
+	InputManager::GetInstance().UnbindAll();
+	auto bigfont = dae::ResourceManager::GetInstance().LoadFont("Pixel.otf", 48);
+	auto smallfont = dae::ResourceManager::GetInstance().LoadFont("Pixel.otf", 36);
+	auto& scene = dae::SceneManager::GetInstance().CreateScene();
+	dae::SceneManager::GetInstance().SetActiveScene(scene);
+
+	auto LogoGameObject = std::make_unique<dae::GameObject>();
+	auto logoRenderComponent = std::make_unique<dae::RenderComponent>(LogoGameObject.get(), "BombermanLogo.png");
+	logoRenderComponent.get()->SetRenderOnScreen(true);
+	LogoGameObject->AddComponent(std::move(logoRenderComponent));
+	LogoGameObject->AddComponent(std::make_unique<ScoreBoardComponent>());
+	LogoGameObject->SetPosition(512, 150);
+	LogoGameObject->SetScale(2.f, 2.f);
+
+	auto scoreboard = LogoGameObject->GetComponentByType<ScoreBoardComponent>();
+
+
+	//Score Text
+	auto textScoreObject = std::make_unique<dae::GameObject>();
+	auto textScoreTextComponent = std::make_unique<dae::TextComponent>(textScoreObject.get(), "0", bigfont);
+	auto textScoreRendercomponent = std::make_unique<dae::RenderComponent>(textScoreObject.get());
+	textScoreRendercomponent.get()->SetRenderOnScreen(true);
+	textScoreObject.get()->AddComponent(std::move(textScoreTextComponent));
+	textScoreObject.get()->AddComponent(std::move(textScoreRendercomponent));
+	textScoreObject.get()->AddComponent(std::make_unique<dae::ScoreDisplayComponent>());
+	textScoreObject->SetPosition(512, 320);
+	scene.Add(std::move(textScoreObject));
+	scene.Start();
+
+
+
+	//Letters
+	int lettersAmount{ 5 };
+	float startPosX = 432.f;
+	for (int index{}; index < lettersAmount; index++) 
+	{
+		auto textLetterbutton = std::make_unique<dae::GameObject>();
+		auto textLetterbuttoncomponent = std::make_unique<dae::TextComponent>(textLetterbutton.get(), "A", smallfont);
+		auto textLetterbuttonRendercomponent = std::make_unique<dae::RenderComponent>(textLetterbutton.get());
+		scoreboard->AddButton(textLetterbuttoncomponent.get(), false);
+		textLetterbuttonRendercomponent.get()->SetRenderOnScreen(true);
+		textLetterbutton.get()->AddComponent(std::move(textLetterbuttoncomponent));
+		textLetterbutton.get()->AddComponent(std::move(textLetterbuttonRendercomponent));
+		textLetterbutton->SetPosition(startPosX + index*40, 370);
+		scene.Add(std::move(textLetterbutton));
+	}
+
+	//Underlines
+	startPosX = 430.f;
+	for (int index{}; index < lettersAmount; index++)
+	{
+		auto textLetterbutton = std::make_unique<dae::GameObject>();
+		auto textLetterbuttoncomponent = std::make_unique<dae::TextComponent>(textLetterbutton.get(), "_", smallfont);
+		auto textLetterbuttonRendercomponent = std::make_unique<dae::RenderComponent>(textLetterbutton.get());
+		textLetterbuttonRendercomponent.get()->SetRenderOnScreen(true);
+		textLetterbutton.get()->AddComponent(std::move(textLetterbuttoncomponent));
+		textLetterbutton.get()->AddComponent(std::move(textLetterbuttonRendercomponent));
+		textLetterbutton->SetPosition(startPosX + index * 40, 375);
+		scene.Add(std::move(textLetterbutton));
+	}
+	
+	auto confirmButton = std::make_unique<dae::GameObject>();
+	auto textConfirmbuttoncomponent = std::make_unique<dae::TextComponent>(confirmButton.get(), "Confirm", smallfont);
+	auto confirmbuttonRendercomponent = std::make_unique<dae::RenderComponent>(confirmButton.get());
+	confirmbuttonRendercomponent.get()->SetRenderOnScreen(true);
+	scoreboard->AddButton(textConfirmbuttoncomponent.get(), true);
+	confirmButton.get()->AddComponent(std::move(textConfirmbuttoncomponent));
+	confirmButton.get()->AddComponent(std::move(confirmbuttonRendercomponent));
+	confirmButton->SetPosition(512, 450);
+	scene.Add(std::move(confirmButton));
+
+	scoreboard->MoveSelected(0);
+	InputManager::GetInstance().BindCommand(SDL_SCANCODE_D, dae::KeyState::Up, std::make_unique<dae::MoveScoreBoardCommand>(scoreboard), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
+	InputManager::GetInstance().BindCommand(SDL_SCANCODE_A, dae::KeyState::Up, std::make_unique<dae::MoveScoreBoardCommand>(scoreboard), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
+	InputManager::GetInstance().BindCommand(SDL_SCANCODE_W, dae::KeyState::Up, std::make_unique<dae::MoveScoreBoardCommand>(scoreboard), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, 1.f }));
+	InputManager::GetInstance().BindCommand(SDL_SCANCODE_S, dae::KeyState::Up, std::make_unique<dae::MoveScoreBoardCommand>(scoreboard), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, -1.f }));
+	InputManager::GetInstance().BindCommand(SDL_SCANCODE_SPACE, dae::KeyState::Up, std::make_unique<dae::ExecuteScoreBoardCommand>(scoreboard), nullptr);
+	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_F1, dae::KeyState::Up, std::make_unique<dae::ToggleMuteCommand>(), nullptr);
+
+	scene.Add(std::move(LogoGameObject));
 }
 
 void dae::GameSceneLoader::OpenMainMenu()
