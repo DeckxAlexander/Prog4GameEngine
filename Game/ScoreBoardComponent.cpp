@@ -47,9 +47,6 @@ void dae::ScoreBoardComponent::ExecuteSelected()
 {
 	if (m_Buttons[m_SelectedIndex].isConfirm )
 	{
-		auto& oldScene = SceneManager::GetInstance().GetActiveScene();
-		GameSceneLoader::GetInstance().OpenMainMenu();
-		SceneManager::GetInstance().RemoveScene(oldScene);
 		std::string name = "";
 		for (auto button: m_Buttons) 
 		{
@@ -57,6 +54,9 @@ void dae::ScoreBoardComponent::ExecuteSelected()
 			name += std::string(1,button.letter);
 		}
 		AddScore("scores.csv", name, GameManager::GetInstance().GetScore());
+		auto& oldScene = SceneManager::GetInstance().GetActiveScene();
+		GameSceneLoader::GetInstance().OpenMainMenu();
+		SceneManager::GetInstance().RemoveScene(oldScene);
 	}
 	else 
 	{

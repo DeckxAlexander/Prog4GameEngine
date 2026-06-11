@@ -5,6 +5,7 @@
 #include "GameSceneLoaderComponent.h"
 #include "GameObject.h"
 #include <iostream>
+#include <filesystem>
 
 void dae::GameManager::CheckGameState()
 {
@@ -37,6 +38,14 @@ void dae::GameManager::ProcessWin()
 		savedLives[playerComp->m_PlayerIndex] = playerComp->m_PlayerLives;
 	}
 	std::string filename = "Levels/Level" + std::to_string(m_CurrentLevel) + ".txt";
+
+	if (!std::filesystem::exists(filename)) 
+	{
+		GameSceneLoader::GetInstance().LoadScoreBoard();
+		SceneManager::GetInstance().RemoveScene(oldScene);
+		return;
+	}
+
 
 	GameSceneLoader::GetInstance().LoadLevelFromFile(filename, m_PlayerAmount, m_IsVersus);
 

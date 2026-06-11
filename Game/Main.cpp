@@ -34,6 +34,7 @@
 #include "MenuComponent.h"
 #include "MenuCommands.h"
 #include "GameSceneLoaderComponent.h"
+#include "ScoreBoardDisplayComponent.h"
 #include <filesystem>
 
 
@@ -108,10 +109,6 @@ static void load()
 	textQuitbutton.get()->AddComponent(std::move(textQuitbuttonRendercomponent));
 	textQuitbutton->SetPosition(512, 450);
 
-
-
-
-
 	menucomponent->MoveSelected(0);
 
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_W, dae::KeyState::Up, std::make_unique<dae::MoveMenuCommand>(menucomponent), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
@@ -124,6 +121,42 @@ static void load()
 	scene.Add(std::move(textCoopbutton));
 	scene.Add(std::move(textVersusbutton));
 	scene.Add(std::move(textQuitbutton));
+
+	//ScoreBoard
+	auto scoreboardTitleObject = std::make_unique<dae::GameObject>();
+	auto scoreboardTitleTextComponent = std::make_unique<dae::TextComponent>(scoreboardTitleObject.get(), "ScoreBoard:",font);
+	auto scoreboardTitleRenderComponent = std::make_unique<dae::RenderComponent>(scoreboardTitleObject.get());
+
+	scoreboardTitleRenderComponent.get()->SetRenderOnScreen(true);
+	scoreboardTitleObject.get()->AddComponent(std::move(scoreboardTitleTextComponent));
+	scoreboardTitleObject.get()->AddComponent(std::move(scoreboardTitleRenderComponent));
+	scoreboardTitleObject.get()->AddComponent(std::make_unique<dae::ScoreBoardDisplayComponent>());
+	auto scoreboardDisplay = scoreboardTitleObject.get()->GetComponentByType<dae::ScoreBoardDisplayComponent>();
+	scoreboardTitleObject->SetPosition(850.f, 100.f);
+	scene.Add(std::move(scoreboardTitleObject));
+
+
+	auto textfont = dae::ResourceManager::GetInstance().LoadFont("Pixel.otf", 24);
+	for (int index{}; index<7; index++) 
+	{
+		auto scoreboardTextObject = std::make_unique<dae::GameObject>();
+		auto scoreboardTextComponent = std::make_unique<dae::TextComponent>(scoreboardTextObject.get(), "-", textfont);
+		auto scoreboardRenderComponent = std::make_unique<dae::RenderComponent>(scoreboardTextObject.get());
+
+		scoreboardDisplay->AddText(scoreboardTextComponent.get());
+
+		scoreboardRenderComponent.get()->SetRenderOnScreen(true);
+		scoreboardTextObject.get()->AddComponent(std::move(scoreboardTextComponent));
+		scoreboardTextObject.get()->AddComponent(std::move(scoreboardRenderComponent));
+		scoreboardTextObject->SetPosition(850.f, 150.f+float(index*50.f));
+		scene.Add(std::move(scoreboardTextObject));
+		
+	}
+
+	
+	scoreboardDisplay->SetDataPath(data_location);
+	scoreboardDisplay->RefreshScore("scores.csv");
+
 
 	scene.Start();
 	//SOUND

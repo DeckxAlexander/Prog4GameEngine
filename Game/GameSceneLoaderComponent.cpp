@@ -27,6 +27,7 @@
 #include "ScoreDisplayComponent.h"
 #include "LivesDisplayComponent.h"
 #include "ScoreBoardComponent.h"
+#include "ScoreBoardDisplayComponent.h"
 #include <fstream>
 
 void dae::GameSceneLoader::SetupScene(SceneDetails details)
@@ -498,7 +499,7 @@ void dae::GameSceneLoader::LoadScoreBoard()
 	LogoGameObject->AddComponent(std::move(logoRenderComponent));
 	LogoGameObject->AddComponent(std::make_unique<ScoreBoardComponent>());
 	LogoGameObject->SetPosition(512, 150);
-	LogoGameObject->SetScale(2.f, 2.f);
+	LogoGameObject->SetScale(1.5f, 1.5f);
 
 	auto scoreboard = LogoGameObject->GetComponentByType<ScoreBoardComponent>();
 
@@ -513,9 +514,6 @@ void dae::GameSceneLoader::LoadScoreBoard()
 	textScoreObject.get()->AddComponent(std::make_unique<dae::ScoreDisplayComponent>());
 	textScoreObject->SetPosition(512, 320);
 	scene.Add(std::move(textScoreObject));
-	scene.Start();
-
-
 
 	//Letters
 	int lettersAmount{ 5 };
@@ -566,6 +564,44 @@ void dae::GameSceneLoader::LoadScoreBoard()
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_F1, dae::KeyState::Up, std::make_unique<dae::ToggleMuteCommand>(), nullptr);
 
 	scene.Add(std::move(LogoGameObject));
+
+	//ScoreBoard
+	auto scoreboardTitleObject = std::make_unique<dae::GameObject>();
+	auto scoreboardTitleTextComponent = std::make_unique<dae::TextComponent>(scoreboardTitleObject.get(), "ScoreBoard:", smallfont);
+	auto scoreboardTitleRenderComponent = std::make_unique<dae::RenderComponent>(scoreboardTitleObject.get());
+
+	scoreboardTitleRenderComponent.get()->SetRenderOnScreen(true);
+	scoreboardTitleObject.get()->AddComponent(std::move(scoreboardTitleTextComponent));
+	scoreboardTitleObject.get()->AddComponent(std::move(scoreboardTitleRenderComponent));
+	scoreboardTitleObject.get()->AddComponent(std::make_unique<dae::ScoreBoardDisplayComponent>());
+	auto scoreboardDisplay = scoreboardTitleObject.get()->GetComponentByType<dae::ScoreBoardDisplayComponent>();
+	scoreboardTitleObject->SetPosition(850.f, 100.f);
+	scene.Add(std::move(scoreboardTitleObject));
+
+
+	auto textfont = dae::ResourceManager::GetInstance().LoadFont("Pixel.otf", 24);
+	for (int index{}; index < 7; index++)
+	{
+		auto scoreboardTextObject = std::make_unique<dae::GameObject>();
+		auto scoreboardTextComponent = std::make_unique<dae::TextComponent>(scoreboardTextObject.get(), "-", textfont);
+		auto scoreboardRenderComponent = std::make_unique<dae::RenderComponent>(scoreboardTextObject.get());
+
+		scoreboardDisplay->AddText(scoreboardTextComponent.get());
+
+		scoreboardRenderComponent.get()->SetRenderOnScreen(true);
+		scoreboardTextObject.get()->AddComponent(std::move(scoreboardTextComponent));
+		scoreboardTextObject.get()->AddComponent(std::move(scoreboardRenderComponent));
+		scoreboardTextObject->SetPosition(850.f, 150.f + float(index * 50.f));
+		scene.Add(std::move(scoreboardTextObject));
+
+	}
+
+
+	scoreboard->SetDataPath(m_dataPath);
+	scoreboardDisplay->SetDataPath(m_dataPath);
+	scoreboardDisplay->RefreshScore("scores.csv");
+	scene.Start();
+
 }
 
 void dae::GameSceneLoader::OpenMainMenu()
@@ -573,6 +609,8 @@ void dae::GameSceneLoader::OpenMainMenu()
 	InputManager::GetInstance().UnbindAll();
 	SceneManager::GetInstance().SetActiveScene(0);
 	auto menuComponent = SceneManager::GetInstance().GetActiveScene().GetAllObjectsByComponent<MenuComponent>().front()->GetComponentByType<MenuComponent>();
+	auto scoreboardDisplay = SceneManager::GetInstance().GetActiveScene().GetAllObjectsByComponent<ScoreBoardDisplayComponent>().front()->GetComponentByType<ScoreBoardDisplayComponent>();
+	scoreboardDisplay->RefreshScore("scores.csv");
 	InputManager::GetInstance().BindCommand(SDL_SCANCODE_W, dae::KeyState::Up, std::make_unique<dae::MoveMenuCommand>(menuComponent), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
 	InputManager::GetInstance().BindCommand(SDL_SCANCODE_S, dae::KeyState::Up, std::make_unique<dae::MoveMenuCommand>(menuComponent), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
 	InputManager::GetInstance().BindCommand(SDL_SCANCODE_SPACE, dae::KeyState::Up, std::make_unique<dae::ExecuteMenuCommand>(menuComponent), nullptr);
