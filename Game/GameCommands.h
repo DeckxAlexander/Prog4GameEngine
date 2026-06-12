@@ -1,6 +1,6 @@
 #include "Commands.h"
 #include "GameObject.h"
-#include "MovementComponent.h"
+#include "MovementComponents.h"
 #include "HealthComponent.h"
 #include "PlaceBombComponent.h"
 namespace dae

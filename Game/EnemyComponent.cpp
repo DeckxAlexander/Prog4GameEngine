@@ -3,7 +3,7 @@
 #include "CollisionComponent.h"
 #include "States.h"
 #include "GridComponent.h"
-#include "MovementComponent.h"
+#include "MovementComponents.h"
 #include "PlayerComponent.h"
 #include "GameManager.h"
 #include "HealthComponent.h"

@@ -45,7 +45,7 @@ add_library(MiniginEngine STATIC
 add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Game/Main.cpp
   Game/FPSCounterComponent.cpp
-  Game/MovementComponent.cpp
+  Game/MovementComponents.cpp
   Game/BombComponent.cpp
   Game/PlaceBombComponent.cpp 
   Game/EnemyComponent.cpp

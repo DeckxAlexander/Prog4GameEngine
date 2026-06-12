@@ -6,34 +6,8 @@
 #endif
 
 #include "Minigin.h"
-#include "SceneManager.h"
-#include "ResourceManager.h"
-#include "RenderComponent.h"
-#include "MovementComponent.h"
-#include "ThrashCacheComponent.h"
-#include "TextComponent.h"
-#include "Scene.h"
-#include "FPSCounterComponent.h"
-#include "Renderer.h"
-
-#include "HealthComponent.h"
-#include "InputManager.h"
-#include "GridComponent.h"
-#include "CollisionComponent.h"
-#include "BombComponent.h"
-#include "PlaceBombComponent.h"
-#include "EnemyComponent.h"
-#include "GameCommands.h"
 #include "SDLSoundSystem.h"
-#include "States.h"
-#include "PlayerComponent.h"
-#include "GridTransform.h"
-#include "PowerUps.h"
-#include "CameraFollower.h"
-#include "MenuComponent.h"
-#include "MenuCommands.h"
 #include "GameSceneLoaderComponent.h"
-#include "ScoreBoardDisplayComponent.h"
 #include <filesystem>
 
 
@@ -46,132 +20,9 @@ static void load()
 		data_location = "../Data/";
 
 	dae::GameSceneLoader::GetInstance().SetDataPath(data_location);
-
-	auto font = dae::ResourceManager::GetInstance().LoadFont("Pixel.otf", 36);
-	auto& scene = dae::SceneManager::GetInstance().CreateScene();
-	dae::SceneManager::GetInstance().SetActiveScene(0);
-	auto menuGameObject = std::make_unique<dae::GameObject>();
-	auto menuRenderComponentLogo = std::make_unique<dae::RenderComponent>( "Textures/BombermanLogo.png");
-	menuRenderComponentLogo.get()->SetRenderOnScreen(true);
-	menuGameObject->AddComponent(std::make_unique<dae::MenuComponent>());
-	menuGameObject->AddComponent(std::move(menuRenderComponentLogo));
-	auto menucomponent = menuGameObject->GetComponentByType<dae::MenuComponent>();
-	menuGameObject->SetPosition(512, 150);
-	menuGameObject->SetScale(1.5f, 1.5f);
-
-
-	//SOLO BUTTON
-	auto textSolobutton = std::make_unique<dae::GameObject>();
-	auto textSolobuttoncomponent = std::make_unique<dae::TextComponent>( "Solo", font);
-	auto textSolobuttonRendercomponent = std::make_unique<dae::RenderComponent>();
-
-	menucomponent->AddButton(textSolobuttoncomponent.get(), dae::MenuComponent::MenuEvent::Solo);
-
-	textSolobuttonRendercomponent.get()->SetRenderOnScreen(true);
-	textSolobutton.get()->AddComponent(std::move(textSolobuttoncomponent));
-	textSolobutton.get()->AddComponent(std::move(textSolobuttonRendercomponent));
-	textSolobutton->SetPosition(512, 300);
-
-	//COOP BUTTON
-	auto textCoopbutton = std::make_unique<dae::GameObject>();
-	auto textCoopbuttoncomponent = std::make_unique<dae::TextComponent>( "Coop", font);
-	auto textCoopbuttonRendercomponent = std::make_unique<dae::RenderComponent>();
-
-	menucomponent->AddButton(textCoopbuttoncomponent.get(), dae::MenuComponent::MenuEvent::Coop);
-
-	textCoopbuttonRendercomponent.get()->SetRenderOnScreen(true);
-	textCoopbutton.get()->AddComponent(std::move(textCoopbuttoncomponent));
-	textCoopbutton.get()->AddComponent(std::move(textCoopbuttonRendercomponent));
-	textCoopbutton->SetPosition(512, 350);
-
-	//Versus BUTTON
-	auto textVersusbutton = std::make_unique<dae::GameObject>();
-	auto textVersusbuttoncomponent = std::make_unique<dae::TextComponent>( "Versus", font);
-	auto textVersusbuttonRendercomponent = std::make_unique<dae::RenderComponent>();
-
-	menucomponent->AddButton(textVersusbuttoncomponent.get(), dae::MenuComponent::MenuEvent::Versus);
-
-	textVersusbuttonRendercomponent.get()->SetRenderOnScreen(true);
-	textVersusbutton.get()->AddComponent(std::move(textVersusbuttoncomponent));
-	textVersusbutton.get()->AddComponent(std::move(textVersusbuttonRendercomponent));
-	textVersusbutton->SetPosition(512, 400);
-
-	//QUIT BUTTON
-	auto textQuitbutton = std::make_unique<dae::GameObject>();
-	auto textQuitbuttoncomponent = std::make_unique<dae::TextComponent>( "Quit", font);
-	auto textQuitbuttonRendercomponent = std::make_unique<dae::RenderComponent>();
-
-	menucomponent->AddButton(textQuitbuttoncomponent.get(), dae::MenuComponent::MenuEvent::Quit);
-
-	textQuitbuttonRendercomponent.get()->SetRenderOnScreen(true);
-	textQuitbutton.get()->AddComponent(std::move(textQuitbuttoncomponent));
-	textQuitbutton.get()->AddComponent(std::move(textQuitbuttonRendercomponent));
-	textQuitbutton->SetPosition(512, 450);
-
-	menucomponent->MoveSelected(0);
-
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_W, dae::KeyState::Up, std::make_unique<dae::MoveMenuCommand>(menucomponent), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_S, dae::KeyState::Up, std::make_unique<dae::MoveMenuCommand>(menucomponent), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_SPACE, dae::KeyState::Up, std::make_unique<dae::ExecuteMenuCommand>(menucomponent), nullptr);
-
-	for (int index{}; index < dae::Controller::GetConnectedControllerCount(); index++)
-	{
-		auto controller = std::make_unique<dae::Controller>(index);
-		controller->BindCommand(GAMEPAD_DPAD_UP, dae::KeyState::Up, std::make_unique<dae::MoveMenuCommand>(menucomponent), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
-		controller->BindCommand(GAMEPAD_DPAD_DOWN, dae::KeyState::Up, std::make_unique<dae::MoveMenuCommand>(menucomponent), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
-		controller->BindCommand(GAMEPAD_A, dae::KeyState::Up, std::make_unique<dae::ExecuteMenuCommand>(menucomponent), nullptr);
-		dae::InputManager::GetInstance().AddController(std::move(controller));
-	}
-
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_F2, dae::KeyState::Up, std::make_unique<dae::ToggleMuteCommand>(), nullptr);
-
-	scene.Add(std::move(menuGameObject));
-	scene.Add(std::move(textSolobutton));
-	scene.Add(std::move(textCoopbutton));
-	scene.Add(std::move(textVersusbutton));
-	scene.Add(std::move(textQuitbutton));
-
-	//ScoreBoard
-	auto scoreboardTitleObject = std::make_unique<dae::GameObject>();
-	auto scoreboardTitleTextComponent = std::make_unique<dae::TextComponent>( "ScoreBoard:",font);
-	auto scoreboardTitleRenderComponent = std::make_unique<dae::RenderComponent>();
-
-	scoreboardTitleRenderComponent.get()->SetRenderOnScreen(true);
-	scoreboardTitleObject.get()->AddComponent(std::move(scoreboardTitleTextComponent));
-	scoreboardTitleObject.get()->AddComponent(std::move(scoreboardTitleRenderComponent));
-	scoreboardTitleObject.get()->AddComponent(std::make_unique<dae::ScoreBoardDisplayComponent>());
-	auto scoreboardDisplay = scoreboardTitleObject.get()->GetComponentByType<dae::ScoreBoardDisplayComponent>();
-	scoreboardTitleObject->SetPosition(850.f, 100.f);
-	scene.Add(std::move(scoreboardTitleObject));
-
-
-	auto textfont = dae::ResourceManager::GetInstance().LoadFont("Pixel.otf", 24);
-	for (int index{}; index<7; index++) 
-	{
-		auto scoreboardTextObject = std::make_unique<dae::GameObject>();
-		auto scoreboardTextComponent = std::make_unique<dae::TextComponent>( "-", textfont);
-		auto scoreboardRenderComponent = std::make_unique<dae::RenderComponent>();
-
-		scoreboardDisplay->AddText(scoreboardTextComponent.get());
-
-		scoreboardRenderComponent.get()->SetRenderOnScreen(true);
-		scoreboardTextObject.get()->AddComponent(std::move(scoreboardTextComponent));
-		scoreboardTextObject.get()->AddComponent(std::move(scoreboardRenderComponent));
-		scoreboardTextObject->SetPosition(850.f, 150.f+float(index*50.f));
-		scene.Add(std::move(scoreboardTextObject));
-		
-	}
-
+	dae::GameSceneLoader::GetInstance().LoadMainMenu();
 	
-	scoreboardDisplay->SetDataPath(data_location);
-	scoreboardDisplay->RefreshScore("scores.csv");
-
-
-	scene.Start();
 	//SOUND
-
-
-
 	auto fullPath = data_location / "BombExplodes.wav";
 	auto filename = fs::path(fullPath).string();
 	dae::SoundSystemLocator::register_sound_system(std::make_unique<dae::SDLSoundSystem>());

@@ -1,4 +1,4 @@
-#include "MovementComponent.h"
+#include "MovementComponents.h"
 #include "CollisionComponent.h"
 #include "GameObject.h"
 #include "TimeManager.h"
@@ -12,11 +12,7 @@
 
 void dae::MovementComponent::Start()
 {
-
      m_Collider = GetOwner()->GetComponentByType<CollisionComponent>();
-
-
-
 }
 
 dae::MovementComponent::MovementComponent( float speed, GridComponent* pGrid) : ObjectComponent(), m_pGrid{ pGrid },m_Speed{speed}
@@ -42,8 +38,6 @@ void dae::MovementComponent::Update()
         m_pOwner->SetPosition(pos.x, pos.y);
         return;
     }
-
-
 
     float snapSpeed{ 12.f };
     float tileSizeX{ m_pGrid->GetTileScale().x};
@@ -196,15 +190,7 @@ void dae::MovementComponent::Update()
             }
         }
     }
-    
-
     if (hasHit) m_pOwner->SetPosition(pos.x, pos.y);
-
-    
-
-
-
-
 }
 
 
@@ -287,10 +273,7 @@ glm::vec3 dae::ChaseMovementComponent::FindDirection()
     }
 
 
-    std::vector<glm::ivec2> dirs = {
-        {1, 0}, {-1, 0}, {0, 1}, {0, -1}
-    };
-
+    std::vector<glm::ivec2> dirs = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
 
     for (auto& dir : dirs) {
         if (m_pGrid->GetGridLayout()[m_pGrid->GridToIndex(pos + dir)] != GridComponent::GridValue::soft &&
@@ -298,7 +281,6 @@ glm::vec3 dae::ChaseMovementComponent::FindDirection()
             return { dir.x, dir.y, 0 };
         }
     }
-    std::cout << "NONE\n";
 
     return glm::vec3();
 }
@@ -307,16 +289,12 @@ void dae::ChaseMovementComponent::SetTarget(GameObject* target)
 {
     m_Target = target;
     SetVelocity(FindDirection());
-
-
 }
 
 
 void dae::ChaseMovementComponent::Update()
 {
     m_Velocity = m_DesiredVelocity;
-
-
     MovementComponent::Update();
 }
 
@@ -324,12 +302,8 @@ void dae::ChaseMovementComponent::HitCollider()
 {
     int gridForwardIndex = m_pGrid->GridToIndex(m_pGrid->WorldPosToTile(GetOwner()->GetWorldPosition()) + glm::ivec2{ m_DesiredVelocity.x, m_DesiredVelocity.y});
     if (m_pGrid->GetGridLayout()[gridForwardIndex] != GridComponent::GridValue::bomb) return;
-
-
-    std::cout << "\nBOMB! Giveup\n";
     GetOwner()->GetComponentByType<EnemyComponent>()->GiveUpChase();
     GetOwner()->GetComponentByType<WanderMovementComponent>()->SetVelocity(m_DesiredVelocity.x, m_DesiredVelocity.y);
-
 }
 
 dae::ChaseMovementComponent::ChaseMovementComponent( float speed, GridComponent* pGrid) : MovementComponent( speed, pGrid)
@@ -348,10 +322,5 @@ void dae::PlayerMovementComponent::Update()
         if (abs(m_Velocity.x) > abs(m_Velocity.y)) SoundSystemLocator::get_sound_system().PlaySound(2);
         else SoundSystemLocator::get_sound_system().PlaySound(3);
     }
-
     MovementComponent::Update();
-    
-
-
-
 }
