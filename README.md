@@ -1,88 +1,131 @@
 ﻿# Bomberman Engine
-
-Minigin is a very small project using [SDL3](https://www.libsdl.org/) and [glm](https://github.com/g-truc/glm) for 2D c++ game projects. It is in no way a game engine, only a barebone start project where everything sdl related has been set up. It contains glm for vector math, to aleviate the need to write custom vector and matrix classes.
+ 
+A replication of the original Bomberman game made with **minigin** for the Programming 4 course at DAE.
 
 [![Build Status](https://github.com/DeckxAlexander/Prog4GameEngine/actions/workflows/cmake.yml/badge.svg)](https://github.com/DeckxAlexander/cmake/actions)
 [![Build Status](https://github.com/DeckxAlexander/Prog4GameEngine/actions/workflows/emscripten.yml/badge.svg)](https://github.com/DeckxAlexander/emscripten/actions)
-<!-- a normal html comment[![GitHub Release](https://img.shields.io/github/v/release/avadae/minigin?logo=github&sort=semver)](https://github.com/avadae/minigin/releases/latest)-->
 
-# Goal
+# Github
 
-Minigin can/may be used as a start project for the exam assignment in the course [Programming 4](https://youtu.be/j96Oh6vzhmg) at DAE. In that assignment students need to recreate a popular 80's arcade game with a game engine they need to program themselves. During the course we discuss several game programming patterns, using the book '[Game Programming Patterns](https://gameprogrammingpatterns.com/)' by [Robert Nystrom](https://github.com/munificent) as reading material. 
+[Github Repository](https://github.com/DeckxAlexander/Prog4GameEngine)
 
-# Disclaimer
 
-Minigin is, despite perhaps the suggestion in its name, **not** a game engine. It is just a very simple SDL3 ready project with some of the scaffolding in place to get started. None of the patterns discussed in the course are used yet (except singleton which use we challenge during the course). It is up to the students to implement their own vision for their engine, apply patterns as they see fit, create their game as efficient as possible.
+# Engine
 
-# Use
+To create the engine of the game we started from the Minigin start project. 
+Almost every week we learned a new Design Pattern and implemented it into the engine.
 
-Get the source from this project, or since students need to have their work on github too, they can use this repository as a template. Hit the "Use this template" button on the top right corner of the github page of this project.
+## Design Patterns
 
-## Windows version
+This project uses the following Game Patterns:
 
-Either
-- Open the root folder in Visual Studio 2026; this will be recognized as a cmake project.
+- Game Loop
+- Update
+- Components
+- Dirty flag
+- Commands
+- Subject / Observers
+- Service locator
+- Singleton
+- States
+
+
+# Design choices
+
+During development I made the following design choices:
+
+### 60 FPS
+FPS is capped at 60 to ensure a consistent frame rate across different hardware.
+
+### Time Manager
+I used a Time Manager Singleton to provide global access to delta time, ensuring it can be accessed from anywhere in the engine without needing to pass it through function parameters.
+
+### States 
+I used the State pattern for enemy behavior, since enemies can switch between different behaviors such as wandering or chasing the player. 
+Enemies can also have different levels of intelligence, with their specific behavior encapsulated within each state.
+
+### Threading
+I used multithreading for the soundsystem to prevent it from blocking or slowing down the gameloop
+
+### Service locator
+The soundsystem uses a service locator to make sure its always accesible.
+In addition, there is also a service for the grid component, since alot of components need to access it.
+
+### Singleton
+I used Singletons for the GameSceneLoader and GameManager, as these classes need to be globally accessible and consistent across all scenes throughout the game.
+I also used a Singleton for the ColliderManager to keep track of all colliders in the game, used for movement etc.
+
+### Scores
+The scoreboard is saved to a CSV file, allowing high scores and a list of all players to exist across multiple sessions.
+
+### Levels
+Levels are loaded from a text file, allowing for easy customization of level data without changing the source code.
+
+### Game Manager
+The GameManager keeps track of the game's score and overall state. It is also responsible for transferring player data between levels. 
+This prevents player data from being lost during scene transitions.
+
+### Scene transistions
+The SceneManager maintains a collection of all available scenes and keeps track of the currently active scene through an index. 
+When a new scene is loaded, the previous scene is removed from memory to safe up memory. 
+However the Main Menu scene remains loaded because it is accessed frequently throughout the game.
+
+
+# Game
+
+The game is a replication of the first bomberman game.
+It features 4 enemies:
+- Balloom
+- Oneal
+- Doll
+- Minvo
+
+It features 3 powerups:
+- Flames
+- Extra Bomb
+- Detonator
+
+And it features 3 different gamemodes:
+- Solo
+- Coop
+- Versus
+
+### Game rules
+- Each Bomberman starts with **3 extra lives**.
+- Bomberman loses a life when colliding with an enemy or when caught in the blast radius of a bomb.
+- A level is completed when all enemies have been killed and the exit has been found.
+
+# Controls
+
+## Keyboard
+
+### Game:
+Moving - WASD
+
+Place Bomb - X
+
+Detonate - C
+
+### Menu:
+Moving Selected - WASD
+
+Executing Selected - SPACE
+
+## GamePad
+
+### Game:
+Moving - DPAD
+
+Place Bomb - A
+
+Detonate - X
+
+### Menu:
+Moving Selected - DPAD
+
+Executing Selected - X
+
+
   
-Or
-- Install CMake 
-- Install CMake and CMake Tools extensions in Visual Code
-- Open the root folder in Visual Code,  this will be recognized as a cmake project.
 
-Or
-- Use whatever editor you like :)
-
-## Emscripten (web) version
-
-### On windows
-
-For installing all of the needed tools on Windows I recommend using [Chocolatey](https://chocolatey.org/). You can then run the following in a terminal to install what is needed:
-
-    choco install -y cmake
-    choco install -y emscripten
-    choco install -y ninja
-    choco install -y python
-
-In a terminal, navigate to the root folder. Run this: 
-
-    mkdir build_web
-    cd build_web
-    emcmake cmake ..
-    emmake ninja
-
-To be able to see the webpage you can start a python webserver in the build_web folder
-
-    python -m http.server
-
-Then browse to http://localhost:8000 and you're good to go.
-
-### On OSX
-
-On Mac you can use homebrew
-
-    brew install cmake
-    brew install emscripten
-    brew install python
-
-In a terminal on OSX, navigate to the root folder. Run this: 
-
-    mkdir build_web
-    cd build_web
-    emcmake cmake .. -DCMAKE_OSX_ARCHITECTURES=""
-    emmake make
-
-To be able to see the webpage you can start a python webserver in the build_web folder
-
-    python3 -m http.server
-
-Then browse to http://localhost:8000 and you're good to go.
-
-## Github Actions
-
-This project is build with github actions.
-- The CMake workflow builds the project in Debug and Release for Windows and serves as a check that the project builds on that platform.
-- The Emscripten workflow generates a web version of the project and publishes it as a [github page](https://avadae.github.io/minigin/). 
-  - The url of that page will be `https://<username>.github.io/<repository>/`
-- You can embed this page with 
-
-```<iframe style="position: absolute; top: 0px; left: 0px; width: 1024px; height: 576px;" src="https://<username>.github.io/<repository>/" loading="lazy"></iframe>```
 
