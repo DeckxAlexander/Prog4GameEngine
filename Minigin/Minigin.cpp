@@ -87,12 +87,6 @@ dae::Minigin::Minigin(const std::filesystem::path& dataPath)
 		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 	}
 
-#ifndef __EMSCRIPTEN__
-	AllocConsole();
-	FILE* fp;
-	freopen_s(&fp, "CONOUT$", "w", stdout);
-#endif
-
 	if (!SDL_InitSubSystem(SDL_INIT_GAMEPAD))
 	{
 		SDL_Log("Input error: %s", SDL_GetError());
