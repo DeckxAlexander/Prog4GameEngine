@@ -66,6 +66,7 @@ namespace dae
 		//Parent/Child
 		void SetParent(GameObject* gameObject, bool keepWorldPosition = true);
 		GameObject* GetParent() { return m_pParent; };
+		bool IsDecendant(GameObject* gameObject);
 
 
 		GameObject();

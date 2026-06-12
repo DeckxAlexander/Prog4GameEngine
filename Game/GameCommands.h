@@ -20,7 +20,7 @@ namespace dae
 		{
 		}
 
-		void Execute([[maybe_unused]] CommandValue* value) 
+		void Execute(CommandValue* value) 
 		{
 			auto comp = m_GameObject->GetComponentByType<MovementComponent>();
 			if (value != nullptr)comp->AddVelocity(value->Vec2D.x, value->Vec2D.y);
@@ -35,7 +35,7 @@ namespace dae
 		{
 		}
 
-		void Execute([[maybe_unused]] CommandValue* value)
+		void Execute( CommandValue*)
 		{
 			if (auto comp = m_GameObject->GetComponentByType<PlaceBombComponent>()) comp->PlaceBomb();
 		}
@@ -48,7 +48,7 @@ namespace dae
 		{
 		}
 
-		void Execute([[maybe_unused]] CommandValue* value)
+		void Execute( CommandValue*)
 		{
 			if (auto comp = m_GameObject->GetComponentByType<PlaceBombComponent>()) comp->ForceDetonate();
 		}

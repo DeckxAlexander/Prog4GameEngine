@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "GameObject.h"
+#include "GameObject.h"
 #include <string>
 #include "GameObject.h"
 #include "ResourceManager.h"
@@ -31,8 +32,8 @@ void dae::GameObject::MarkForDelete()
 
 void dae::GameObject::SetParent(GameObject* gameObject, bool keepWorldPosition)
 {
-	if (gameObject == this ||
-		std::find(m_Children.begin(), m_Children.end(), gameObject) != m_Children.end()) return;
+	if (gameObject == this) return;
+	if (gameObject != nullptr && gameObject->IsDecendant(this)) return;
 
 
 	if (m_pParent != nullptr) //Remove child from previous parent
@@ -64,6 +65,19 @@ void dae::GameObject::SetParent(GameObject* gameObject, bool keepWorldPosition)
 	m_pParent = gameObject;
 
 
+}
+
+bool dae::GameObject::IsDecendant(GameObject* gameObject)
+{
+	const GameObject* parent = m_pParent;
+	while (parent)
+	{
+		if (parent == gameObject) return true;
+
+		parent = parent->m_pParent;
+	}
+
+	return false;
 }
 
 

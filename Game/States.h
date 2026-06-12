@@ -9,7 +9,7 @@ namespace dae {
 	class State
 	{
 	public:
-		virtual void Start([[maybe_unused]] GameObject* ownerObject) = 0;
+		virtual void Start(GameObject* ownerObject) = 0;
 		virtual std::unique_ptr<State> Update() = 0;
 		virtual void End() = 0;
 
@@ -23,7 +23,7 @@ namespace dae {
 	public:
 		EnemyState() = default;
 		virtual ~EnemyState() = default;
-		virtual void Start([[maybe_unused]] GameObject* ownerObject) override;
+		virtual void Start(GameObject* ownerObject) override;
 		virtual  std::unique_ptr<State> Update() override = 0;
 		virtual void End() override = 0;
 
@@ -40,7 +40,7 @@ namespace dae {
 	public:
 		SearchWanderState() = default;
 
-		virtual void Start([[maybe_unused]] GameObject* ownerObject) override;
+		virtual void Start(GameObject* ownerObject) override;
 		virtual std::unique_ptr<State> Update() override;
 		virtual void End() override;
 
@@ -52,7 +52,7 @@ namespace dae {
 	public:
 		IdleWanderState() = default;
 
-		virtual void Start([[maybe_unused]] GameObject* ownerObject) override;
+		virtual void Start(GameObject* ownerObject) override;
 		virtual std::unique_ptr<State> Update() override { return nullptr; }
 		virtual void End() override;
 
@@ -87,7 +87,7 @@ namespace dae {
 	public:
 		ChaseState(GameObject* target) : m_Target{target} {}
 
-		virtual void Start([[maybe_unused]] GameObject* ownerObject) override;
+		virtual void Start(GameObject* ownerObject) override;
 		virtual std::unique_ptr<State> Update() override;
 		virtual void End() override;
 
