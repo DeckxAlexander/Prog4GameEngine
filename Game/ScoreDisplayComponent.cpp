@@ -2,6 +2,7 @@
 #include "GameManager.h"
 #include "GameObject.h"
 #include "TextComponent.h"
+#include <sstream>
 
 
 void dae::ScoreDisplayComponent::Start()

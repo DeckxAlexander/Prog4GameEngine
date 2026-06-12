@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.26)
 project(Minigin)
 
-
-
 if(EMSCRIPTEN)
   message("Using Emscripten!")
 endif()
@@ -69,7 +67,8 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Game/ScoreDisplayComponent.cpp   
   Game/LivesDisplayComponent.cpp 
   Game/ScoreBoardComponent.cpp 
-  Game/ScoreBoardDisplayComponent.cpp)
+  Game/ScoreBoardDisplayComponent.cpp
+)
 
 # enable c++20 features
 target_compile_features(MiniginEngine PUBLIC cxx_std_20)
@@ -197,12 +196,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SDL_mixer)
 
-
-
-
-
-
-
 target_include_directories(MiniginEngine PUBLIC
   ${CMAKE_SOURCE_DIR}/Minigin/
   ${glm_SOURCE_DIR}
@@ -224,8 +217,6 @@ target_link_libraries(MiniginEngine PUBLIC
   ${VLD_LIBRARIES}
 )
 
-
-
 target_include_directories(${TARGET_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/Game/
 )
@@ -244,10 +235,6 @@ if(MSVC)
 else()
   target_compile_options(${TARGET_NAME} PRIVATE -Wall -Wextra -Werror)
 endif()
-
-
-
-
 
 if(EMSCRIPTEN)
   set(EMSCRIPTEN_COMPILE_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -g")
