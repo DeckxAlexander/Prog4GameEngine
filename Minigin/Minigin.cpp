@@ -95,7 +95,7 @@ dae::Minigin::Minigin(const std::filesystem::path& dataPath)
 
 	if (!SDL_InitSubSystem(SDL_INIT_AUDIO) )
 	{
-		std::cout << "SDL Init failed\n";
+		throw std::runtime_error(std::string("Input Error: ") + SDL_GetError());
 	}
 
 
