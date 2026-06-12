@@ -6,6 +6,7 @@
 #include "SoundSystem.h"
 #include <string>
 #include <iostream>
+#include <sstream>
 #include <fstream>
 #include <stdexcept>
 
