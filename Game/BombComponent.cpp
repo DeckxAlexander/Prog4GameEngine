@@ -61,7 +61,7 @@ void dae::BombComponent::Explode()
 
 }
 
-dae::BombComponent::BombComponent(float detonationTime, PlaceBombComponent* placer, int size) : ObjectComponent(), m_DetonationTime{ detonationTime }, m_Placer{ placer }, m_Size{ size }
+dae::BombComponent::BombComponent(float detonationTime, PlaceBombComponent* placer, int size) : ObjectComponent(), m_DetonationTime{ detonationTime }, m_Size{ size }, m_Placer{ placer }
 {}
 
 void dae::BombComponent::KillSurrounding(dae::GridTransform* gridTransform, glm::ivec4 dirSizes)

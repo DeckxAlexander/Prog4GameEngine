@@ -76,7 +76,7 @@ namespace dae {
 	public:
 		IdleState() = default;
 
-		virtual std::unique_ptr<State> Update() override {};
+		virtual std::unique_ptr<State> Update() override { return nullptr;  };
 		virtual void End() override {};
 
 
