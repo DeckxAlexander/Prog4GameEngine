@@ -21,8 +21,8 @@ namespace dae
 		void SetRenderOnScreen(bool value) { m_RenderOnScreen = value; }
 
 
-		RenderComponent(GameObject* pOwner);
-		RenderComponent(GameObject* pOwner, const std::string& filename);
+		RenderComponent();
+		RenderComponent(const std::string& filename);
 		~RenderComponent() = default; 
 		RenderComponent(const RenderComponent& other) = delete;
 		RenderComponent(RenderComponent&& other) = delete;

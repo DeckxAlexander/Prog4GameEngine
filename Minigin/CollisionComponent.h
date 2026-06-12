@@ -38,7 +38,7 @@ namespace dae
 		
 
 
-		CollisionComponent(GameObject* pOwner, float width, float height, char tag);
+		CollisionComponent(float width, float height, char tag);
 		~CollisionComponent();
 		CollisionComponent(const CollisionComponent& other) = delete;
 		CollisionComponent(CollisionComponent&& other) = delete;

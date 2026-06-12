@@ -37,7 +37,7 @@ void dae::LivesDisplayComponent::UpdateDisplay()
 	GetOwner()->GetComponentByType<TextComponent>()->SetText(text);
 }
 
-dae::LivesDisplayComponent::LivesDisplayComponent() : ObjectComponent(nullptr)
+dae::LivesDisplayComponent::LivesDisplayComponent() : ObjectComponent()
 {}
 
 dae::LivesDisplayComponent::~LivesDisplayComponent()

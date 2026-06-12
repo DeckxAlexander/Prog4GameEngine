@@ -29,7 +29,7 @@ namespace dae
 
 		void ForceDetonate();
 
-		PlaceBombComponent(GameObject* pOwner, GridComponent* pGrid) : ObjectComponent(pOwner), m_pGrid{pGrid}
+		PlaceBombComponent(GridComponent* pGrid) : ObjectComponent(), m_pGrid{pGrid}
 		{}
 		~PlaceBombComponent() = default;
 		PlaceBombComponent(const PlaceBombComponent& other) = delete;

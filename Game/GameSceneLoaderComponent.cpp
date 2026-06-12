@@ -10,7 +10,6 @@
 #include "Renderer.h"
 #include "HealthComponent.h"
 #include "InputManager.h"
-#include "SteamObserver.h"
 #include "GridComponent.h"
 #include "CollisionComponent.h"
 #include "BombComponent.h"
@@ -54,14 +53,14 @@ void dae::GameSceneLoader::SetupScene(SceneDetails details)
 
 
 	auto tileGameObject = std::make_unique<dae::GameObject>();
-	auto tileRenderComponent = std::make_unique<dae::RenderComponent>(tileGameObject.get(), "background2.png");
+	auto tileRenderComponent = std::make_unique<dae::RenderComponent>( "background2.png");
 	tileRenderComponent->SetRenderOnScreen(true);
 	tileGameObject.get()->AddComponent(std::move(tileRenderComponent));
 	tileGameObject->SetPosition(512.f, 288.f);
 	scene.Add(std::move(tileGameObject));
 
 	auto GridManager = std::make_unique<dae::GameObject>();
-	auto GridComp = std::make_unique<dae::GridComponent>(GridManager.get(), details.width, details.height); //31 13
+	auto GridComp = std::make_unique<dae::GridComponent>( details.width, details.height); //31 13
 	dae::GridComponent* grid = GridComp.get();
 	GridComp->SetTileScale(32.f, 32.f);
 	GridManager.get()->AddComponent(std::move(GridComp));
@@ -77,10 +76,10 @@ void dae::GameSceneLoader::SetupScene(SceneDetails details)
 	auto pixelfont = dae::ResourceManager::GetInstance().LoadFont("Pixel.otf", 48);
 
 	auto fpso = std::make_unique<dae::GameObject>();
-	auto fpsc = std::make_unique<dae::FPSCounterComponent>(fpso.get());
-	auto fpst = std::make_unique<dae::TextComponent>(fpso.get(), "FPS", normalfont);
+	auto fpsc = std::make_unique<dae::FPSCounterComponent>();
+	auto fpst = std::make_unique<dae::TextComponent>( "FPS", normalfont);
 	fpst.get()->SetColor({ 0,0,0,255 });
-	auto fpsr = std::make_unique<dae::RenderComponent>(fpso.get());
+	auto fpsr = std::make_unique<dae::RenderComponent>();
 	fpsr.get()->SetRenderOnScreen(true);
 	fpso.get()->AddComponent(std::move(fpsc));
 	fpso.get()->AddComponent(std::move(fpst));
@@ -90,8 +89,8 @@ void dae::GameSceneLoader::SetupScene(SceneDetails details)
 	scene.Add(std::move(fpso));
 
 	auto livesGameObject = std::make_unique<dae::GameObject>();
-	auto livesRenderComponent = std::make_unique<dae::RenderComponent>(livesGameObject.get());
-	auto livesTextComponent = std::make_unique<dae::TextComponent>(livesGameObject.get(), "0", pixelfont);
+	auto livesRenderComponent = std::make_unique<dae::RenderComponent>();
+	auto livesTextComponent = std::make_unique<dae::TextComponent>( "0", pixelfont);
 	livesTextComponent.get()->SetColor({ 0,0,0,255 });
 	livesRenderComponent->SetRenderOnScreen(true);
 	livesGameObject.get()->AddComponent(std::move(livesTextComponent));
@@ -102,8 +101,8 @@ void dae::GameSceneLoader::SetupScene(SceneDetails details)
 
 
 	auto scoreGameObject = std::make_unique<dae::GameObject>();
-	auto scoreRenderComponent = std::make_unique<dae::RenderComponent>(scoreGameObject.get());
-	auto scoreTextComponent = std::make_unique<dae::TextComponent>(scoreGameObject.get(), "0", pixelfont);
+	auto scoreRenderComponent = std::make_unique<dae::RenderComponent>();
+	auto scoreTextComponent = std::make_unique<dae::TextComponent>( "0", pixelfont);
 	scoreTextComponent.get()->SetColor({ 0,0,0,255 });
 	scoreRenderComponent->SetRenderOnScreen(true);
 	scoreGameObject.get()->AddComponent(std::move(scoreTextComponent));
@@ -130,7 +129,7 @@ void dae::GameSceneLoader::SetupScene(SceneDetails details)
 
 	SpawnEnemies(details);
 
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_F1, dae::KeyState::Up, std::make_unique<dae::ToggleMuteCommand>(), nullptr);
+	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_F2, dae::KeyState::Up, std::make_unique<dae::ToggleMuteCommand>(), nullptr);
 
 	
 	scene.Start();
@@ -142,16 +141,17 @@ void dae::GameSceneLoader::SpawnPlayers(int amount)
 	InputManager::GetInstance().UnbindAll();
 	auto grid = GridLocator::GetGrid();
 	auto& scene = SceneManager::GetInstance().GetActiveScene();
+	int controllersAmount = Controller::GetConnectedControllerCount();
 
 	for (int index{}; index < amount; index++)
 	{
 		auto playerGameObject = std::make_unique<dae::GameObject>();
-		auto playerRenderComponent = std::make_unique<dae::RenderComponent>(playerGameObject.get(), "Bomberman.png");
-		auto playerMovementComponent = std::make_unique<dae::PlayerMovementComponent>(playerGameObject.get(), 60.f, grid);
-		auto playerHealthComponent = std::make_unique<dae::HealthComponent>(playerGameObject.get());
-		auto playerCollider = std::make_unique<dae::CollisionComponent>(playerGameObject.get(), 18.f, 27.f, 'e');
-		auto playerplacebombcomponent = std::make_unique<dae::PlaceBombComponent>(playerGameObject.get(), grid);
-		auto playerComponent = std::make_unique<dae::PlayerComponent>(playerGameObject.get(), index);
+		auto playerRenderComponent = std::make_unique<dae::RenderComponent>( "Bomberman.png");
+		auto playerMovementComponent = std::make_unique<dae::PlayerMovementComponent>( 60.f, grid);
+		auto playerHealthComponent = std::make_unique<dae::HealthComponent>();
+		auto playerCollider = std::make_unique<dae::CollisionComponent>( 18.f, 27.f, 'e');
+		auto playerplacebombcomponent = std::make_unique<dae::PlaceBombComponent>( grid);
+		auto playerComponent = std::make_unique<dae::PlayerComponent>( index);
 		playerGameObject.get()->AddComponent(std::move(playerRenderComponent));
 		playerGameObject.get()->AddComponent(std::move(playerMovementComponent));
 		playerGameObject.get()->AddComponent(std::move(playerCollider));
@@ -171,16 +171,32 @@ void dae::GameSceneLoader::SpawnPlayers(int amount)
 			dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_X, dae::KeyState::Up, std::make_unique<dae::PlaceBomb>(playerGameObject.get()), nullptr);
 			dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_C, dae::KeyState::Up, std::make_unique<dae::DetonateBomb>(playerGameObject.get()), nullptr);
 		}
-		else {
-			auto controller1 = std::make_unique<Controller>(index-1);
-			controller1->BindAxis(std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 1.f }), true);
-			controller1->BindCommand(GAMEPAD_DPAD_UP, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, -1.f }));
-			controller1->BindCommand(GAMEPAD_DPAD_DOWN, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, 1.f }));
-			controller1->BindCommand(GAMEPAD_DPAD_LEFT, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
-			controller1->BindCommand(GAMEPAD_DPAD_RIGHT, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
-			controller1->BindCommand(GAMEPAD_A, dae::KeyState::Up, std::make_unique<dae::PlaceBomb>(playerGameObject.get()), nullptr);
-			controller1->BindCommand(GAMEPAD_X, dae::KeyState::Up, std::make_unique<dae::DetonateBomb>(playerGameObject.get()), nullptr);
-			dae::InputManager::GetInstance().AddController(std::move(controller1));
+		if(controllersAmount < 2 && amount > 1) 
+		{
+			if (index > 0) 
+			{
+				auto controller = std::make_unique<Controller>(index - 1);
+				controller->BindAxis(std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 1.f }), true);
+				controller->BindCommand(GAMEPAD_DPAD_UP, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, -1.f }));
+				controller->BindCommand(GAMEPAD_DPAD_DOWN, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, 1.f }));
+				controller->BindCommand(GAMEPAD_DPAD_LEFT, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
+				controller->BindCommand(GAMEPAD_DPAD_RIGHT, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
+				controller->BindCommand(GAMEPAD_A, dae::KeyState::Up, std::make_unique<dae::PlaceBomb>(playerGameObject.get()), nullptr);
+				controller->BindCommand(GAMEPAD_X, dae::KeyState::Up, std::make_unique<dae::DetonateBomb>(playerGameObject.get()), nullptr);
+				dae::InputManager::GetInstance().AddController(std::move(controller));
+			}
+		}
+		else 
+		{
+			auto controller = std::make_unique<Controller>(index);
+			controller->BindAxis(std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 1.f }), true);
+			controller->BindCommand(GAMEPAD_DPAD_UP, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, -1.f }));
+			controller->BindCommand(GAMEPAD_DPAD_DOWN, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, 1.f }));
+			controller->BindCommand(GAMEPAD_DPAD_LEFT, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
+			controller->BindCommand(GAMEPAD_DPAD_RIGHT, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(playerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
+			controller->BindCommand(GAMEPAD_A, dae::KeyState::Up, std::make_unique<dae::PlaceBomb>(playerGameObject.get()), nullptr);
+			controller->BindCommand(GAMEPAD_X, dae::KeyState::Up, std::make_unique<dae::DetonateBomb>(playerGameObject.get()), nullptr);
+			dae::InputManager::GetInstance().AddController(std::move(controller));
 		}
 		scene.Add(std::move(playerGameObject));
 	}
@@ -189,12 +205,13 @@ void dae::GameSceneLoader::SpawnPlayers(int amount)
 void dae::GameSceneLoader::SpawnVersusPlayer(int x, int y, GridComponent* grid, Scene& scene)
 {
 	int playerIndex = 1;
+	int controllersAmount = Controller::GetConnectedControllerCount();
 	auto versusPlayerGameObject = std::make_unique<dae::GameObject>();
-	auto versusPlayerRenderComponent = std::make_unique<dae::RenderComponent>(versusPlayerGameObject.get(), "Balloom.png");
-	auto versusPlayerMovementComponent = std::make_unique<dae::MovementComponent>(versusPlayerGameObject.get(), 60.f, grid);
-	auto versusPlayerHealthComponent = std::make_unique<dae::HealthComponent>(versusPlayerGameObject.get());
-	auto versusPlayerCollider = std::make_unique<dae::CollisionComponent>(versusPlayerGameObject.get(), 18.f, 27.f, 'e');
-	auto versusEnemyComponent = std::make_unique<dae::EnemyComponent>(versusPlayerGameObject.get(), EnemyComponent::IntelligenceType::player);
+	auto versusPlayerRenderComponent = std::make_unique<dae::RenderComponent>( "Balloom.png");
+	auto versusPlayerMovementComponent = std::make_unique<dae::MovementComponent>( 60.f, grid);
+	auto versusPlayerHealthComponent = std::make_unique<dae::HealthComponent>();
+	auto versusPlayerCollider = std::make_unique<dae::CollisionComponent>( 18.f, 27.f, 'e');
+	auto versusEnemyComponent = std::make_unique<dae::EnemyComponent>( EnemyComponent::IntelligenceType::player);
 	versusPlayerGameObject.get()->AddComponent(std::move(versusPlayerRenderComponent));
 	versusPlayerGameObject.get()->AddComponent(std::move(versusPlayerMovementComponent));
 	versusPlayerGameObject.get()->AddComponent(std::move(versusPlayerCollider));
@@ -207,21 +224,30 @@ void dae::GameSceneLoader::SpawnVersusPlayer(int x, int y, GridComponent* grid, 
 	versusPlayerGameObject.get()->SetPosition(tilescaleX * float(x) + tilescaleX * 0.5f, tilescaleY * float(y) + tilescaleY * 0.5f);
 
 	//Bindings
-	if (playerIndex == 0)
+	if (controllersAmount < 2)
 	{
-			dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_D, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(versusPlayerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
-			dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_A, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(versusPlayerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
-			dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_W, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(versusPlayerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, -1.f }));
-			dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_S, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(versusPlayerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, 1.f }));
+		auto controller = std::make_unique<Controller>(playerIndex - 1);
+		controller->BindAxis(std::make_unique<dae::MoveAround>(versusPlayerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 1.f }), true);
+		controller->BindCommand(GAMEPAD_DPAD_UP, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(versusPlayerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, -1.f }));
+		controller->BindCommand(GAMEPAD_DPAD_DOWN, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(versusPlayerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, 1.f }));
+		controller->BindCommand(GAMEPAD_DPAD_LEFT, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(versusPlayerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
+		controller->BindCommand(GAMEPAD_DPAD_RIGHT, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(versusPlayerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
+		controller->BindCommand(GAMEPAD_A, dae::KeyState::Up, std::make_unique<dae::PlaceBomb>(versusPlayerGameObject.get()), nullptr);
+		controller->BindCommand(GAMEPAD_X, dae::KeyState::Up, std::make_unique<dae::DetonateBomb>(versusPlayerGameObject.get()), nullptr);
+		dae::InputManager::GetInstance().AddController(std::move(controller));
+		
 	}
-	else {
-		auto controller1 = std::make_unique<Controller>(playerIndex - 1);
-		controller1->BindAxis(std::make_unique<dae::MoveAround>(versusPlayerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 1.f }), true);
-		controller1->BindCommand(GAMEPAD_DPAD_UP, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(versusPlayerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, -1.f }));
-		controller1->BindCommand(GAMEPAD_DPAD_DOWN, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(versusPlayerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, 1.f }));
-		controller1->BindCommand(GAMEPAD_DPAD_LEFT, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(versusPlayerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
-		controller1->BindCommand(GAMEPAD_DPAD_RIGHT, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(versusPlayerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
-		dae::InputManager::GetInstance().AddController(std::move(controller1));
+	else
+	{
+		auto controller = std::make_unique<Controller>(playerIndex);
+		controller->BindAxis(std::make_unique<dae::MoveAround>(versusPlayerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 1.f }), true);
+		controller->BindCommand(GAMEPAD_DPAD_UP, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(versusPlayerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, -1.f }));
+		controller->BindCommand(GAMEPAD_DPAD_DOWN, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(versusPlayerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, 1.f }));
+		controller->BindCommand(GAMEPAD_DPAD_LEFT, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(versusPlayerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
+		controller->BindCommand(GAMEPAD_DPAD_RIGHT, dae::KeyState::Pressed, std::make_unique<dae::MoveAround>(versusPlayerGameObject.get()), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
+		controller->BindCommand(GAMEPAD_A, dae::KeyState::Up, std::make_unique<dae::PlaceBomb>(versusPlayerGameObject.get()), nullptr);
+		controller->BindCommand(GAMEPAD_X, dae::KeyState::Up, std::make_unique<dae::DetonateBomb>(versusPlayerGameObject.get()), nullptr);
+		dae::InputManager::GetInstance().AddController(std::move(controller));
 	}
 	scene.Add(std::move(versusPlayerGameObject));
 	
@@ -311,18 +337,18 @@ void dae::GameSceneLoader::SpawnEnemies(SceneDetails details)
 void dae::GameSceneLoader::SpawnBalloom(int x, int y, GridComponent* grid, Scene& scene)
 {
 	auto enemyGameObject = std::make_unique<dae::GameObject>();
-	auto enemyRenderComponent = std::make_unique<dae::RenderComponent>(enemyGameObject.get(), "Balloom.png");
-	auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>(enemyGameObject.get(), 40.f, grid);
+	auto enemyRenderComponent = std::make_unique<dae::RenderComponent>( "Balloom.png");
+	auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>( 40.f, grid);
 	if (rand() % 2 == 1)
 	{
 		enemyMovementComponent.get()->SetVelocity(0.f, 1.f);
 	}
 	else enemyMovementComponent.get()->SetVelocity(1.f, 0.f);
 
-	auto enemyHealthComponent = std::make_unique<dae::HealthComponent>(enemyGameObject.get());
-	auto enemyCollider = std::make_unique<dae::CollisionComponent>(enemyGameObject.get(), 18.f, 27.f, 'e');
+	auto enemyHealthComponent = std::make_unique<dae::HealthComponent>();
+	auto enemyCollider = std::make_unique<dae::CollisionComponent>( 18.f, 27.f, 'e');
 	enemyCollider.get()->AddBlockingTag('b');
-	auto enemyComponent = std::make_unique<dae::EnemyComponent>(enemyGameObject.get(), EnemyComponent::IntelligenceType::normal);
+	auto enemyComponent = std::make_unique<dae::EnemyComponent>( EnemyComponent::IntelligenceType::normal);
 	enemyGameObject.get()->AddComponent(std::move(enemyRenderComponent));
 	enemyGameObject.get()->AddComponent(std::move(enemyCollider));
 	enemyGameObject.get()->AddComponent(std::move(enemyMovementComponent));
@@ -340,9 +366,9 @@ void dae::GameSceneLoader::SpawnBalloom(int x, int y, GridComponent* grid, Scene
 void dae::GameSceneLoader::SpawnOneal(int x, int y, GridComponent* grid, Scene& scene)
 {
 	auto enemyGameObject = std::make_unique<dae::GameObject>();
-	auto enemyRenderComponent = std::make_unique<dae::RenderComponent>(enemyGameObject.get(), "Oneal.png");
-	auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>(enemyGameObject.get(), 60.f, grid);
-	auto enemyChaseMovementComponent = std::make_unique<dae::ChaseMovementComponent>(enemyGameObject.get(), 60.f, grid);
+	auto enemyRenderComponent = std::make_unique<dae::RenderComponent>( "Oneal.png");
+	auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>( 60.f, grid);
+	auto enemyChaseMovementComponent = std::make_unique<dae::ChaseMovementComponent>( 60.f, grid);
 
 	if (rand() % 2 == 1)
 	{
@@ -350,10 +376,10 @@ void dae::GameSceneLoader::SpawnOneal(int x, int y, GridComponent* grid, Scene& 
 	}
 	else enemyMovementComponent.get()->SetVelocity(1.f, 0.f);
 
-	auto enemyHealthComponent = std::make_unique<dae::HealthComponent>(enemyGameObject.get());
-	auto enemyCollider = std::make_unique<dae::CollisionComponent>(enemyGameObject.get(), 18.f, 27.f, 'e');
+	auto enemyHealthComponent = std::make_unique<dae::HealthComponent>();
+	auto enemyCollider = std::make_unique<dae::CollisionComponent>( 18.f, 27.f, 'e');
 	enemyCollider.get()->AddBlockingTag('b');
-	auto enemyComponent = std::make_unique<dae::EnemyComponent>(enemyGameObject.get(), EnemyComponent::IntelligenceType::smart);
+	auto enemyComponent = std::make_unique<dae::EnemyComponent>( EnemyComponent::IntelligenceType::smart);
 	enemyGameObject.get()->AddComponent(std::move(enemyRenderComponent));
 	enemyGameObject.get()->AddComponent(std::move(enemyCollider));
 	enemyGameObject.get()->AddComponent(std::move(enemyMovementComponent));
@@ -373,8 +399,8 @@ void dae::GameSceneLoader::SpawnOneal(int x, int y, GridComponent* grid, Scene& 
 void dae::GameSceneLoader::SpawnDoll(int x, int y, GridComponent* grid, Scene& scene)
 {
 	auto enemyGameObject = std::make_unique<dae::GameObject>();
-	auto enemyRenderComponent = std::make_unique<dae::RenderComponent>(enemyGameObject.get(), "Doll.png");
-	auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>(enemyGameObject.get(), 60.f, grid);
+	auto enemyRenderComponent = std::make_unique<dae::RenderComponent>( "Doll.png");
+	auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>( 60.f, grid);
 
 	if (rand() % 2 == 1)
 	{
@@ -382,10 +408,10 @@ void dae::GameSceneLoader::SpawnDoll(int x, int y, GridComponent* grid, Scene& s
 	}
 	else enemyMovementComponent.get()->SetVelocity(1.f, 0.f);
 
-	auto enemyHealthComponent = std::make_unique<dae::HealthComponent>(enemyGameObject.get());
-	auto enemyCollider = std::make_unique<dae::CollisionComponent>(enemyGameObject.get(), 18.f, 27.f, 'e');
+	auto enemyHealthComponent = std::make_unique<dae::HealthComponent>();
+	auto enemyCollider = std::make_unique<dae::CollisionComponent>( 18.f, 27.f, 'e');
 	enemyCollider.get()->AddBlockingTag('b');
-	auto enemyComponent = std::make_unique<dae::EnemyComponent>(enemyGameObject.get(), EnemyComponent::IntelligenceType::normal);
+	auto enemyComponent = std::make_unique<dae::EnemyComponent>( EnemyComponent::IntelligenceType::normal);
 	enemyGameObject.get()->AddComponent(std::move(enemyRenderComponent));
 	enemyGameObject.get()->AddComponent(std::move(enemyCollider));
 	enemyGameObject.get()->AddComponent(std::move(enemyMovementComponent));
@@ -404,9 +430,9 @@ void dae::GameSceneLoader::SpawnDoll(int x, int y, GridComponent* grid, Scene& s
 void dae::GameSceneLoader::SpawnMinvo(int x, int y, GridComponent* grid, Scene& scene)
 {
 	auto enemyGameObject = std::make_unique<dae::GameObject>();
-	auto enemyRenderComponent = std::make_unique<dae::RenderComponent>(enemyGameObject.get(), "Minvo.png");
-	auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>(enemyGameObject.get(), 80.f, grid);
-	auto enemyChaseMovementComponent = std::make_unique<dae::ChaseMovementComponent>(enemyGameObject.get(), 80.f, grid);
+	auto enemyRenderComponent = std::make_unique<dae::RenderComponent>( "Minvo.png");
+	auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>( 80.f, grid);
+	auto enemyChaseMovementComponent = std::make_unique<dae::ChaseMovementComponent>( 80.f, grid);
 
 	if (rand() % 2 == 1)
 	{
@@ -414,10 +440,10 @@ void dae::GameSceneLoader::SpawnMinvo(int x, int y, GridComponent* grid, Scene& 
 	}
 	else enemyMovementComponent.get()->SetVelocity(1.f, 0.f);
 
-	auto enemyHealthComponent = std::make_unique<dae::HealthComponent>(enemyGameObject.get());
-	auto enemyCollider = std::make_unique<dae::CollisionComponent>(enemyGameObject.get(), 18.f, 27.f, 'e');
+	auto enemyHealthComponent = std::make_unique<dae::HealthComponent>();
+	auto enemyCollider = std::make_unique<dae::CollisionComponent>( 18.f, 27.f, 'e');
 	enemyCollider.get()->AddBlockingTag('b');
-	auto enemyComponent = std::make_unique<dae::EnemyComponent>(enemyGameObject.get(), EnemyComponent::IntelligenceType::smart);
+	auto enemyComponent = std::make_unique<dae::EnemyComponent>( EnemyComponent::IntelligenceType::smart);
 	enemyGameObject.get()->AddComponent(std::move(enemyRenderComponent));
 	enemyGameObject.get()->AddComponent(std::move(enemyCollider));
 	enemyGameObject.get()->AddComponent(std::move(enemyMovementComponent));
@@ -437,6 +463,12 @@ void dae::GameSceneLoader::SpawnMinvo(int x, int y, GridComponent* grid, Scene& 
 
 
 
+
+bool dae::GameSceneLoader::DoesSceneExist(const std::string& filename)
+{
+	const auto fullPath = m_dataPath / filename;
+	return std::filesystem::exists(fullPath);
+}
 
 void dae::GameSceneLoader::LoadLevelFromFile(const std::string& filename, int playersAmount, bool isVersus)
 {
@@ -494,7 +526,7 @@ void dae::GameSceneLoader::LoadScoreBoard()
 	dae::SceneManager::GetInstance().SetActiveScene(scene);
 
 	auto LogoGameObject = std::make_unique<dae::GameObject>();
-	auto logoRenderComponent = std::make_unique<dae::RenderComponent>(LogoGameObject.get(), "BombermanLogo.png");
+	auto logoRenderComponent = std::make_unique<dae::RenderComponent>( "BombermanLogo.png");
 	logoRenderComponent.get()->SetRenderOnScreen(true);
 	LogoGameObject->AddComponent(std::move(logoRenderComponent));
 	LogoGameObject->AddComponent(std::make_unique<ScoreBoardComponent>());
@@ -506,8 +538,8 @@ void dae::GameSceneLoader::LoadScoreBoard()
 
 	//Score Text
 	auto textScoreObject = std::make_unique<dae::GameObject>();
-	auto textScoreTextComponent = std::make_unique<dae::TextComponent>(textScoreObject.get(), "0", bigfont);
-	auto textScoreRendercomponent = std::make_unique<dae::RenderComponent>(textScoreObject.get());
+	auto textScoreTextComponent = std::make_unique<dae::TextComponent>( "0", bigfont);
+	auto textScoreRendercomponent = std::make_unique<dae::RenderComponent>();
 	textScoreRendercomponent.get()->SetRenderOnScreen(true);
 	textScoreObject.get()->AddComponent(std::move(textScoreTextComponent));
 	textScoreObject.get()->AddComponent(std::move(textScoreRendercomponent));
@@ -521,8 +553,8 @@ void dae::GameSceneLoader::LoadScoreBoard()
 	for (int index{}; index < lettersAmount; index++) 
 	{
 		auto textLetterbutton = std::make_unique<dae::GameObject>();
-		auto textLetterbuttoncomponent = std::make_unique<dae::TextComponent>(textLetterbutton.get(), "A", smallfont);
-		auto textLetterbuttonRendercomponent = std::make_unique<dae::RenderComponent>(textLetterbutton.get());
+		auto textLetterbuttoncomponent = std::make_unique<dae::TextComponent>( "A", smallfont);
+		auto textLetterbuttonRendercomponent = std::make_unique<dae::RenderComponent>();
 		scoreboard->AddButton(textLetterbuttoncomponent.get(), false);
 		textLetterbuttonRendercomponent.get()->SetRenderOnScreen(true);
 		textLetterbutton.get()->AddComponent(std::move(textLetterbuttoncomponent));
@@ -536,8 +568,8 @@ void dae::GameSceneLoader::LoadScoreBoard()
 	for (int index{}; index < lettersAmount; index++)
 	{
 		auto textLetterbutton = std::make_unique<dae::GameObject>();
-		auto textLetterbuttoncomponent = std::make_unique<dae::TextComponent>(textLetterbutton.get(), "_", smallfont);
-		auto textLetterbuttonRendercomponent = std::make_unique<dae::RenderComponent>(textLetterbutton.get());
+		auto textLetterbuttoncomponent = std::make_unique<dae::TextComponent>( "_", smallfont);
+		auto textLetterbuttonRendercomponent = std::make_unique<dae::RenderComponent>();
 		textLetterbuttonRendercomponent.get()->SetRenderOnScreen(true);
 		textLetterbutton.get()->AddComponent(std::move(textLetterbuttoncomponent));
 		textLetterbutton.get()->AddComponent(std::move(textLetterbuttonRendercomponent));
@@ -546,8 +578,8 @@ void dae::GameSceneLoader::LoadScoreBoard()
 	}
 	
 	auto confirmButton = std::make_unique<dae::GameObject>();
-	auto textConfirmbuttoncomponent = std::make_unique<dae::TextComponent>(confirmButton.get(), "Confirm", smallfont);
-	auto confirmbuttonRendercomponent = std::make_unique<dae::RenderComponent>(confirmButton.get());
+	auto textConfirmbuttoncomponent = std::make_unique<dae::TextComponent>( "Confirm", smallfont);
+	auto confirmbuttonRendercomponent = std::make_unique<dae::RenderComponent>();
 	confirmbuttonRendercomponent.get()->SetRenderOnScreen(true);
 	scoreboard->AddButton(textConfirmbuttoncomponent.get(), true);
 	confirmButton.get()->AddComponent(std::move(textConfirmbuttoncomponent));
@@ -556,19 +588,31 @@ void dae::GameSceneLoader::LoadScoreBoard()
 	scene.Add(std::move(confirmButton));
 
 	scoreboard->MoveSelected(0);
+
+	//Bindings
 	InputManager::GetInstance().BindCommand(SDL_SCANCODE_D, dae::KeyState::Up, std::make_unique<dae::MoveScoreBoardCommand>(scoreboard), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
 	InputManager::GetInstance().BindCommand(SDL_SCANCODE_A, dae::KeyState::Up, std::make_unique<dae::MoveScoreBoardCommand>(scoreboard), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
 	InputManager::GetInstance().BindCommand(SDL_SCANCODE_W, dae::KeyState::Up, std::make_unique<dae::MoveScoreBoardCommand>(scoreboard), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, 1.f }));
 	InputManager::GetInstance().BindCommand(SDL_SCANCODE_S, dae::KeyState::Up, std::make_unique<dae::MoveScoreBoardCommand>(scoreboard), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, -1.f }));
 	InputManager::GetInstance().BindCommand(SDL_SCANCODE_SPACE, dae::KeyState::Up, std::make_unique<dae::ExecuteScoreBoardCommand>(scoreboard), nullptr);
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_F1, dae::KeyState::Up, std::make_unique<dae::ToggleMuteCommand>(), nullptr);
+	for (int index{}; index < Controller::GetConnectedControllerCount(); index++)
+	{
+		auto controller = std::make_unique<Controller>(index);
+		controller->BindCommand(GAMEPAD_DPAD_UP, dae::KeyState::Up, std::make_unique<dae::MoveScoreBoardCommand>(scoreboard), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, 1.f }));
+		controller->BindCommand(GAMEPAD_DPAD_DOWN, dae::KeyState::Up, std::make_unique<dae::MoveScoreBoardCommand>(scoreboard), std::make_unique<dae::CommandValue>(glm::vec2{ 0.f, -1.f }));
+		controller->BindCommand(GAMEPAD_DPAD_LEFT, dae::KeyState::Up, std::make_unique<dae::MoveScoreBoardCommand>(scoreboard), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
+		controller->BindCommand(GAMEPAD_DPAD_RIGHT, dae::KeyState::Up, std::make_unique<dae::MoveScoreBoardCommand>(scoreboard), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
+		controller->BindCommand(GAMEPAD_A, dae::KeyState::Up, std::make_unique<dae::ExecuteScoreBoardCommand>(scoreboard), nullptr);
+		dae::InputManager::GetInstance().AddController(std::move(controller));
+	}
+	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_F2, dae::KeyState::Up, std::make_unique<dae::ToggleMuteCommand>(), nullptr);
 
 	scene.Add(std::move(LogoGameObject));
 
 	//ScoreBoard
 	auto scoreboardTitleObject = std::make_unique<dae::GameObject>();
-	auto scoreboardTitleTextComponent = std::make_unique<dae::TextComponent>(scoreboardTitleObject.get(), "ScoreBoard:", smallfont);
-	auto scoreboardTitleRenderComponent = std::make_unique<dae::RenderComponent>(scoreboardTitleObject.get());
+	auto scoreboardTitleTextComponent = std::make_unique<dae::TextComponent>( "ScoreBoard:", smallfont);
+	auto scoreboardTitleRenderComponent = std::make_unique<dae::RenderComponent>();
 
 	scoreboardTitleRenderComponent.get()->SetRenderOnScreen(true);
 	scoreboardTitleObject.get()->AddComponent(std::move(scoreboardTitleTextComponent));
@@ -583,8 +627,8 @@ void dae::GameSceneLoader::LoadScoreBoard()
 	for (int index{}; index < 7; index++)
 	{
 		auto scoreboardTextObject = std::make_unique<dae::GameObject>();
-		auto scoreboardTextComponent = std::make_unique<dae::TextComponent>(scoreboardTextObject.get(), "-", textfont);
-		auto scoreboardRenderComponent = std::make_unique<dae::RenderComponent>(scoreboardTextObject.get());
+		auto scoreboardTextComponent = std::make_unique<dae::TextComponent>( "-", textfont);
+		auto scoreboardRenderComponent = std::make_unique<dae::RenderComponent>();
 
 		scoreboardDisplay->AddText(scoreboardTextComponent.get());
 
@@ -614,7 +658,18 @@ void dae::GameSceneLoader::OpenMainMenu()
 	InputManager::GetInstance().BindCommand(SDL_SCANCODE_W, dae::KeyState::Up, std::make_unique<dae::MoveMenuCommand>(menuComponent), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
 	InputManager::GetInstance().BindCommand(SDL_SCANCODE_S, dae::KeyState::Up, std::make_unique<dae::MoveMenuCommand>(menuComponent), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
 	InputManager::GetInstance().BindCommand(SDL_SCANCODE_SPACE, dae::KeyState::Up, std::make_unique<dae::ExecuteMenuCommand>(menuComponent), nullptr);
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_F1, dae::KeyState::Up, std::make_unique<dae::ToggleMuteCommand>(), nullptr);
+
+
+	for (int index{}; index < Controller::GetConnectedControllerCount(); index++)
+	{
+		auto controller = std::make_unique<Controller>(index);
+		controller->BindCommand(GAMEPAD_DPAD_UP, dae::KeyState::Up, std::make_unique<dae::MoveMenuCommand>(menuComponent), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
+		controller->BindCommand(GAMEPAD_DPAD_DOWN, dae::KeyState::Up, std::make_unique<dae::MoveMenuCommand>(menuComponent), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
+		controller->BindCommand(GAMEPAD_A, dae::KeyState::Up, std::make_unique<dae::ExecuteMenuCommand>(menuComponent), nullptr);
+		dae::InputManager::GetInstance().AddController(std::move(controller));
+	}
+
+	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_F2, dae::KeyState::Up, std::make_unique<dae::ToggleMuteCommand>(), nullptr);
 }
 
 

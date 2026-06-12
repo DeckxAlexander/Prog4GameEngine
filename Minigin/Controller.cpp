@@ -1,6 +1,7 @@
 #include "Controller.h"
 #include "Controller.h"
 #include "Controller.h"
+#include "Controller.h"
 #ifdef WIN32
 #include <Windows.h>
 #include <Xinput.h>
@@ -20,6 +21,35 @@ struct dae::Controller::Impl
 	uint32_t previousButtons{ 0 };
 	uint32_t currentButtons{ 0 };
 #endif
+	static int GetConnectedControllerCount()
+	{
+#ifdef WIN32
+		int count = 0;
+
+		for (DWORD i = 0; i < XUSER_MAX_COUNT; ++i) // XUSER_MAX_COUNT == 4
+		{
+			XINPUT_STATE state{};
+			if (XInputGetState(i, &state) == ERROR_SUCCESS)
+			{
+				++count;
+			}
+		}
+
+		return count;
+#else
+
+		int count = 0;
+
+		SDL_JoystickID* gamepads = SDL_GetGamepads(&count);
+
+		if (gamepads)
+		{
+			SDL_free(gamepads);
+		}
+
+		return count;
+#endif
+	}
 };
 
 dae::Controller::Controller(int controllerIndex) : m_ControllerIndex(controllerIndex), m_Impl{ std::make_unique<Impl>() }
@@ -263,4 +293,9 @@ void dae::Controller::UnbindGameObject(GameObject* gameObject)
 				return ptr->GetGameObject() != nullptr && ptr->GetGameObject() == gameObject;
 			}),
 		m_ControllerAxisBindings.end());
+}
+
+int dae::Controller::GetConnectedControllerCount()
+{
+	return Impl::GetConnectedControllerCount();
 }

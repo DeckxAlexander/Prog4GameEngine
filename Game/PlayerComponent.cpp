@@ -7,7 +7,7 @@
 #include <memory>
 
 
-dae::PlayerComponent::PlayerComponent(GameObject* pOwner, int index) : ObjectComponent(pOwner), m_PlayerIndex{ index }, m_Subject{std::make_unique<Subject>()}
+dae::PlayerComponent::PlayerComponent( int index) : ObjectComponent(), m_PlayerIndex{ index }, m_Subject{std::make_unique<Subject>()}
 {
 	
 }
@@ -38,7 +38,7 @@ void dae::PlayerComponent::PlayerDeath()
 	m_PlayerLives--;
 	m_Subject->Notify(Event{ EventType::LivesChanged, this });
 
-	if (m_PlayerLives <= 0) 
+	if (m_PlayerLives < 0) 
 	{ 
 		m_Subject->Notify(Event{ EventType::PlayerDead, this }); 
 		GameManager::GetInstance().CheckPlayerDeath();

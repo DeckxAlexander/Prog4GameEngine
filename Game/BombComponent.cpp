@@ -127,7 +127,7 @@ void dae::BombComponent::SpawnParticles(glm::ivec4 positions, glm::vec2 size)
 	auto& scene = SceneManager::GetInstance().GetActiveScene();
 	auto positionOwner = GetOwner()->GetWorldPosition();
 	auto particleObject = std::make_unique<GameObject>();
-	particleObject->AddComponent(std::make_unique<RenderComponent>(particleObject.get(), "Textures/BombParticles/ExplosionCenter.png"));
+	particleObject->AddComponent(std::make_unique<RenderComponent>( "Textures/BombParticles/ExplosionCenter.png"));
 	particleObject->AddComponent(std::make_unique<LifetimeComponent>(0.5f));
 	particleObject->SetPosition(positionOwner);
 	particleObject->SetScale(2.0f, 2.0f);
@@ -141,7 +141,7 @@ void dae::BombComponent::SpawnParticles(glm::ivec4 positions, glm::vec2 size)
 		particleObject = std::make_unique<GameObject>();
 		std::string filename = "Textures/BombParticles/ExplosionLeft.png";
 		if (index == positions.x) filename = "Textures/BombParticles/ExplosionLeftEnd.png";
-		particleObject->AddComponent(std::make_unique<RenderComponent>(particleObject.get(), filename));
+		particleObject->AddComponent(std::make_unique<RenderComponent>( filename));
 		particleObject->AddComponent(std::make_unique<LifetimeComponent>(0.5f));
 		particleObject->SetPosition(position);
 		particleObject->SetScale(2.0f, 2.0f);
@@ -156,7 +156,7 @@ void dae::BombComponent::SpawnParticles(glm::ivec4 positions, glm::vec2 size)
 		particleObject = std::make_unique<GameObject>();
 		std::string filename = "Textures/BombParticles/ExplosionTop.png";
 		if (index == positions.y) filename = "Textures/BombParticles/ExplosionTopEnd.png";
-		particleObject->AddComponent(std::make_unique<RenderComponent>(particleObject.get(), filename));
+		particleObject->AddComponent(std::make_unique<RenderComponent>( filename));
 		particleObject->AddComponent(std::make_unique<LifetimeComponent>(0.5f));
 		particleObject->SetPosition(position);
 		particleObject->SetScale(2.0f, 2.0f);
@@ -171,7 +171,7 @@ void dae::BombComponent::SpawnParticles(glm::ivec4 positions, glm::vec2 size)
 		particleObject = std::make_unique<GameObject>();
 		std::string filename = "Textures/BombParticles/ExplosionRight.png";
 		if (index == positions.z) filename = "Textures/BombParticles/ExplosionRightEnd.png";
-		particleObject->AddComponent(std::make_unique<RenderComponent>(particleObject.get(), filename));
+		particleObject->AddComponent(std::make_unique<RenderComponent>( filename));
 		particleObject->AddComponent(std::make_unique<LifetimeComponent>(0.5f));
 		particleObject->SetPosition(position);
 		particleObject->SetScale(2.0f, 2.0f);
@@ -186,7 +186,7 @@ void dae::BombComponent::SpawnParticles(glm::ivec4 positions, glm::vec2 size)
 		particleObject = std::make_unique<GameObject>();
 		std::string filename = "Textures/BombParticles/ExplosionBottom.png";
 		if (index == positions.w) filename = "Textures/BombParticles/ExplosionBottomEnd.png";
-		particleObject->AddComponent(std::make_unique<RenderComponent>(particleObject.get(), filename));
+		particleObject->AddComponent(std::make_unique<RenderComponent>( filename));
 		particleObject->AddComponent(std::make_unique<LifetimeComponent>(0.5f));
 		particleObject->SetPosition(position);
 		particleObject->SetScale(2.0f, 2.0f);

@@ -29,12 +29,12 @@ void dae::RenderComponent::SetTexture(std::shared_ptr<dae::Texture2D> texture)
 	m_texture = texture;
 }
 
-dae::RenderComponent::RenderComponent(GameObject* pOwner) : ObjectComponent(pOwner)
+dae::RenderComponent::RenderComponent() : ObjectComponent()
 {
 
 }
 
-dae::RenderComponent::RenderComponent(GameObject* pOwner,const std::string& filename) : ObjectComponent(pOwner)
+dae::RenderComponent::RenderComponent(const std::string& filename) : ObjectComponent()
 {
 	SetTexture(filename);
 }

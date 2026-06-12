@@ -10,7 +10,7 @@ namespace dae
 
 		virtual void ActivatePowerUp(GameObject* player) override;
 
-		ExtraBombPowerUpComponent(GameObject* pOwner);
+		ExtraBombPowerUpComponent();
 		~ExtraBombPowerUpComponent() = default;
 		ExtraBombPowerUpComponent(const ExtraBombPowerUpComponent& other) = delete;
 		ExtraBombPowerUpComponent(ExtraBombPowerUpComponent&& other) = delete;
@@ -26,7 +26,7 @@ namespace dae
 
 		virtual void ActivatePowerUp(GameObject* player) override;
 
-		FlamesPowerUpComponent(GameObject* pOwner);
+		FlamesPowerUpComponent();
 		~FlamesPowerUpComponent() = default;
 		FlamesPowerUpComponent(const FlamesPowerUpComponent& other) = delete;
 		FlamesPowerUpComponent(FlamesPowerUpComponent&& other) = delete;
@@ -42,7 +42,7 @@ namespace dae
 
 		virtual void ActivatePowerUp(GameObject* player) override;
 
-		DetonatorPowerUpComponent(GameObject* pOwner);
+		DetonatorPowerUpComponent();
 		~DetonatorPowerUpComponent() = default;
 		DetonatorPowerUpComponent(const DetonatorPowerUpComponent& other) = delete;
 		DetonatorPowerUpComponent(DetonatorPowerUpComponent&& other) = delete;

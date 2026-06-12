@@ -11,6 +11,6 @@ dae::GameObject* dae::ObjectComponent::GetOwner() const
 }
 
 
-dae::ObjectComponent::ObjectComponent(GameObject* pOwner) : m_pOwner{pOwner}
+dae::ObjectComponent::ObjectComponent() : m_pOwner{nullptr}
 {
 }

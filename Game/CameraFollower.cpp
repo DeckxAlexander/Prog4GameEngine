@@ -44,7 +44,7 @@ void dae::CameraFollowerComponent::Update()
 }
 
 
-dae::CameraFollowerComponent::CameraFollowerComponent(float mapWidth, float mapHeight) : ObjectComponent(nullptr), m_MapX{ mapWidth}, m_MapY{ mapHeight }
+dae::CameraFollowerComponent::CameraFollowerComponent(float mapWidth, float mapHeight) : ObjectComponent(), m_MapX{ mapWidth}, m_MapY{ mapHeight }
 {
 
 }

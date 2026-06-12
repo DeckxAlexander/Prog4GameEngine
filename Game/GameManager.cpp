@@ -39,7 +39,7 @@ void dae::GameManager::ProcessWin()
 	}
 	std::string filename = "Levels/Level" + std::to_string(m_CurrentLevel) + ".txt";
 
-	if (!std::filesystem::exists(filename)) 
+	if (!GameSceneLoader::GetInstance().DoesSceneExist(filename))
 	{
 		GameSceneLoader::GetInstance().LoadScoreBoard();
 		SceneManager::GetInstance().RemoveScene(oldScene);

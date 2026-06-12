@@ -12,7 +12,7 @@ namespace dae
 		virtual void Render() const override {};
 		void DestroyObject();
 
-		DestructibleComponent(GameObject* pOwner) : ObjectComponent(pOwner)
+		DestructibleComponent() : ObjectComponent()
 		{
 		}
 		~DestructibleComponent() {}

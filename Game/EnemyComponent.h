@@ -29,7 +29,7 @@ namespace dae
 		void EnemyDeath();
 
 
-		EnemyComponent(GameObject* pOwner, IntelligenceType intelligenceType, int scoreAmount = 100);
+		EnemyComponent( IntelligenceType intelligenceType, int scoreAmount = 100);
 		~EnemyComponent();
 		EnemyComponent(const EnemyComponent& other) = delete;
 		EnemyComponent(EnemyComponent&& other) = delete;

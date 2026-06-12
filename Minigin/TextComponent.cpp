@@ -9,8 +9,8 @@
 #include <sstream>
 
 
-dae::TextComponent::TextComponent(GameObject* pOwner, const std::string& text, std::shared_ptr<Font> font, const SDL_Color& color)
-	: ObjectComponent(pOwner), m_needsUpdate(true), m_text(text), m_color(color), m_font(std::move(font))
+dae::TextComponent::TextComponent(const std::string& text, std::shared_ptr<Font> font, const SDL_Color& color)
+	: ObjectComponent(), m_needsUpdate(true), m_text(text), m_color(color), m_font(std::move(font))
 { }
 
 void dae::TextComponent::Update()

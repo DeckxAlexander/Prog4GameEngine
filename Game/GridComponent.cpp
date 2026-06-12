@@ -22,7 +22,7 @@ glm::ivec2 dae::GridComponent::WorldPosToTile(const glm::vec3& worldPos) const
 	);
 }
 
-dae::GridComponent::GridComponent(GameObject* pOwner, int colums, int rows) : ObjectComponent(pOwner), m_Colums{colums}, m_Rows{rows}
+dae::GridComponent::GridComponent(int colums, int rows) : ObjectComponent(), m_Colums{colums}, m_Rows{rows}
 {
     m_GridLayout.resize(m_Colums * m_Rows);
     m_GridPointers.resize(m_Colums * m_Rows);
@@ -85,8 +85,8 @@ void dae::GridComponent::SetExit()
 			m_GridLayout[index] = GridValue::soft;
 
 			auto exitGameObject = std::make_unique<dae::GameObject>(std::make_unique<dae::GridTransform>(this));
-			exitGameObject.get()->AddComponent(std::make_unique<dae::RenderComponent>(exitGameObject.get(), "Exit.png"));
-			exitGameObject.get()->AddComponent(std::make_unique<dae::CollisionComponent>(exitGameObject.get(), 20.f, 20.f, 'p'));
+			exitGameObject.get()->AddComponent(std::make_unique<dae::RenderComponent>( "Exit.png"));
+			exitGameObject.get()->AddComponent(std::make_unique<dae::CollisionComponent>( 20.f, 20.f, 'p'));
 			exitGameObject.get()->AddComponent(std::make_unique<dae::ExitComponent>());
 			exitGameObject.get()->SetScale(2.f, 2.f);
 
@@ -120,9 +120,9 @@ void dae::GridComponent::SpawnPowerUps()
 			if (softwallIndex == randSoftwallNumber)
 			{
 				auto testPowerup = std::make_unique<dae::GameObject>(std::make_unique<dae::GridTransform>(this));
-				testPowerup.get()->AddComponent(std::make_unique<dae::RenderComponent>(testPowerup.get(), "ExtraBombPowerUp.png"));
-				testPowerup.get()->AddComponent(std::make_unique<dae::CollisionComponent>(testPowerup.get(), 20.f, 20.f, 'p'));
-				testPowerup.get()->AddComponent(std::make_unique<dae::ExtraBombPowerUpComponent>(testPowerup.get()));
+				testPowerup.get()->AddComponent(std::make_unique<dae::RenderComponent>( "ExtraBombPowerUp.png"));
+				testPowerup.get()->AddComponent(std::make_unique<dae::CollisionComponent>( 20.f, 20.f, 'p'));
+				testPowerup.get()->AddComponent(std::make_unique<dae::ExtraBombPowerUpComponent>());
 				testPowerup.get()->SetScale(2.f, 2.f);
 
 				int x = i % m_Colums;
@@ -149,9 +149,9 @@ void dae::GridComponent::SpawnPowerUps()
 			if (softwallIndex2 == randSoftwallNumber)
 			{
 				auto testPowerup = std::make_unique<dae::GameObject>(std::make_unique<dae::GridTransform>(this));
-				testPowerup.get()->AddComponent(std::make_unique<dae::RenderComponent>(testPowerup.get(), "FlamePowerUp.png"));
-				testPowerup.get()->AddComponent(std::make_unique<dae::CollisionComponent>(testPowerup.get(), 20.f, 20.f, 'p'));
-				testPowerup.get()->AddComponent(std::make_unique<dae::FlamesPowerUpComponent>(testPowerup.get()));
+				testPowerup.get()->AddComponent(std::make_unique<dae::RenderComponent>( "FlamePowerUp.png"));
+				testPowerup.get()->AddComponent(std::make_unique<dae::CollisionComponent>( 20.f, 20.f, 'p'));
+				testPowerup.get()->AddComponent(std::make_unique<dae::FlamesPowerUpComponent>());
 				testPowerup.get()->SetScale(2.f, 2.f);
 
 				int x = i % m_Colums;
@@ -178,9 +178,9 @@ void dae::GridComponent::SpawnPowerUps()
 			if (softwallIndex3 == randSoftwallNumber)
 			{
 				auto testPowerup = std::make_unique<dae::GameObject>(std::make_unique<dae::GridTransform>(this));
-				testPowerup.get()->AddComponent(std::make_unique<dae::RenderComponent>(testPowerup.get(), "DetonatorPowerUp.png"));
-				testPowerup.get()->AddComponent(std::make_unique<dae::CollisionComponent>(testPowerup.get(), 20.f, 20.f, 'p'));
-				testPowerup.get()->AddComponent(std::make_unique<dae::DetonatorPowerUpComponent>(testPowerup.get()));
+				testPowerup.get()->AddComponent(std::make_unique<dae::RenderComponent>( "DetonatorPowerUp.png"));
+				testPowerup.get()->AddComponent(std::make_unique<dae::CollisionComponent>( 20.f, 20.f, 'p'));
+				testPowerup.get()->AddComponent(std::make_unique<dae::DetonatorPowerUpComponent>());
 				testPowerup.get()->SetScale(2.f, 2.f);
 
 				int x = i % m_Colums;
@@ -208,8 +208,8 @@ void dae::GridComponent::SpawnGrid()
 		if (val == GridValue::hard) 
 		{
 			auto tileGameObject = std::make_unique<dae::GameObject>(std::make_unique<GridTransform>( this));
-			auto tileRenderComponent = std::make_unique<dae::RenderComponent>(tileGameObject.get(), "HardStoneTile.png");
-			auto tilecoll = std::make_unique<dae::CollisionComponent>(tileGameObject.get(), 32.f, 32.f, 'w');
+			auto tileRenderComponent = std::make_unique<dae::RenderComponent>( "HardStoneTile.png");
+			auto tilecoll = std::make_unique<dae::CollisionComponent>( 32.f, 32.f, 'w');
 			tilecoll.get()->AddBlockingTag('e');
 
 			tileGameObject.get()->AddComponent(std::move(tileRenderComponent));
@@ -227,8 +227,8 @@ void dae::GridComponent::SpawnGrid()
 		if (val == GridValue::soft)
 		{
 			auto tileGameObject = std::make_unique<dae::GameObject>(std::make_unique<GridTransform>(this));
-			auto tileRenderComponent = std::make_unique<dae::RenderComponent>(tileGameObject.get(), "SoftStoneTile.png");
-			auto tilecoll = std::make_unique<dae::CollisionComponent>(tileGameObject.get(), 32.f, 32.f, 'w');
+			auto tileRenderComponent = std::make_unique<dae::RenderComponent>( "SoftStoneTile.png");
+			auto tilecoll = std::make_unique<dae::CollisionComponent>( 32.f, 32.f, 'w');
 			tilecoll.get()->AddBlockingTag('e');
 			tileGameObject.get()->AddComponent(std::move(tileRenderComponent));
 			tileGameObject.get()->AddComponent(std::move(tilecoll));

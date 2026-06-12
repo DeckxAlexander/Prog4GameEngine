@@ -19,7 +19,7 @@ void dae::MovementComponent::Start()
 
 }
 
-dae::MovementComponent::MovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid) : ObjectComponent(pOwner), m_pGrid{ pGrid },m_Speed{speed}
+dae::MovementComponent::MovementComponent( float speed, GridComponent* pGrid) : ObjectComponent(), m_pGrid{ pGrid },m_Speed{speed}
 {
 }
 
@@ -209,7 +209,7 @@ void dae::MovementComponent::Update()
 
 
 
-dae::WanderMovementComponent::WanderMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid) : MovementComponent(pOwner, speed, pGrid)
+dae::WanderMovementComponent::WanderMovementComponent( float speed, GridComponent* pGrid) : MovementComponent( speed, pGrid)
 {
 }
 
@@ -332,7 +332,7 @@ void dae::ChaseMovementComponent::HitCollider()
 
 }
 
-dae::ChaseMovementComponent::ChaseMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid) : MovementComponent(pOwner, speed, pGrid)
+dae::ChaseMovementComponent::ChaseMovementComponent( float speed, GridComponent* pGrid) : MovementComponent( speed, pGrid)
 {
 }
 

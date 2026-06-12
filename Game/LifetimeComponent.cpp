@@ -14,7 +14,7 @@ void dae::LifetimeComponent::Update()
 
 }
 
-dae::LifetimeComponent::LifetimeComponent(float lifetime) : ObjectComponent(nullptr), m_LifeTime{lifetime}
+dae::LifetimeComponent::LifetimeComponent(float lifetime) : ObjectComponent(), m_LifeTime{lifetime}
 {
 	
 

@@ -66,6 +66,7 @@ public:
 	void UnbindCommand(uint16_t key, KeyState state);
 	void UnbindAxis(bool isLeft);
 	void UnbindGameObject(GameObject* gameObject);
+	static int GetConnectedControllerCount();
 
 private:
 	int m_ControllerIndex;

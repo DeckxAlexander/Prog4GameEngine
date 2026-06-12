@@ -349,7 +349,7 @@ std::vector<float> dae::ThrashCacheComponent::ThrashCacheInt(int samples)
 
 }
 
-dae::ThrashCacheComponent::ThrashCacheComponent(GameObject* pOwner) : ObjectComponent(pOwner)
+dae::ThrashCacheComponent::ThrashCacheComponent() : ObjectComponent()
 {
 }
 

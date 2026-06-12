@@ -41,7 +41,7 @@ void dae::PowerUpComponent::ActivatePowerUp(GameObject*)
 
 }
 
-dae::PowerUpComponent::PowerUpComponent(GameObject* pOwner) : ObjectComponent(pOwner)
+dae::PowerUpComponent::PowerUpComponent() : ObjectComponent()
 {
 }
 

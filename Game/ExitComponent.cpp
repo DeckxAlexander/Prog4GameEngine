@@ -40,7 +40,7 @@ void dae::ExitComponent::InitializePlayers()
 	}
 }
 
-dae::ExitComponent::ExitComponent() : ObjectComponent(nullptr)
+dae::ExitComponent::ExitComponent() : ObjectComponent()
 {
 }
 

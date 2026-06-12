@@ -18,7 +18,6 @@
 
 #include "HealthComponent.h"
 #include "InputManager.h"
-#include "SteamObserver.h"
 #include "GridComponent.h"
 #include "CollisionComponent.h"
 #include "BombComponent.h"
@@ -52,7 +51,7 @@ static void load()
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
 	dae::SceneManager::GetInstance().SetActiveScene(0);
 	auto menuGameObject = std::make_unique<dae::GameObject>();
-	auto menuRenderComponentLogo = std::make_unique<dae::RenderComponent>(menuGameObject.get(), "BombermanLogo.png");
+	auto menuRenderComponentLogo = std::make_unique<dae::RenderComponent>( "BombermanLogo.png");
 	menuRenderComponentLogo.get()->SetRenderOnScreen(true);
 	menuGameObject->AddComponent(std::make_unique<dae::MenuComponent>());
 	menuGameObject->AddComponent(std::move(menuRenderComponentLogo));
@@ -63,8 +62,8 @@ static void load()
 
 	//SOLO BUTTON
 	auto textSolobutton = std::make_unique<dae::GameObject>();
-	auto textSolobuttoncomponent = std::make_unique<dae::TextComponent>(textSolobutton.get(), "Solo", font);
-	auto textSolobuttonRendercomponent = std::make_unique<dae::RenderComponent>(textSolobutton.get());
+	auto textSolobuttoncomponent = std::make_unique<dae::TextComponent>( "Solo", font);
+	auto textSolobuttonRendercomponent = std::make_unique<dae::RenderComponent>();
 
 	menucomponent->AddButton(textSolobuttoncomponent.get(), dae::MenuComponent::MenuEvent::Solo);
 
@@ -75,8 +74,8 @@ static void load()
 
 	//COOP BUTTON
 	auto textCoopbutton = std::make_unique<dae::GameObject>();
-	auto textCoopbuttoncomponent = std::make_unique<dae::TextComponent>(textCoopbutton.get(), "Coop", font);
-	auto textCoopbuttonRendercomponent = std::make_unique<dae::RenderComponent>(textCoopbutton.get());
+	auto textCoopbuttoncomponent = std::make_unique<dae::TextComponent>( "Coop", font);
+	auto textCoopbuttonRendercomponent = std::make_unique<dae::RenderComponent>();
 
 	menucomponent->AddButton(textCoopbuttoncomponent.get(), dae::MenuComponent::MenuEvent::Coop);
 
@@ -87,8 +86,8 @@ static void load()
 
 	//Versus BUTTON
 	auto textVersusbutton = std::make_unique<dae::GameObject>();
-	auto textVersusbuttoncomponent = std::make_unique<dae::TextComponent>(textVersusbutton.get(), "Versus", font);
-	auto textVersusbuttonRendercomponent = std::make_unique<dae::RenderComponent>(textVersusbutton.get());
+	auto textVersusbuttoncomponent = std::make_unique<dae::TextComponent>( "Versus", font);
+	auto textVersusbuttonRendercomponent = std::make_unique<dae::RenderComponent>();
 
 	menucomponent->AddButton(textVersusbuttoncomponent.get(), dae::MenuComponent::MenuEvent::Versus);
 
@@ -99,8 +98,8 @@ static void load()
 
 	//QUIT BUTTON
 	auto textQuitbutton = std::make_unique<dae::GameObject>();
-	auto textQuitbuttoncomponent = std::make_unique<dae::TextComponent>(textQuitbutton.get(), "Quit", font);
-	auto textQuitbuttonRendercomponent = std::make_unique<dae::RenderComponent>(textQuitbutton.get());
+	auto textQuitbuttoncomponent = std::make_unique<dae::TextComponent>( "Quit", font);
+	auto textQuitbuttonRendercomponent = std::make_unique<dae::RenderComponent>();
 
 	menucomponent->AddButton(textQuitbuttoncomponent.get(), dae::MenuComponent::MenuEvent::Quit);
 
@@ -114,7 +113,17 @@ static void load()
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_W, dae::KeyState::Up, std::make_unique<dae::MoveMenuCommand>(menucomponent), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_S, dae::KeyState::Up, std::make_unique<dae::MoveMenuCommand>(menucomponent), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_SPACE, dae::KeyState::Up, std::make_unique<dae::ExecuteMenuCommand>(menucomponent), nullptr);
-	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_F1, dae::KeyState::Up, std::make_unique<dae::ToggleMuteCommand>(), nullptr);
+
+	for (int index{}; index < dae::Controller::GetConnectedControllerCount(); index++)
+	{
+		auto controller = std::make_unique<dae::Controller>(index);
+		controller->BindCommand(GAMEPAD_DPAD_UP, dae::KeyState::Up, std::make_unique<dae::MoveMenuCommand>(menucomponent), std::make_unique<dae::CommandValue>(glm::vec2{ -1.f, 0.f }));
+		controller->BindCommand(GAMEPAD_DPAD_DOWN, dae::KeyState::Up, std::make_unique<dae::MoveMenuCommand>(menucomponent), std::make_unique<dae::CommandValue>(glm::vec2{ 1.f, 0.f }));
+		controller->BindCommand(GAMEPAD_A, dae::KeyState::Up, std::make_unique<dae::ExecuteMenuCommand>(menucomponent), nullptr);
+		dae::InputManager::GetInstance().AddController(std::move(controller));
+	}
+
+	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_F2, dae::KeyState::Up, std::make_unique<dae::ToggleMuteCommand>(), nullptr);
 
 	scene.Add(std::move(menuGameObject));
 	scene.Add(std::move(textSolobutton));
@@ -124,8 +133,8 @@ static void load()
 
 	//ScoreBoard
 	auto scoreboardTitleObject = std::make_unique<dae::GameObject>();
-	auto scoreboardTitleTextComponent = std::make_unique<dae::TextComponent>(scoreboardTitleObject.get(), "ScoreBoard:",font);
-	auto scoreboardTitleRenderComponent = std::make_unique<dae::RenderComponent>(scoreboardTitleObject.get());
+	auto scoreboardTitleTextComponent = std::make_unique<dae::TextComponent>( "ScoreBoard:",font);
+	auto scoreboardTitleRenderComponent = std::make_unique<dae::RenderComponent>();
 
 	scoreboardTitleRenderComponent.get()->SetRenderOnScreen(true);
 	scoreboardTitleObject.get()->AddComponent(std::move(scoreboardTitleTextComponent));
@@ -140,8 +149,8 @@ static void load()
 	for (int index{}; index<7; index++) 
 	{
 		auto scoreboardTextObject = std::make_unique<dae::GameObject>();
-		auto scoreboardTextComponent = std::make_unique<dae::TextComponent>(scoreboardTextObject.get(), "-", textfont);
-		auto scoreboardRenderComponent = std::make_unique<dae::RenderComponent>(scoreboardTextObject.get());
+		auto scoreboardTextComponent = std::make_unique<dae::TextComponent>( "-", textfont);
+		auto scoreboardRenderComponent = std::make_unique<dae::RenderComponent>();
 
 		scoreboardDisplay->AddText(scoreboardTextComponent.get());
 

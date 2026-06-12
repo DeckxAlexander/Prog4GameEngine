@@ -35,7 +35,7 @@ namespace dae
 
 		void Explode();
 
-		BombComponent(GameObject* pOwner, float detonationTime, PlaceBombComponent* placer, int size = 1) : ObjectComponent(pOwner), m_DetonationTime{detonationTime}, m_Placer{ placer }, m_Size{size}
+		BombComponent(float detonationTime, PlaceBombComponent* placer, int size = 1) : ObjectComponent(), m_DetonationTime{detonationTime}, m_Placer{ placer }, m_Size{size}
 		{
 		}
 		~BombComponent() {}

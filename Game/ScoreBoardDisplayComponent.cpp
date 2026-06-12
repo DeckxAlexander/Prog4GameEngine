@@ -69,5 +69,5 @@ void dae::ScoreBoardDisplayComponent::RefreshScore(const std::string& filename)
 
 }
 
-dae::ScoreBoardDisplayComponent::ScoreBoardDisplayComponent() : ObjectComponent(nullptr)
+dae::ScoreBoardDisplayComponent::ScoreBoardDisplayComponent() : ObjectComponent()
 {}

@@ -27,7 +27,7 @@ namespace dae
         static std::vector<float> ThrashCacheAlt(int samples) ;
         static std::vector<float> ThrashCacheInt(int samples) ;
 
-		ThrashCacheComponent(GameObject* pOwner);
+		ThrashCacheComponent();
 		~ThrashCacheComponent() = default;
 		ThrashCacheComponent(const ThrashCacheComponent& other) = delete;
 		ThrashCacheComponent(ThrashCacheComponent&& other) = delete;

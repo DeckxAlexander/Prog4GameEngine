@@ -1,5 +1,4 @@
 #include "CollisionComponent.h"
-#include "CollisionComponent.h"
 #include "CollisionsManager.h"
 #include "GameObject.h"
 #include "Renderer.h"
@@ -37,7 +36,7 @@ void dae::CollisionComponent::Render() const
     Renderer::GetInstance().RenderLine(pos.x, pos.y , pos.x , pos.y + m_CollisionRect.w);
 }
 
-dae::CollisionComponent::CollisionComponent(GameObject* pOwner, float width, float height, char tag) : ObjectComponent(pOwner), m_Tag{tag}
+dae::CollisionComponent::CollisionComponent(float width, float height, char tag) : ObjectComponent(), m_Tag{tag}
 {
 	m_CollisionRect.z = width;
 	m_CollisionRect.w = height;

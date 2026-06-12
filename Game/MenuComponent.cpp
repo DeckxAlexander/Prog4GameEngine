@@ -67,5 +67,5 @@ void dae::MenuComponent::ExecuteSelected()
 
 }
 
-dae::MenuComponent::MenuComponent() : ObjectComponent(nullptr)
+dae::MenuComponent::MenuComponent() : ObjectComponent()
 {}

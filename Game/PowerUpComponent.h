@@ -20,7 +20,7 @@ namespace dae
 
 		virtual void ActivatePowerUp(GameObject* player);
 
-		PowerUpComponent(GameObject* pOwner);
+		PowerUpComponent();
 		~PowerUpComponent() ;
 		PowerUpComponent(const PowerUpComponent& other) = delete;
 		PowerUpComponent(PowerUpComponent&& other) = delete;

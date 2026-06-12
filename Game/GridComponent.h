@@ -48,7 +48,7 @@ namespace dae
 			return index == m_ExitIndex;
 		}
 
-		GridComponent(GameObject* pOwner, int colums, int rows);
+		GridComponent(int colums, int rows);
 		~GridComponent() {  };
 		GridComponent(const GridComponent& other) = delete;
 		GridComponent(GridComponent&& other) = delete;

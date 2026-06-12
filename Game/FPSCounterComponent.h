@@ -46,7 +46,7 @@ namespace dae
 		{
 		}
 
-		FPSCounterComponent(GameObject* pOwner) : ObjectComponent(pOwner), m_smoothDelta{0.f}, m_FPS{}
+		FPSCounterComponent() : ObjectComponent(), m_smoothDelta{0.f}, m_FPS{}
 		{}
 		~FPSCounterComponent() = default;
 		FPSCounterComponent(const FPSCounterComponent& other) = delete;

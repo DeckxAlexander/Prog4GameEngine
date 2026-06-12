@@ -28,7 +28,7 @@ namespace dae
 		virtual void HitCollider() {}
 		void Start() override;
 
-		MovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid);
+		MovementComponent(float speed, GridComponent* pGrid);
 		~MovementComponent() = default;
 		MovementComponent(const MovementComponent& other) = delete;
 		MovementComponent(MovementComponent&& other) = delete;
@@ -41,7 +41,7 @@ namespace dae
 	public:
 		virtual void Update() override;
 
-		PlayerMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid) : MovementComponent(pOwner, speed, pGrid) {}
+		PlayerMovementComponent( float speed, GridComponent* pGrid) : MovementComponent( speed, pGrid) {}
 		~PlayerMovementComponent() = default;
 		PlayerMovementComponent(const MovementComponent& other) = delete;
 		PlayerMovementComponent(MovementComponent&& other) = delete;
@@ -81,7 +81,7 @@ namespace dae
 			}
 		};
 
-		WanderMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid);
+		WanderMovementComponent( float speed, GridComponent* pGrid);
 		~WanderMovementComponent() = default;
 		WanderMovementComponent(const WanderMovementComponent& other) = delete;
 		WanderMovementComponent(WanderMovementComponent&& other) = delete;
@@ -109,7 +109,7 @@ namespace dae
 		};
 
 		virtual void HitCollider() override;
-		ChaseMovementComponent(GameObject* pOwner, float speed, GridComponent* pGrid);
+		ChaseMovementComponent( float speed, GridComponent* pGrid);
 		~ChaseMovementComponent() = default;
 		ChaseMovementComponent(const ChaseMovementComponent& other) = delete;
 		ChaseMovementComponent(ChaseMovementComponent&& other) = delete;

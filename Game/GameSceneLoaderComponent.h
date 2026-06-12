@@ -25,6 +25,7 @@ namespace dae
 			
 		};
 
+		bool DoesSceneExist(const std::string& filename);
 		void LoadLevelFromFile(const std::string& filename, int playersAmount, bool isVersus = false);
 		void LoadScoreBoard();
 		void OpenMainMenu();

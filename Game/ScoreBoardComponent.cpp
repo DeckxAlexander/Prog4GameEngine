@@ -113,7 +113,7 @@ void dae::ScoreBoardComponent::AddScore(const std::string& filename, const std::
 	outFile.close();
 }
 
-dae::ScoreBoardComponent::ScoreBoardComponent() : ObjectComponent(nullptr)
+dae::ScoreBoardComponent::ScoreBoardComponent() : ObjectComponent()
 {
 
 }

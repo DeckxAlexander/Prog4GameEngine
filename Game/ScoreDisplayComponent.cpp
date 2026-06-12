@@ -14,7 +14,7 @@ void dae::ScoreDisplayComponent::Start()
 
 }
 
-dae::ScoreDisplayComponent::ScoreDisplayComponent() : ObjectComponent(nullptr)
+dae::ScoreDisplayComponent::ScoreDisplayComponent() : ObjectComponent()
 {
 
 }
