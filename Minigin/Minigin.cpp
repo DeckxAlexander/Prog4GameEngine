@@ -112,6 +112,7 @@ dae::Minigin::Minigin(const std::filesystem::path& dataPath)
 #endif
 	Renderer::GetInstance().Init(g_window);
 	ResourceManager::GetInstance().Init(dataPath);
+
 }
 
 dae::Minigin::~Minigin()
@@ -122,6 +123,7 @@ dae::Minigin::~Minigin()
 #if USE_STEAMWORKS
 	SteamAPI_Shutdown();
 #endif
+
 	SoundSystemLocator::get_sound_system().Destroy();
 
 
