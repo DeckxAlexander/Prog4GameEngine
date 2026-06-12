@@ -99,8 +99,6 @@ void dae::EnemyComponent::EnemyDeath()
 
 void dae::EnemyComponent::SearchPlayer()
 {
-	auto grid = GridLocator::GetGrid();
-
 	for (auto player : m_Players) 
 	{
 
