@@ -1,6 +1,5 @@
-#pragma once
 #include "ObjectComponent.h"
-
+#include <memory>
 
 
 

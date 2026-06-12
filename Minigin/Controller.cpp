@@ -1,7 +1,4 @@
 #include "Controller.h"
-#include "Controller.h"
-#include "Controller.h"
-#include "Controller.h"
 #ifdef WIN32
 #include <Windows.h>
 #include <Xinput.h>

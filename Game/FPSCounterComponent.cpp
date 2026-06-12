@@ -5,7 +5,6 @@
 #include "TimeManager.h"
 #include <sstream>
 #include <iomanip>
-#include <iostream>
 #include "GameObject.h"
 
 void dae::FPSCounterComponent::Update()

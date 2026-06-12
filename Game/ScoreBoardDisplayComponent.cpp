@@ -7,7 +7,6 @@
 #include "SoundSystem.h"
 #include <string>
 #include <sstream>
-#include <iostream>
 
 
 void dae::ScoreBoardDisplayComponent::AddText(TextComponent* text)

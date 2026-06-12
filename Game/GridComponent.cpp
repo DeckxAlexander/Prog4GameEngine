@@ -8,7 +8,6 @@
 #include "SceneManager.h"
 #include "PowerUps.h"
 #include "ExitComponent.h"
-#include <iostream>
 
 dae::GridComponent* dae::GridLocator::m_GridInstance = nullptr;
 
@@ -130,7 +129,6 @@ void dae::GridComponent::SpawnPowerUps()
 				dynamic_cast<dae::GridTransform*>(testPowerup->GetTransform())->SetGridTile(x, y);
 
 				scene.Add(std::move(testPowerup));
-				std::cout << "Spawn ExtraBomb" << randSoftwallNumber;
 				break;
 			}
 		}
@@ -159,7 +157,6 @@ void dae::GridComponent::SpawnPowerUps()
 				dynamic_cast<dae::GridTransform*>(testPowerup->GetTransform())->SetGridTile(x, y);
 
 				scene.Add(std::move(testPowerup));
-				std::cout << "Spawn Flames" << randSoftwallNumber;
 				break;
 			}
 		}
@@ -188,7 +185,6 @@ void dae::GridComponent::SpawnPowerUps()
 				dynamic_cast<dae::GridTransform*>(testPowerup->GetTransform())->SetGridTile(x, y);
 
 				scene.Add(std::move(testPowerup));
-				std::cout << "Spawn Detonator" << randSoftwallNumber;
 				break;
 			}
 		}

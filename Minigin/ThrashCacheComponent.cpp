@@ -262,7 +262,6 @@ std::vector<float> dae::ThrashCacheComponent::ThrashCache(int samples)
         
 
         averageTimesList[yindex] = std::accumulate(timesList.begin(), timesList.end(), 0.f) / static_cast<float>(samples);
-        std::cout << std::accumulate(timesList.begin(), timesList.end(), 0.f) / samples << std::endl;
         yindex++;
     }
     delete[] arr;
@@ -301,7 +300,6 @@ std::vector<float> dae::ThrashCacheComponent::ThrashCacheAlt(int samples)
 
 
         averageTimesList[yindex] = std::accumulate(timesList.begin(), timesList.end(), 0.f) / static_cast<float>(samples);
-        std::cout << std::accumulate(timesList.begin(), timesList.end(), 0.f) / samples << std::endl;
         yindex++;
     }
     delete[] arr;
@@ -341,7 +339,6 @@ std::vector<float> dae::ThrashCacheComponent::ThrashCacheInt(int samples)
 
 
         averageTimesList[yindex] = std::accumulate(timesList.begin(), timesList.end(), 0.f) / static_cast<float>(samples);
-        std::cout << std::accumulate(timesList.begin(), timesList.end(), 0.f) / samples << std::endl;
         yindex++;
     }
     delete[] arr;

@@ -4,7 +4,6 @@
 #include "PlayerComponent.h"
 #include "GameSceneLoaderComponent.h"
 #include "GameObject.h"
-#include <iostream>
 #include <filesystem>
 
 void dae::GameManager::CheckGameState()

@@ -3,7 +3,6 @@
 #include "CollisionComponent.h"
 #include "PlayerComponent.h"
 #include "SoundSystem.h"
-#include <iostream>
 
 void dae::PowerUpComponent::Start()
 {
@@ -25,7 +24,6 @@ void dae::PowerUpComponent::Update()
 		auto b = player->GetCollisionRect();
 		if (CollisionComponent::CheckCollision(a, b))
 		{
-			std::cout << "Activated";
 			ActivatePowerUp(player->GetOwner());
 			break;
 		}

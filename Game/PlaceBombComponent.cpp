@@ -7,7 +7,6 @@
 #include "GridComponent.h"
 #include "GridTransform.h"
 #include "SoundSystem.h"
-#include <iostream>
 
 void dae::PlaceBombComponent::PlaceBomb() 
 {
@@ -16,8 +15,6 @@ void dae::PlaceBombComponent::PlaceBomb()
 	if (m_pGrid->GetGridLayout()[gridIndex] == GridComponent::GridValue::bomb) return;
 	auto& scene = dae::SceneManager::GetInstance().GetActiveScene();
 
-
-	std::cout << "Place Bomb";
 	m_CanPlace--;
 	bool willDetonate{ true };
 

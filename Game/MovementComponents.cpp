@@ -7,7 +7,6 @@
 #include "EnemyComponent.h"
 #include "GridTransform.h"
 #include "SoundSystem.h"
-#include <iostream>
 
 
 void dae::MovementComponent::Start()

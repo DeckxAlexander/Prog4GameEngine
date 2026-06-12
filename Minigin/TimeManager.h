@@ -1,6 +1,5 @@
 #pragma once
 #include "Singleton.h"
-#include <iostream>
 
 namespace dae
 {
@@ -15,7 +14,6 @@ namespace dae
 		void SetDeltaTime(float deltaT) 
 		{
 			m_DeltaTime = deltaT;
-			//std::cout << m_DeltaTime << "\n";
 		}
 	private:
 		friend class Singleton<TimeManager>;

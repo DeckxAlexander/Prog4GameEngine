@@ -70,7 +70,6 @@ std::unique_ptr<dae::State> dae::ChaseState::Update()
 		if (m_LastSeenTimer >= m_GiveUpTime)
 		{
 			m_EnemyComponent->GiveUpChase();
-			std::cout << "GiveUp";
 			return nullptr;
 		}
 	}

@@ -1,4 +1,3 @@
-#pragma once
 #include "ObjectComponent.h"
 #include <algorithm>
 #include <glm/glm.hpp>

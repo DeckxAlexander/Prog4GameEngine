@@ -1,4 +1,3 @@
-#pragma once
 #include "ObjectComponent.h"
 #include "SceneManager.h"
 #include "Singleton.h"

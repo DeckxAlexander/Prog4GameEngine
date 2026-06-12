@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include <glm/glm.hpp>
 
 namespace dae
@@ -34,9 +33,4 @@ namespace dae
 		virtual void Execute(CommandValue* value) = 0;
 		GameObject* GetGameObject() const { return m_GameObject; }
 	};
-
-
-	
-
-	
 }

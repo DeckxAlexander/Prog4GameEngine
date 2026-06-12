@@ -23,26 +23,26 @@ static void load()
 	dae::GameSceneLoader::GetInstance().LoadMainMenu();
 	
 	//SOUND
-	auto fullPath = data_location / "BombExplodes.wav";
+	auto fullPath = data_location / "Sounds/BombExplodes.wav";
 	auto filename = fs::path(fullPath).string();
 	dae::SoundSystemLocator::register_sound_system(std::make_unique<dae::SDLSoundSystem>());
 	dae::SoundSystemLocator::get_sound_system().LoadSound(0, filename);
-	fullPath = data_location / "Music.mp3";
+	fullPath = data_location / "Sounds/Music.mp3";
 	filename = fs::path(fullPath).string();
 	dae::SoundSystemLocator::get_sound_system().LoadSound(1, filename);
-	fullPath = data_location / "StepX.wav";
+	fullPath = data_location / "Sounds/StepX.wav";
 	filename = fs::path(fullPath).string();
 	dae::SoundSystemLocator::get_sound_system().LoadSound(2, filename);
-	fullPath = data_location / "StepY.wav";
+	fullPath = data_location / "Sounds/StepY.wav";
 	filename = fs::path(fullPath).string();
 	dae::SoundSystemLocator::get_sound_system().LoadSound(3, filename);
-	fullPath = data_location / "Powerup.wav";
+	fullPath = data_location / "Sounds/Powerup.wav";
 	filename = fs::path(fullPath).string();
 	dae::SoundSystemLocator::get_sound_system().LoadSound(4, filename);
-	fullPath = data_location / "BombLay.wav";
+	fullPath = data_location / "Sounds/BombLay.wav";
 	filename = fs::path(fullPath).string();
 	dae::SoundSystemLocator::get_sound_system().LoadSound(5, filename);
-	fullPath = data_location / "BombermanKilled.wav";
+	fullPath = data_location / "Sounds/BombermanKilled.wav";
 	filename = fs::path(fullPath).string();
 	dae::SoundSystemLocator::get_sound_system().LoadSound(6, filename);
 	dae::SoundSystemLocator::get_sound_system().PlaySound(1);

@@ -13,7 +13,6 @@
 #include "GameManager.h"
 #include "RenderComponent.h"
 #include "LifetimeComponent.h"
-#include <iostream>
 
 void dae::BombComponent::Update()
 {
@@ -53,7 +52,6 @@ void dae::BombComponent::Explode()
 
 	KillSurrounding(gridTransform, sizes);
 	SpawnParticles(sizes, grid->GetTileScale());
-	std::cout << "Explode";
 	if (m_Placer) m_Placer->AddCanPlace();
 	dae::SoundSystemLocator::get_sound_system().PlaySound(0);
 	GetOwner()->MarkForDelete();

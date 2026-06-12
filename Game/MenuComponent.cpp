@@ -4,7 +4,6 @@
 #include "GameSceneLoaderComponent.h"
 #include "GameManager.h"
 #include "SoundSystem.h"
-#include <iostream>
 #include <stdexcept>
 
 
@@ -33,7 +32,6 @@ void dae::MenuComponent::MoveSelected(size_t index)
 
 void dae::MenuComponent::ExecuteSelected()
 {
-	std::cout << "Execute";
 
 
 	if (m_Buttons[m_SelectedIndex].event == MenuEvent::Solo) 

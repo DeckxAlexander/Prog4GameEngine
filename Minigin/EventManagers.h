@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <memory>
 #include "ObjectComponent.h"
+
 namespace dae
 {
     class ObjectComponent;

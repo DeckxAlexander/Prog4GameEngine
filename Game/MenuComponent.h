@@ -1,4 +1,3 @@
-#pragma once
 #include "ObjectComponent.h"
 #include <SDL3/SDL.h> 
 #include <vector>

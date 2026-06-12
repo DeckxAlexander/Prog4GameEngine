@@ -8,7 +8,6 @@
 #include "GameManager.h"
 #include "HealthComponent.h"
 #include <memory>
-#include <iostream>
 #include <vector>
 
 
@@ -105,7 +104,6 @@ void dae::EnemyComponent::SearchPlayer()
 		bool found = CanSeePlayer(player);
 		if (found == true) 
 		{
-			std::cout << "Seen";
 			SetState(std::make_unique<ChaseState>(player));
 			return;
 		}

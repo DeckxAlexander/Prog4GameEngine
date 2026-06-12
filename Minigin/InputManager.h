@@ -1,4 +1,3 @@
-#pragma once
 #include "Singleton.h"
 #include <vector>
 #include <SDL3/SDL.h>
@@ -10,8 +9,6 @@
 
 namespace dae
 {
-
-
 	struct KeyBinding 
 	{
 		SDL_Scancode key;
@@ -20,7 +17,6 @@ namespace dae
 		std::unique_ptr<CommandValue> value;
 
 	};
-
 	struct MouseBinding
 	{
 		uint8_t button;
@@ -30,11 +26,9 @@ namespace dae
 
 	};
 
-
 	class InputManager final : public Singleton<InputManager>
 	{
 	public:
-
 		bool ProcessInput();
 		void BindCommand(SDL_Scancode key, KeyState state, std::unique_ptr<Command> command, std::unique_ptr<CommandValue> value);
 		void BindMouseCommand(uint8_t button, KeyState state, std::unique_ptr<Command> command, std::unique_ptr<CommandValue> value);
@@ -49,18 +43,9 @@ namespace dae
 		{
 			return m_Controllers;
 		}
-
-		
-
 	private:
-
-
-
 		std::vector<KeyBinding> m_KeyBindings{};
 		std::vector<MouseBinding> m_MouseBindings{};
 		std::vector<std::unique_ptr<Controller>> m_Controllers{};
-
 	};
-	
-
 }

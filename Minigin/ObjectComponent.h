@@ -1,7 +1,4 @@
 #pragma once
-#include <string>
-#include <memory>
-#include "Transform.h"
 
 namespace dae
 {

@@ -1,6 +1,5 @@
 #pragma once
 #include "ObjectComponent.h"
-#include <iostream>
 #include <vector>
 #include <chrono>
 
