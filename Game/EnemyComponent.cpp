@@ -36,7 +36,6 @@ bool dae::EnemyComponent::CanSeePlayer(GameObject* obj)
 	auto enemyGridPosition = grid->WorldPosToTile(GetOwner()->GetWorldPosition());
 
 
-
 	auto playerGridPosition = grid->WorldPosToTile(obj->GetWorldPosition());
 	if (grid->GetGridLayout()[grid->GridToIndex(playerGridPosition.x, playerGridPosition.y)] == GridComponent::GridValue::bomb) 
 		return false; //If player is standing on a bomb he will not be count as seen!
@@ -101,8 +100,6 @@ void dae::EnemyComponent::EnemyDeath()
 void dae::EnemyComponent::SearchPlayer()
 {
 	auto grid = GridLocator::GetGrid();
-
-	auto enemyGridPosition = grid->WorldPosToTile(GetOwner()->GetWorldPosition());
 
 	for (auto player : m_Players) 
 	{
