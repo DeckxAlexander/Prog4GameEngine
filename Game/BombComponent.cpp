@@ -206,7 +206,7 @@ glm::ivec4 dae::BombComponent::BreakSoftBlocks(dae::GridComponent* grid, glm::iv
 	for (int index{1}; index <= m_Size; index++) 
 	{
 		int gridIndex = grid->GridToIndex(gpos.x, gpos.y - index);
-		if (gridIndex >= tileLayout.size() || gridIndex < 0) continue;
+		if (size_t(gridIndex) >= tileLayout.size() || gridIndex < 0) continue;
 		if (tileLayout[gridIndex] == GridComponent::GridValue::hard) break;
 		upSize++;
 		if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
@@ -223,7 +223,7 @@ glm::ivec4 dae::BombComponent::BreakSoftBlocks(dae::GridComponent* grid, glm::iv
 	for (int index{ 1 }; index <= m_Size; index++)
 	{
 		int gridIndex = grid->GridToIndex(gpos.x, gpos.y + index);
-		if (gridIndex >= tileLayout.size() || gridIndex < 0) continue;
+		if (size_t(gridIndex) >= tileLayout.size() || gridIndex < 0) continue;
 		if (tileLayout[gridIndex] == GridComponent::GridValue::hard) break;
 		downSize++;
 		if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
@@ -239,7 +239,7 @@ glm::ivec4 dae::BombComponent::BreakSoftBlocks(dae::GridComponent* grid, glm::iv
 	for (int index{ 1 }; index <= m_Size; index++)
 	{
 		int gridIndex = grid->GridToIndex(gpos.x+index, gpos.y);
-		if (gridIndex >= tileLayout.size() || gridIndex < 0) continue;
+		if (size_t(gridIndex) >= tileLayout.size() || gridIndex < 0) continue;
 		if (tileLayout[gridIndex] == GridComponent::GridValue::hard) break;
 		rightSize++;
 		if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
@@ -255,7 +255,7 @@ glm::ivec4 dae::BombComponent::BreakSoftBlocks(dae::GridComponent* grid, glm::iv
 	for (int index{ 1 }; index <= m_Size; index++)
 	{
 		int gridIndex = grid->GridToIndex(gpos.x - index, gpos.y);
-		if (gridIndex >= tileLayout.size() || gridIndex < 0) continue;
+		if (size_t(gridIndex) >= tileLayout.size() || gridIndex < 0) continue;
 		if (tileLayout[gridIndex] == GridComponent::GridValue::hard) break;
 		leftSize++;
 		if (tileLayout[gridIndex] == GridComponent::GridValue::soft)
