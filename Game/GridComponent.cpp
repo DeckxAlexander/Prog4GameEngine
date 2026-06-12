@@ -1,5 +1,4 @@
 #include "GridComponent.h"
-#include "GridComponent.h"
 #include "Renderer.h"
 #include "GameObject.h"
 #include "GridTransform.h"
