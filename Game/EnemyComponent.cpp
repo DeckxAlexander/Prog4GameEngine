@@ -131,7 +131,6 @@ dae::EnemyComponent::~EnemyComponent()
 {
 	for (auto player : m_Players)
 	{
-
 		auto playerComp = player->GetComponentByType<PlayerComponent>();
 		if (playerComp != nullptr) 
 		{
@@ -194,8 +193,5 @@ void dae::EnemyComponent::OnNotify(const Event& event)
 
 }
 
-void dae::EnemyComponent::OnSubjectDestroyed(Subject* subject)
-{
-	subject->RemoveObserver(this);
-}
+
 

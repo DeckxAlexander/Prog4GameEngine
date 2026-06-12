@@ -24,20 +24,12 @@ namespace dae
 
 	public:
 		virtual void Update() override;
-		virtual void Render() const override;
-		void StartDetonate(bool value = true) {
-			m_IsDetonating = value;
-		}
-
-
-		
-
+		void StartDetonate(bool value = true) {m_IsDetonating = value;}
 
 		void Explode();
 
-		BombComponent(float detonationTime, PlaceBombComponent* placer, int size = 1) : ObjectComponent(), m_DetonationTime{detonationTime}, m_Placer{ placer }, m_Size{size}
-		{
-		}
+		BombComponent(float detonationTime, PlaceBombComponent* placer, int size = 1);
+		
 		~BombComponent() {}
 		BombComponent(const BombComponent& other) = delete;
 		BombComponent(BombComponent&& other) = delete;

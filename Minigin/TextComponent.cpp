@@ -49,10 +49,6 @@ std::vector<std::string> dae::TextComponent::SplitLines(const std::string& text)
 	return lines;
 }
 
-void dae::TextComponent::Render() const
-{
-
-}
 
 void dae::TextComponent::SetText(const std::string& text)
 {

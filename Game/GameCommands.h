@@ -13,6 +13,13 @@ namespace dae
 		bool m_Toggle{ false };
 	};
 
+	class NextLevelCommand final : public Command
+	{
+	public:
+		void Execute(CommandValue* value) override;
+	};
+
+
 	class MoveAround final : public GameObjectCommand
 	{
 	public:

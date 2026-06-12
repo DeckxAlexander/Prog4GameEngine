@@ -1,5 +1,5 @@
 seed=10
 width=31
 height=13
-bcount=0
+bcount=1
 blockscount=4

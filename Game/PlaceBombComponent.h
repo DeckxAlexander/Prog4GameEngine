@@ -19,7 +19,6 @@ namespace dae
 
 	public:
 		virtual void Update() override {}
-		virtual void Render() const override {}
 
 		void AddSize(int size) { m_Size += size; }
 		void PlaceBomb();

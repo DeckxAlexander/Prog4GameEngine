@@ -16,7 +16,6 @@ namespace dae
 	public:
 		virtual void Start() override;
 		virtual void Update() override;
-		virtual void Render() const override {}
 
 		virtual void ActivatePowerUp(GameObject* player);
 
@@ -28,7 +27,7 @@ namespace dae
 		PowerUpComponent& operator=(PowerUpComponent&& other) = delete;
 
 		virtual void OnNotify(const Event& event);
-		virtual void OnSubjectDestroyed(Subject* subject) ;
+		virtual void OnSubjectDestroyed(Subject*) {}
 	};
 
 

@@ -9,9 +9,6 @@ namespace dae {
         {
         }
 
-        void Render() const override
-        {
-        }
 
         HealthComponent() : ObjectComponent(),  m_Subject{std::make_unique<Subject>()}
         {

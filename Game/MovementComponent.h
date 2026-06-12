@@ -17,7 +17,6 @@ namespace dae
 		CollisionComponent* m_Collider{};
 	public:
 		virtual void Update() override;
-		virtual void Render() const override {}
 		void AddVelocity(float x, float y) 
 		{
 			m_Velocity += glm::vec3{ x,y,0 };

@@ -26,14 +26,6 @@ void dae::CollisionComponent::UpdateCollisionRect()
 void dae::CollisionComponent::Render() const
 {
 
-    auto pos = m_pOwner->GetWorldPosition();
-    pos.x -= m_CollisionRect.z/2.f;
-    pos.y -= m_CollisionRect.w/2.f;
-
-    Renderer::GetInstance().RenderLine(pos.x, pos.y, pos.x + m_CollisionRect.z, pos.y);
-    Renderer::GetInstance().RenderLine(pos.x + m_CollisionRect.z, pos.y, pos.x + m_CollisionRect.z, pos.y + m_CollisionRect.w);
-    Renderer::GetInstance().RenderLine(pos.x, pos.y + m_CollisionRect.w, pos.x + m_CollisionRect.z, pos.y + m_CollisionRect.w);
-    Renderer::GetInstance().RenderLine(pos.x, pos.y , pos.x , pos.y + m_CollisionRect.w);
 }
 
 dae::CollisionComponent::CollisionComponent(float width, float height, char tag) : ObjectComponent(), m_Tag{tag}

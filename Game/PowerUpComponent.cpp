@@ -65,11 +65,7 @@ void dae::PowerUpComponent::OnNotify(const Event& event)
 	}
 }
 
-void dae::PowerUpComponent::OnSubjectDestroyed(Subject* subject)
-{
-	subject->RemoveObserver(this);
 
-}
 
 
 

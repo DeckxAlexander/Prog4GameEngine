@@ -12,7 +12,6 @@ namespace dae
 	public:
 
 		virtual void Update() override {}
-		virtual void Render() const override {}
 
 		void AddButton(TextComponent* text, bool confirm = false);
 		void RemoveButton(size_t index);

@@ -64,8 +64,3 @@ void dae::CameraFollowerComponent::OnNotify(const Event& event)
 {
 	if (event.event == EventType::PlayerDead)m_Player = nullptr;
 }
-
-void dae::CameraFollowerComponent::OnSubjectDestroyed(Subject * subject)
-{
-	subject->RemoveObserver(this);
-}

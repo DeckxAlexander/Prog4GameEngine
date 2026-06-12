@@ -48,7 +48,6 @@ void dae::GameObject::SetParent(GameObject* gameObject, bool keepWorldPosition)
 		);
 	}
 
-
 	if (gameObject != nullptr)
 	{ 
 		gameObject->m_Children.push_back(this);
@@ -69,14 +68,12 @@ void dae::GameObject::SetParent(GameObject* gameObject, bool keepWorldPosition)
 
 bool dae::GameObject::IsDecendant(GameObject* gameObject)
 {
-	const GameObject* parent = m_pParent;
-	while (parent)
+	auto parent = m_pParent;
+	while (parent != nullptr)
 	{
 		if (parent == gameObject) return true;
-
 		parent = parent->m_pParent;
 	}
-
 	return false;
 }
 

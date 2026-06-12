@@ -10,7 +10,7 @@ namespace dae
 	{
 	public:
 		void CheckGameState();
-		void ProcessWin();
+		void ProcessNextLevel();
 		void ProcessGameOver();
 		void ResetGame();
 		void SetPlayerAmount(int amount);

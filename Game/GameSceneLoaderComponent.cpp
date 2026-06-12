@@ -130,6 +130,7 @@ void dae::GameSceneLoader::SetupScene(SceneDetails details)
 	SpawnEnemies(details);
 
 	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_F2, dae::KeyState::Up, std::make_unique<dae::ToggleMuteCommand>(), nullptr);
+	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_F1, dae::KeyState::Up, std::make_unique<dae::NextLevelCommand>(), nullptr);
 
 	
 	scene.Start();
@@ -348,7 +349,7 @@ void dae::GameSceneLoader::SpawnBalloom(int x, int y, GridComponent* grid, Scene
 	auto enemyHealthComponent = std::make_unique<dae::HealthComponent>();
 	auto enemyCollider = std::make_unique<dae::CollisionComponent>( 18.f, 27.f, 'e');
 	enemyCollider.get()->AddBlockingTag('b');
-	auto enemyComponent = std::make_unique<dae::EnemyComponent>( EnemyComponent::IntelligenceType::normal);
+	auto enemyComponent = std::make_unique<dae::EnemyComponent>( EnemyComponent::IntelligenceType::normal, 100);
 	enemyGameObject.get()->AddComponent(std::move(enemyRenderComponent));
 	enemyGameObject.get()->AddComponent(std::move(enemyCollider));
 	enemyGameObject.get()->AddComponent(std::move(enemyMovementComponent));
@@ -379,7 +380,7 @@ void dae::GameSceneLoader::SpawnOneal(int x, int y, GridComponent* grid, Scene& 
 	auto enemyHealthComponent = std::make_unique<dae::HealthComponent>();
 	auto enemyCollider = std::make_unique<dae::CollisionComponent>( 18.f, 27.f, 'e');
 	enemyCollider.get()->AddBlockingTag('b');
-	auto enemyComponent = std::make_unique<dae::EnemyComponent>( EnemyComponent::IntelligenceType::smart);
+	auto enemyComponent = std::make_unique<dae::EnemyComponent>( EnemyComponent::IntelligenceType::smart, 200);
 	enemyGameObject.get()->AddComponent(std::move(enemyRenderComponent));
 	enemyGameObject.get()->AddComponent(std::move(enemyCollider));
 	enemyGameObject.get()->AddComponent(std::move(enemyMovementComponent));
@@ -411,7 +412,7 @@ void dae::GameSceneLoader::SpawnDoll(int x, int y, GridComponent* grid, Scene& s
 	auto enemyHealthComponent = std::make_unique<dae::HealthComponent>();
 	auto enemyCollider = std::make_unique<dae::CollisionComponent>( 18.f, 27.f, 'e');
 	enemyCollider.get()->AddBlockingTag('b');
-	auto enemyComponent = std::make_unique<dae::EnemyComponent>( EnemyComponent::IntelligenceType::normal);
+	auto enemyComponent = std::make_unique<dae::EnemyComponent>( EnemyComponent::IntelligenceType::normal, 400);
 	enemyGameObject.get()->AddComponent(std::move(enemyRenderComponent));
 	enemyGameObject.get()->AddComponent(std::move(enemyCollider));
 	enemyGameObject.get()->AddComponent(std::move(enemyMovementComponent));
@@ -443,7 +444,7 @@ void dae::GameSceneLoader::SpawnMinvo(int x, int y, GridComponent* grid, Scene& 
 	auto enemyHealthComponent = std::make_unique<dae::HealthComponent>();
 	auto enemyCollider = std::make_unique<dae::CollisionComponent>( 18.f, 27.f, 'e');
 	enemyCollider.get()->AddBlockingTag('b');
-	auto enemyComponent = std::make_unique<dae::EnemyComponent>( EnemyComponent::IntelligenceType::smart);
+	auto enemyComponent = std::make_unique<dae::EnemyComponent>( EnemyComponent::IntelligenceType::smart, 800);
 	enemyGameObject.get()->AddComponent(std::move(enemyRenderComponent));
 	enemyGameObject.get()->AddComponent(std::move(enemyCollider));
 	enemyGameObject.get()->AddComponent(std::move(enemyMovementComponent));

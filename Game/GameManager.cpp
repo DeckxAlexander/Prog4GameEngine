@@ -22,11 +22,11 @@ void dae::GameManager::CheckGameState()
 		}
 	}
 
-	if (!enemiesAlive) ProcessWin();
+	if (!enemiesAlive) ProcessNextLevel();
 
 }
 
-void dae::GameManager::ProcessWin()
+void dae::GameManager::ProcessNextLevel()
 {
 	m_CurrentLevel++;
 	auto& oldScene = SceneManager::GetInstance().GetActiveScene();
@@ -55,7 +55,7 @@ void dae::GameManager::ProcessWin()
 		auto playerComp = player->GetComponentByType<PlayerComponent>();
 		int lives = savedLives[playerComp->m_PlayerIndex];
 		playerComp->m_PlayerLives = savedLives[playerComp->m_PlayerIndex];
-		if (lives <= 0) playerComp->PlayerDeath();
+		if (lives < 0) playerComp->PlayerDeath();
 
 	}
 	SceneManager::GetInstance().RemoveScene(oldScene);

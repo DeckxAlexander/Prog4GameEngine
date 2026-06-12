@@ -16,7 +16,6 @@ namespace dae
 	public:
 		virtual void Start() override;
 		virtual void Update() override;
-		virtual void Render() const override {}
 		void InitializePlayers();
 
 
@@ -28,7 +27,7 @@ namespace dae
 		ExitComponent& operator=(ExitComponent&& other) = delete;
 
 
-		virtual void OnSubjectDestroyed(Subject* subject) { subject; }
+		virtual void OnSubjectDestroyed(Subject*) { }
 		virtual void OnNotify(const Event& event);
 	};
 }

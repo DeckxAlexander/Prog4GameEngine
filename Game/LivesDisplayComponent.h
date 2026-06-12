@@ -9,7 +9,6 @@ namespace dae
 	public:
 		virtual void Start() override;
 		virtual void Update() override {}
-		virtual void Render() const override {}
 		void InitializePlayers();
 		void UpdateDisplay();
 

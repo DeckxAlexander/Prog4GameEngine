@@ -12,7 +12,6 @@ namespace dae
 	public:
 
 		virtual void Update() override {}
-		virtual void Render() const override {}
 
 		void AddText(TextComponent* text);
 		void RemoveText(size_t index);

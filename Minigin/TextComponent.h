@@ -13,7 +13,6 @@ namespace dae
 	{
 	public:
 		void Update() override;
-		void Render() const override;
 
 		void SetText(const std::string& text);
 		void SetColor(const SDL_Color& color);

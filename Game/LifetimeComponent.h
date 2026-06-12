@@ -12,7 +12,6 @@ namespace dae
 		float m_AccumulatedTime{};
 	public:
 		virtual void Update() override;
-		virtual void Render() const override {}
 
 
 		LifetimeComponent(float lifetime);

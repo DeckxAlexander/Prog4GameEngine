@@ -2,8 +2,6 @@
 #include "ObjectComponent.h"
 #include "EventManagers.h"
 
-
-
 namespace dae
 {
 	class State;
@@ -18,7 +16,6 @@ namespace dae
 
 		virtual void Start() override;
 		virtual void Update() override;
-		virtual void Render() const override {}
 		void InitializePlayers();
 
 		void SetState(std::unique_ptr<State> state);
@@ -28,7 +25,6 @@ namespace dae
 
 		void EnemyDeath();
 
-
 		EnemyComponent( IntelligenceType intelligenceType, int scoreAmount = 100);
 		~EnemyComponent();
 		EnemyComponent(const EnemyComponent& other) = delete;
@@ -36,14 +32,12 @@ namespace dae
 		EnemyComponent& operator=(const EnemyComponent& other) = delete;
 		EnemyComponent& operator=(EnemyComponent&& other) = delete;
 
-
 		virtual void OnNotify(const Event& event);
-		virtual void OnSubjectDestroyed(Subject* subject);
+		virtual void OnSubjectDestroyed(Subject*) {}
 	private:
 		std::vector<GameObject*> m_Players{};
 		std::unique_ptr<State> m_State{};
 		int m_ScoreAmount;
-
 		IntelligenceType m_IntelligenceType;
 	};
 }

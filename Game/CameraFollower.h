@@ -9,13 +9,10 @@ namespace dae {
 		GameObject* m_Player{};
 		float m_MapX;
 		float m_MapY;
-		
-
 		void InitializePlayer();
 	public:
 		virtual void Start() override;
 		virtual void Update() override;
-		virtual void Render() const override {}
 
 		CameraFollowerComponent(float mapWidth, float mapHeight);
 		~CameraFollowerComponent();
@@ -25,7 +22,7 @@ namespace dae {
 		CameraFollowerComponent& operator=(CameraFollowerComponent&& other) = delete;
 
 		virtual void OnNotify(const Event& event);
-		virtual void OnSubjectDestroyed(Subject* subject);
+		virtual void OnSubjectDestroyed(Subject*) {}
 
     };
 }

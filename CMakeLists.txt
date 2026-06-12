@@ -28,19 +28,14 @@ add_library(MiniginEngine STATIC
   Minigin/Transform.cpp
   Minigin/TimeManager.h
   Minigin/ObjectComponent.cpp
-  Minigin/RenderComponent.h
   Minigin/RenderComponent.cpp
-  Minigin/Controller.h
   Minigin/Controller.cpp
   Minigin/EventManagers.h
-  Minigin/CollisionComponent.h
   Minigin/CollisionComponent.cpp
   Minigin/CollisionsManager.h
   Minigin/Commands.h
-  Minigin/SoundSystem.h
   Minigin/SoundSystem.cpp
   Minigin/SoundEventQueue.h
-  Minigin/SDLSoundSystem.h
   Minigin/SDLSoundSystem.cpp 
   Minigin/Camera.h 
   Minigin/TextComponent.cpp
@@ -51,23 +46,30 @@ add_library(MiniginEngine STATIC
 # list source files here
 add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Game/Main.cpp
-  Game/FPSCounterComponent.h
-  Game/MovementComponent.h
+  Game/FPSCounterComponent.cpp
   Game/MovementComponent.cpp
-  Game/HealthComponent.h 
-  Game/DestructibleComponent.h
-  Game/BombComponent.h
   Game/BombComponent.cpp
-  Game/PlaceBombComponent.h 
   Game/PlaceBombComponent.cpp 
-  Game/EnemyComponent.h
   Game/EnemyComponent.cpp
-  Game/GameCommands.h
   Game/GameCommands.cpp
-  Game/States.h
-  Game/States.cpp "Game/PlayerComponent.h" "Game/PlayerComponent.cpp" "Game/HealthComponent.cpp" "Game/GridTransform.h" "Game/GridTransform.cpp"
-  "Game/GridComponent.h"
-  "Game/GridComponent.cpp" "Game/PowerUpComponent.h" "Game/PowerUpComponent.cpp"  "Game/PowerUps.h" "Game/PowerUps.cpp" "Game/GameManager.h" "Game/GameManager.cpp" "Game/CameraFollower.h" "Game/CameraFollower.cpp" "Game/MenuComponent.h" "Game/MenuComponent.cpp" "Game/MenuCommands.h" "Game/MenuCommands.cpp" "Game/GameSceneLoaderComponent.h" "Game/GameSceneLoaderComponent.cpp" "Game/ExitComponent.h" "Game/ExitComponent.cpp" "Game/LifetimeComponent.h" "Game/LifetimeComponent.cpp" "Game/ScoreDisplayComponent.h"  "Game/ScoreDisplayComponent.cpp"   "Game/LivesDisplayComponent.cpp" "Game/ScoreBoardComponent.h" "Game/ScoreBoardComponent.cpp" "Game/ScoreBoardDisplayComponent.h" "Game/ScoreBoardDisplayComponent.cpp")
+  Game/States.cpp 
+  Game/PlayerComponent.cpp 
+  Game/HealthComponent.cpp 
+  Game/GridTransform.cpp
+  Game/GridComponent.cpp 
+  Game/PowerUpComponent.cpp  
+  Game/PowerUps.cpp 
+  Game/GameManager.cpp 
+  Game/CameraFollower.cpp 
+  Game/MenuComponent.cpp 
+  Game/MenuCommands.cpp  
+  Game/GameSceneLoaderComponent.cpp 
+  Game/ExitComponent.cpp  
+  Game/LifetimeComponent.cpp   
+  Game/ScoreDisplayComponent.cpp   
+  Game/LivesDisplayComponent.cpp 
+  Game/ScoreBoardComponent.cpp 
+  Game/ScoreBoardDisplayComponent.cpp)
 
 # enable c++20 features
 target_compile_features(MiniginEngine PUBLIC cxx_std_20)
