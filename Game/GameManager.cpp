@@ -54,6 +54,7 @@ void dae::GameManager::ProcessNextLevel()
 		auto playerComp = player->GetComponentByType<PlayerComponent>();
 		int lives = savedLives[playerComp->m_PlayerIndex];
 		playerComp->m_PlayerLives = savedLives[playerComp->m_PlayerIndex];
+		playerComp->GetSubject()->Notify({ EventType::LivesChanged, playerComp });
 		if (lives < 0) playerComp->PlayerDeath();
 
 	}

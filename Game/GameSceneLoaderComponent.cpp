@@ -124,7 +124,7 @@ void dae::GameSceneLoader::SetupScene(SceneDetails details)
 			scene.Add(std::move(CameraFollowerGameObject));
 		}
 
-		SpawnPlayers(details.playersAmount);
+		SpawnPlayers(details.playersAmount, details.isVersus);
 	}
 
 	SpawnEnemies(details);
@@ -137,7 +137,7 @@ void dae::GameSceneLoader::SetupScene(SceneDetails details)
 
 }
 
-void dae::GameSceneLoader::SpawnPlayers(int amount)
+void dae::GameSceneLoader::SpawnPlayers(int amount, bool isVersus)
 {
 	InputManager::GetInstance().UnbindAll();
 	auto grid = GridLocator::GetGrid();
@@ -172,7 +172,7 @@ void dae::GameSceneLoader::SpawnPlayers(int amount)
 			dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_X, dae::KeyState::Up, std::make_unique<dae::PlaceBomb>(playerGameObject.get()), nullptr);
 			dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_C, dae::KeyState::Up, std::make_unique<dae::DetonateBomb>(playerGameObject.get()), nullptr);
 		}
-		if(controllersAmount < 2 && amount > 1) 
+		if(controllersAmount < 2 && (amount > 1 || isVersus))
 		{
 			if (index > 0) 
 			{

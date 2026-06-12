@@ -1,5 +1,5 @@
 seed=10
-width=21
+width=31
 height=13
 bcount=6
-blockscount=20
+blockscount=40

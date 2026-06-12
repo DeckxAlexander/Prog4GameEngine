@@ -1,0 +1,8 @@
+seed=316
+width=31
+height=13
+bcount=0
+ocount=0
+dcount=10
+mcount=10
+blockscount=45

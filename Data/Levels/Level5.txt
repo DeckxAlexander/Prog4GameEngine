@@ -1,0 +1,8 @@
+seed=11608
+width=31
+height=15
+bcount=0
+ocount=5
+dcount=10
+mcount=5
+blockscount=50
