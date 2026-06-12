@@ -69,13 +69,10 @@ public:
 	static int GetConnectedControllerCount();
 
 private:
-	int m_ControllerIndex;
 
 	struct Impl;
 	std::unique_ptr<Impl> m_Impl;
 
-	std::vector<ControllerBinding> m_ControllerBindings{};
-	std::vector<ControllerAxisBinding> m_ControllerAxisBindings{};
 };
 
 }
