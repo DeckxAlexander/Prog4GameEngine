@@ -6,6 +6,7 @@
 #include "GameManager.h"
 #include "SoundSystem.h"
 #include <string>
+#include <sstream>
 #include <iostream>
 
 
