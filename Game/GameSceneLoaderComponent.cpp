@@ -53,7 +53,7 @@ void dae::GameSceneLoader::SetupScene(SceneDetails details)
 
 
 	auto tileGameObject = std::make_unique<dae::GameObject>();
-	auto tileRenderComponent = std::make_unique<dae::RenderComponent>( "background2.png");
+	auto tileRenderComponent = std::make_unique<dae::RenderComponent>( "Textures/background2.png");
 	tileRenderComponent->SetRenderOnScreen(true);
 	tileGameObject.get()->AddComponent(std::move(tileRenderComponent));
 	tileGameObject->SetPosition(512.f, 288.f);
@@ -146,7 +146,7 @@ void dae::GameSceneLoader::SpawnPlayers(int amount)
 	for (int index{}; index < amount; index++)
 	{
 		auto playerGameObject = std::make_unique<dae::GameObject>();
-		auto playerRenderComponent = std::make_unique<dae::RenderComponent>( "Bomberman.png");
+		auto playerRenderComponent = std::make_unique<dae::RenderComponent>( "Textures/Bomberman.png");
 		auto playerMovementComponent = std::make_unique<dae::PlayerMovementComponent>( 60.f, grid);
 		auto playerHealthComponent = std::make_unique<dae::HealthComponent>();
 		auto playerCollider = std::make_unique<dae::CollisionComponent>( 18.f, 27.f, 'e');
@@ -207,7 +207,7 @@ void dae::GameSceneLoader::SpawnVersusPlayer(int x, int y, GridComponent* grid, 
 	int playerIndex = 1;
 	int controllersAmount = Controller::GetConnectedControllerCount();
 	auto versusPlayerGameObject = std::make_unique<dae::GameObject>();
-	auto versusPlayerRenderComponent = std::make_unique<dae::RenderComponent>( "Balloom.png");
+	auto versusPlayerRenderComponent = std::make_unique<dae::RenderComponent>( "Textures/Balloom.png");
 	auto versusPlayerMovementComponent = std::make_unique<dae::MovementComponent>( 60.f, grid);
 	auto versusPlayerHealthComponent = std::make_unique<dae::HealthComponent>();
 	auto versusPlayerCollider = std::make_unique<dae::CollisionComponent>( 18.f, 27.f, 'e');
@@ -337,7 +337,7 @@ void dae::GameSceneLoader::SpawnEnemies(SceneDetails details)
 void dae::GameSceneLoader::SpawnBalloom(int x, int y, GridComponent* grid, Scene& scene)
 {
 	auto enemyGameObject = std::make_unique<dae::GameObject>();
-	auto enemyRenderComponent = std::make_unique<dae::RenderComponent>( "Balloom.png");
+	auto enemyRenderComponent = std::make_unique<dae::RenderComponent>( "Textures/Balloom.png");
 	auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>( 40.f, grid);
 	if (rand() % 2 == 1)
 	{
@@ -366,9 +366,9 @@ void dae::GameSceneLoader::SpawnBalloom(int x, int y, GridComponent* grid, Scene
 void dae::GameSceneLoader::SpawnOneal(int x, int y, GridComponent* grid, Scene& scene)
 {
 	auto enemyGameObject = std::make_unique<dae::GameObject>();
-	auto enemyRenderComponent = std::make_unique<dae::RenderComponent>( "Oneal.png");
-	auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>( 60.f, grid);
-	auto enemyChaseMovementComponent = std::make_unique<dae::ChaseMovementComponent>( 60.f, grid);
+	auto enemyRenderComponent = std::make_unique<dae::RenderComponent>( "Textures/Oneal.png");
+	auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>( 70.f, grid);
+	auto enemyChaseMovementComponent = std::make_unique<dae::ChaseMovementComponent>( 70.f, grid);
 
 	if (rand() % 2 == 1)
 	{
@@ -399,8 +399,8 @@ void dae::GameSceneLoader::SpawnOneal(int x, int y, GridComponent* grid, Scene& 
 void dae::GameSceneLoader::SpawnDoll(int x, int y, GridComponent* grid, Scene& scene)
 {
 	auto enemyGameObject = std::make_unique<dae::GameObject>();
-	auto enemyRenderComponent = std::make_unique<dae::RenderComponent>( "Doll.png");
-	auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>( 60.f, grid);
+	auto enemyRenderComponent = std::make_unique<dae::RenderComponent>( "Textures/Doll.png");
+	auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>( 70.f, grid);
 
 	if (rand() % 2 == 1)
 	{
@@ -430,9 +430,9 @@ void dae::GameSceneLoader::SpawnDoll(int x, int y, GridComponent* grid, Scene& s
 void dae::GameSceneLoader::SpawnMinvo(int x, int y, GridComponent* grid, Scene& scene)
 {
 	auto enemyGameObject = std::make_unique<dae::GameObject>();
-	auto enemyRenderComponent = std::make_unique<dae::RenderComponent>( "Minvo.png");
-	auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>( 80.f, grid);
-	auto enemyChaseMovementComponent = std::make_unique<dae::ChaseMovementComponent>( 80.f, grid);
+	auto enemyRenderComponent = std::make_unique<dae::RenderComponent>( "Textures/Minvo.png");
+	auto enemyMovementComponent = std::make_unique<dae::WanderMovementComponent>( 85.f, grid);
+	auto enemyChaseMovementComponent = std::make_unique<dae::ChaseMovementComponent>( 85.f, grid);
 
 	if (rand() % 2 == 1)
 	{
@@ -526,7 +526,7 @@ void dae::GameSceneLoader::LoadScoreBoard()
 	dae::SceneManager::GetInstance().SetActiveScene(scene);
 
 	auto LogoGameObject = std::make_unique<dae::GameObject>();
-	auto logoRenderComponent = std::make_unique<dae::RenderComponent>( "BombermanLogo.png");
+	auto logoRenderComponent = std::make_unique<dae::RenderComponent>( "Textures/BombermanLogo.png");
 	logoRenderComponent.get()->SetRenderOnScreen(true);
 	LogoGameObject->AddComponent(std::move(logoRenderComponent));
 	LogoGameObject->AddComponent(std::make_unique<ScoreBoardComponent>());

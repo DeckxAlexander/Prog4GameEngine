@@ -51,7 +51,7 @@ static void load()
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
 	dae::SceneManager::GetInstance().SetActiveScene(0);
 	auto menuGameObject = std::make_unique<dae::GameObject>();
-	auto menuRenderComponentLogo = std::make_unique<dae::RenderComponent>( "BombermanLogo.png");
+	auto menuRenderComponentLogo = std::make_unique<dae::RenderComponent>( "Textures/BombermanLogo.png");
 	menuRenderComponentLogo.get()->SetRenderOnScreen(true);
 	menuGameObject->AddComponent(std::make_unique<dae::MenuComponent>());
 	menuGameObject->AddComponent(std::move(menuRenderComponentLogo));
