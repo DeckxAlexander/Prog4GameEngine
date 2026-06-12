@@ -122,7 +122,7 @@ void dae::EnemyComponent::SearchPlayer()
 
 }
 
-dae::EnemyComponent::EnemyComponent( IntelligenceType intelligenceType, int scoreAmount) : ObjectComponent(), m_IntelligenceType{ intelligenceType }, m_ScoreAmount{ scoreAmount }
+dae::EnemyComponent::EnemyComponent( IntelligenceType intelligenceType, int scoreAmount) : ObjectComponent(), m_ScoreAmount{ scoreAmount }, m_IntelligenceType{ intelligenceType }
 {
 	InitializePlayers();
 }
