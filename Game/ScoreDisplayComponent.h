@@ -16,8 +16,8 @@ namespace dae
 		ScoreDisplayComponent& operator=(const ScoreDisplayComponent& other) = delete;
 		ScoreDisplayComponent& operator=(ScoreDisplayComponent&& other) = delete;
 
-		virtual void OnNotify(const Event& event);
-		virtual void OnSubjectDestroyed(Subject* subject);
+		virtual void OnNotify(const Event& event) override;
+		virtual void OnSubjectDestroyed(Subject* subject) override;
 	private:
 		bool m_SubjectDestroyed{ false };
 	};

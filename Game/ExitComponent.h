@@ -27,7 +27,7 @@ namespace dae
 		ExitComponent& operator=(ExitComponent&& other) = delete;
 
 
-		virtual void OnSubjectDestroyed(Subject*) { }
-		virtual void OnNotify(const Event& event);
+		virtual void OnSubjectDestroyed(Subject*) override { }
+		virtual void OnNotify(const Event& event) override;
 	};
 }

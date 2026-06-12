@@ -32,8 +32,8 @@ namespace dae
 		EnemyComponent& operator=(const EnemyComponent& other) = delete;
 		EnemyComponent& operator=(EnemyComponent&& other) = delete;
 
-		virtual void OnNotify(const Event& event);
-		virtual void OnSubjectDestroyed(Subject*) {}
+		virtual void OnNotify(const Event& event) override;
+		virtual void OnSubjectDestroyed(Subject*) override {}
 	private:
 		std::vector<GameObject*> m_Players{};
 		std::unique_ptr<State> m_State{};

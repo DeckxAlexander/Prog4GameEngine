@@ -19,8 +19,8 @@ namespace dae
 		LivesDisplayComponent& operator=(const LivesDisplayComponent& other) = delete;
 		LivesDisplayComponent& operator=(LivesDisplayComponent&& other) = delete;
 
-		virtual void OnNotify(const Event& event);
-		virtual void OnSubjectDestroyed(Subject*) {}
+		virtual void OnNotify(const Event& event) override;
+		virtual void OnSubjectDestroyed(Subject*) override {}
 	private:
 		std::vector<GameObject*> m_Players{};
 	};

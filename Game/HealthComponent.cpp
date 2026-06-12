@@ -3,7 +3,10 @@
 #include "PlayerComponent.h"
 #include "EnemyComponent.h"
 
-void dae::HealthComponent::ProcessDeath() 
+dae::HealthComponent::HealthComponent() : ObjectComponent()
+{}
+
+void dae::HealthComponent::ProcessDeath()
 {
 	if (GetOwner()->IsMarkedForDelete()) return;
 	auto playerComp = GetOwner()->GetComponentByType<PlayerComponent>();

@@ -5,21 +5,14 @@
 namespace dae {
     class HealthComponent final : public ObjectComponent {
     public:
-        void Update() override
-        {
-        }
-
-
-        HealthComponent() : ObjectComponent(),  m_Subject{std::make_unique<Subject>()}
-        {
-        }
-
-        //Subject* GetSubject() { return m_Subject.get(); } 
-
+        void Update() override {}
+        HealthComponent();
         void ProcessDeath();
 
-
-    private:
-        std::unique_ptr<Subject> m_Subject;
+        ~HealthComponent() = default;
+        HealthComponent(const HealthComponent& other) = delete;
+        HealthComponent(HealthComponent&& other) = delete;
+        HealthComponent& operator=(const HealthComponent& other) = delete;
+        HealthComponent& operator=(HealthComponent&& other) = delete;
     };
 }

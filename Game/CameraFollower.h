@@ -21,8 +21,8 @@ namespace dae {
 		CameraFollowerComponent& operator=(const CameraFollowerComponent& other) = delete;
 		CameraFollowerComponent& operator=(CameraFollowerComponent&& other) = delete;
 
-		virtual void OnNotify(const Event& event);
-		virtual void OnSubjectDestroyed(Subject*) {}
+		virtual void OnNotify(const Event& event) override;
+		virtual void OnSubjectDestroyed(Subject*) override {}
 
     };
 }

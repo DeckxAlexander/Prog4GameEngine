@@ -26,8 +26,8 @@ namespace dae
 		PowerUpComponent& operator=(const PowerUpComponent& other) = delete;
 		PowerUpComponent& operator=(PowerUpComponent&& other) = delete;
 
-		virtual void OnNotify(const Event& event);
-		virtual void OnSubjectDestroyed(Subject*) {}
+		virtual void OnNotify(const Event& event) override;
+		virtual void OnSubjectDestroyed(Subject*) override {}
 	};
 
 
